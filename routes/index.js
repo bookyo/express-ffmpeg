@@ -35,7 +35,7 @@ module.exports = function(app) {
     app.get("/admin", checkLogin, Admincontroller.getadmin);
     app.get("/admin/upload", checkLogin, Admincontroller.getupload);
     app.get("/admin/movies", checkLogin, Admincontroller.getmovies);
-    app.post("/upload", checkLogin, extendTimeout, upload.single('file'), Admincontroller.postupload);
+    app.post("/upload", checkLogin, upload.single('file'), Admincontroller.postupload);
     app.post("/transcode", checkLogin, Admincontroller.transcode);
     app.delete("/delete/movie", checkLogin, Admincontroller.delete);
     app.get("/share/:id", Admincontroller.getmovie);

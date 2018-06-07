@@ -19,7 +19,6 @@ exports.getupload = function(req, res){
 }
 
 exports.postupload = function(req, res) {
-    req.setTimeout(50000000000);
     var file = req.file;
     var body = req.body;
     var des = "./movies/";
