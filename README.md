@@ -47,7 +47,8 @@ module.exports = {
     db: "dbname",
     dbuser: "dbuser",
     dbpassword: "dbpassword"
-};```
+};
+```
 
 2. 登陆后台之后请立刻在设置中进行设置。
 3. 上传视频即可上传视频。
