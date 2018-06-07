@@ -37,7 +37,7 @@ sudo apt-get install ffmpeg
 登陆账号密码在/config/auth.js中设置
 
 #### 使用说明
-1. 在/config文件夹中创建auth.js文件
+1. 创建/config文件夹并在里边创建auth.js文件
 代码如下：
 
 ```
