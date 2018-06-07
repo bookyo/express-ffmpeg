@@ -8,6 +8,7 @@ exports.transcode = function(movie,cb){
     var id = movie._id;
     var outpath = './public/videos/';
     var des = outpath + id;
+    console.log(des);
     fs.exists(des, function(exists){
         if(!exists){
             fs.mkdir(des,function(err) {
@@ -111,7 +112,8 @@ exports.transcode = function(movie,cb){
 }
 
 function chunk(des, cb) {
-    ffmpeg(des+"/index.mp4")
+    var moviepath = des +"/index.mp4";
+    ffmpeg(moviepath)
         .addOptions([
             '-start_number 0',
             '-hls_time 10',
@@ -123,7 +125,7 @@ function chunk(des, cb) {
               console.log('Cannot chunk video: ' + err.message);
             })
             .on("start", function(){
-              console.log(path.join(__dirname, des));
+              console.log(moviepath);
             })
             .run()
 }
