@@ -72,6 +72,9 @@ exports.transcode = function(movie,cb){
                 .addOption('-vf', 'movie='+wmimage+' [watermark]; [in][watermark] overlay=main_w-overlay_w [out]')
                 .output(des + '/index.mp4')
                     .on('start',cb)
+                    .on('error', function(err, stdout, stderr) {
+                      console.log('Cannot process video: ' + err.message);
+                    })
                     .on('end', function(){
                         chunk(des + '/index.mp4', des, function () {
                             Movie.findOne({_id:id})
@@ -104,5 +107,8 @@ function chunk(path,des,cb) {
             '-f hls'
         ]).output(des+'/index.m3u8')
             .on('end', cb)
+            .on('error', function(err, stdout, stderr) {
+              console.log('Cannot chunk video: ' + err.message);
+            })
             .run()
 }
