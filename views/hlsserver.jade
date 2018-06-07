@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  .layui-row
+    .layui-col-md6.layui-col-md-offset3
+      form.layui-form#login(action="",method="post")
+        .layui-form-item
+          label.layui-form-label 账号
+          .layui-input-block
+            input.layui-input(type="text", name="user", required, lay-verify="required", placeholder="输入账号")
+        .layui-form-item
+          label.layui-form-label 密码
+          .layui-input-block
+            input.layui-input(type="password", name="password", required, lay-verify="required", placeholder="输入密码")
+        .layui-form-item
+          .layui-input-block
+            button.layui-btn(lay-submit, lay-filter="loginform") 登陆

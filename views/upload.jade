@@ -1,0 +1,21 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md6.layui-col-md-offset3
+        h1.title 上传电影（可同时上传5部电影）
+        .layui-btn-group#actions
+          button.layui-btn.fileinput-button 添加电影
+          button.layui-btn.start 开始上传
+          button.layui-btn.cancel 终止上传
+        div.table#previews
+          .file-row#template
+            div
+              p.name(data-dz-name)
+              strong.text-danger(data-dz-errormessage)
+            div
+              p.size(data-dz-size)
+              .layui-progress
+                .layui-progress-bar(lay-percent="1%",data-dz-uploadprogress)
+          

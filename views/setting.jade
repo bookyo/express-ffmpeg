@@ -1,0 +1,47 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 设置
+        form.layui-form(method="post")
+          .layui-form-item
+            label.layui-form-label 绑定域名
+            .layui-input-block
+              input.layui-input(type="text",value="#{setting.host}",name="host",placeholder="输入系统绑定的域名，带http://或者https://前缀")
+          .layui-form-item
+            label.layui-form-label 输出清晰度
+            .layui-input-block
+              if setting.hd=="1280x720" || setting.hd==""
+                input(type="radio",name="hd",value="480",title="480P")
+                input(type="radio",name="hd",value="720",title="720P",checked)
+              else
+                input(type="radio",name="hd",value="480",title="480P",checked)
+                input(type="radio",name="hd",value="720",title="720P")
+          .layui-form-item
+            label.layui-form-label 引用网址（防盗链）
+            .layui-input-block
+              input.layui-input(type="text",value="#{setting.antiurl}",name="antiurl",placeholder="http://youurl,必须加http://前缀，设置之后只能指定域名通过ifream调用")
+          .layui-form-item
+            label.layui-form-label 防盗链KEY
+            .layui-input-block
+              input.layui-input(type="text",value="#{setting.antikey}",name="key",placeholder="推荐八位英文数字组合")
+          .layui-form-item
+            label.layui-form-label 水印
+            .layui-input-inline
+              img.watermark(src="")
+              .layui-btn#upload-wm
+                i.layui-icon &#xe67c;
+                | 上传水印
+              input#inputwm(type="hidden",name="watermark",value="#{setting.wmpath}")
+            .layui-form-mid.layui-word-aux 水印图片存在/public/mark文件夹中
+          .layui-form-item
+            .layui-input-block
+              button.layui-btn(lay-submit,lay-filter="submitsetting") 提交
+          
+          
+          
+        
+        
+          

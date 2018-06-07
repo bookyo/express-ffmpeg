@@ -1,0 +1,32 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 全部电影库
+        .layui-btn-group#actions
+          button.layui-btn.zhuanma 转码并切片
+        table.layui-table
+          thead
+            tr
+              th 电影名
+              th 大小
+              th 状态
+              th(width="120px") 操作
+          tbody
+            each movie in movies
+              tr
+                td #{movie.originalname}
+                td #{parseInt(movie.size/1000000)}MB
+                td #{movie.status}
+                td
+                  .layui-btn-group
+                    button.layui-btn.layui-btn-sm.geturl(id="#{movie._id}") 分享链接
+                    button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-movie(data-id="#{movie._id}") 删除
+        nav.pages
+          if( pages> 1) 
+            ul.pagination
+              != createPagination(pages, page)
+        
+          
