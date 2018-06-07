@@ -25,7 +25,6 @@ exports.transcode = function(movie,cb){
         Setting.find()
             .exec(function(err, setting) {
                 var wmimage = setting[0].wmpath;
-                console.log(wmimage);
                 var hd = setting[0].hd*1;
                 var videometa = metadata.streams[0];
                 var size = "";
@@ -118,7 +117,8 @@ function chunk(des, cb) {
             '-start_number 0',
             '-hls_time 10',
             '-hls_list_size 0',
-            '-f hls'
+            '-f hls',
+            '-strict -2'
         ]).output(des+"/index.m3u8")
             .on('end', cb)
             .on('error', function(err, stdout, stderr) {
