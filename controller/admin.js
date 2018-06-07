@@ -120,17 +120,16 @@ exports.transcode = function(req, res) {
                             if(err){
                                 console.log(err);
                             }
-                            console.log("transcoding");
                             movie.status = "transcoding";
                             movie.save(function(err) {
                                 console.log(err);
-                                res.json({
-                                    success: 1
-                                });
                             })
                         })
                 });
             }
+            res.json({
+                success: 1
+            });
         })
 }
 
