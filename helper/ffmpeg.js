@@ -1,6 +1,7 @@
 var ffmpeg = require('fluent-ffmpeg');
 var Movie = require('../models/movie');
 var Setting = require('../models/setting');
+var path = require("path");
 var fs = require('fs');
 exports.transcode = function(movie,cb){
     var path = movie.path;
@@ -76,7 +77,18 @@ exports.transcode = function(movie,cb){
                       console.log('Cannot process video: ' + err.message);
                     })
                     .on('end', function(){
-                        chunk(des + '/index.mp4', des, function () {
+                        Movie.findOne({_id:id})
+                            .exec(function(err,movie) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                                console.log("transcoded");
+                                movie.status = "transcoded";
+                                movie.save(function(err) {
+                                    console.log(err);
+                                })
+                            });
+                        chunk(des, function () {
                             Movie.findOne({_id:id})
                                 .exec(function(err,movie){
                                     if(err){
@@ -98,17 +110,20 @@ exports.transcode = function(movie,cb){
     
 }
 
-function chunk(path,des,cb) {
-    ffmpeg(path)
+function chunk(des, cb) {
+    ffmpeg(des+"/index.mp4")
         .addOptions([
             '-start_number 0',
             '-hls_time 10',
             '-hls_list_size 0',
             '-f hls'
-        ]).output(des+'/index.m3u8')
+        ]).output(des+"/index.m3u8")
             .on('end', cb)
             .on('error', function(err, stdout, stderr) {
               console.log('Cannot chunk video: ' + err.message);
+            })
+            .on("start", function(){
+              console.log(path.join(__dirname, des));
             })
             .run()
 }
