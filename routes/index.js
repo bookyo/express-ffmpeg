@@ -32,6 +32,15 @@ module.exports = function(app) {
       res.setTimeout(480000000, function () { /* Handle timeout */ });
       next();
     };
+    function posttimeout (req, res, next) {
+      req.setTimeout(10000, function() {
+        res.statusCode = 500;
+        return res.json({
+          success: 0
+        });
+      });
+      next();
+    };
     app.get("/admin", checkLogin, Admincontroller.getadmin);
     app.get("/admin/upload", checkLogin, Admincontroller.getupload);
     app.get("/admin/movies", checkLogin, Admincontroller.getmovies);

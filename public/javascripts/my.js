@@ -68,7 +68,7 @@ var myDropzone = new Dropzone(document.body, {
   maxFilesize:4000,
   uploadMultiple:false,
   chunking:true,
-  timeout:10000,
+  timeout:30000,
   chunkSize: 1000000,
   parallelChunkUploads:false,
   retryChunks:true,
@@ -81,6 +81,10 @@ var myDropzone = new Dropzone(document.body, {
 myDropzone.on("uploadprogress", function (file, progress, bytesSent) {
   progress = bytesSent / file.size * 100;
   file.previewTemplate.querySelector(".layui-progress-bar").style.width = progress+"%";
+});
+myDropzone.on("error", function (file, errorMessage) {
+  console.log(errorMessage);
+  console.log(file);
 });
 // Setup the buttons for all transfers
 // The "add files" button doesn't need to be setup because the config
