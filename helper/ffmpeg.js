@@ -8,7 +8,6 @@ exports.transcode = function(movie,cb){
     var id = movie._id;
     var outpath = './public/videos/';
     var des = outpath + id;
-    console.log(des);
     fs.exists(des, function(exists){
         if(!exists){
             fs.mkdir(des,function(err) {
@@ -125,7 +124,7 @@ function chunk(des, cb) {
               console.log('Cannot chunk video: ' + err.message);
             })
             .on("start", function(){
-              console.log(moviepath);
+              console.log("start chunking");
             })
             .run()
 }
