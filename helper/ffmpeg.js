@@ -8,6 +8,9 @@ exports.transcode = function(movie,cb){
     var id = movie._id;
     var outpath = './public/videos/';
     var des = outpath + id;
+    var videoarr = path.split(".");
+    videoarr.pop();
+    var srtpath = videoarr.join(".")+".srt";
     fs.exists(des, function(exists){
         if(!exists){
             fs.mkdir(des,function(err) {
@@ -30,6 +33,7 @@ exports.transcode = function(movie,cb){
                 var bv = "500k";
                 var bufsize = "500k";
                 var maxrate = "600k";
+                var vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w [out]';
                 if (hd==480) {
                     size = "720x480";
                 } else {
@@ -37,6 +41,10 @@ exports.transcode = function(movie,cb){
                     bv = "1000k";
                     bufsize = "1000k";
                     maxrate = "1400k";
+                }
+                var exists = fs.existsSync(srtpath);
+                if(exists) {
+                    vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w,subtitles=' + srtpath + '[out]';
                 }
                 // var codename = metadata.streams[0].codec_name;
                 if (videometa.height <= hd) {
@@ -61,7 +69,7 @@ exports.transcode = function(movie,cb){
                 .addOptions([
                     '-s '+size,
                     '-b:v '+bv,
-                    '-vcodec h264',
+                    '-vcodec libx264',
                     '-acodec aac',
                     '-ac 2',
                     '-b:a 128k',
@@ -69,7 +77,7 @@ exports.transcode = function(movie,cb){
                     '-maxrate '+maxrate,
                     '-q:v 6'
                 ])
-                .addOption('-vf', 'movie='+wmimage+' [watermark]; [in][watermark] overlay=main_w-overlay_w [out]')
+                .addOption('-vf', vf)
                 .output(des + '/index.mp4')
                     .on('start',cb)
                     .on('error', function(err, stdout, stderr) {

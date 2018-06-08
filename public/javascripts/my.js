@@ -30,6 +30,18 @@ layui.use(['jquery','form','element','layer','upload'], function(){
         }
       }
     });
+    upload.render({
+      elem:".zimu",
+      url: "/upzimu",
+      field: "zimu",
+      accept: "file",
+      exts: "srt",
+      done: function(res, index, upload) {
+        if(res.code==0){
+          layer.msg("字幕文件上传成功");
+        }
+      }
+    })
 });
 $(".zhuanma").click(function(e){
   $.ajax({
@@ -43,6 +55,18 @@ $(".zhuanma").click(function(e){
     }
   });
 });
+$(".ruku").click(function(e) {
+  $.ajax({
+    type: "POST",
+    url: "/ruku",
+    dataType: "JSON",
+    success: function (response) {
+      if(response.success == 1) {
+        location.reload();
+      }
+    }
+  });
+})
 $(".btn-delete-movie").click(function(e){
   var target = $(e.target);
   var id = target.data("id");

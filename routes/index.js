@@ -44,12 +44,14 @@ module.exports = function(app) {
     app.get("/admin", checkLogin, Admincontroller.getadmin);
     app.get("/admin/upload", checkLogin, Admincontroller.getupload);
     app.get("/admin/movies", checkLogin, Admincontroller.getmovies);
+    app.post("/upzimu", checkLogin, upload.single('zimu'), Admincontroller.postzimu);
     app.post("/upload", checkLogin, posttimeout, upload.single('file'), Admincontroller.postupload);
     app.post("/transcode", checkLogin, Admincontroller.transcode);
     app.delete("/delete/movie", checkLogin, Admincontroller.delete);
     app.get("/share/:id", Admincontroller.getmovie);
     app.get("/admin/setting", checkLogin, Admincontroller.setting);
     app.post("/admin/setting", checkLogin, Admincontroller.postsetting);
+    app.post("/ruku", checkLogin, Admincontroller.ruku);
     var storage1 = multer.diskStorage({
       destination: function (req, file, cb) {
         cb(null, './public/mark');

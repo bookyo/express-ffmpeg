@@ -257,3 +257,50 @@ exports.uploadwatermark = function(req, res) {
         img: path
     })
 }
+
+exports.postzimu = function(req, res) {
+    res.json({
+        code:0
+    })
+}
+
+exports.ruku = function(req, res) {
+    fs.readdir('./movies', function(err, files) {
+        if(err) {
+            console.log(err);
+        }
+        var path = "./movies/";
+        files.forEach(function(file) {
+            fs.stat(path+file, function(err, stats) {
+                if(err) {
+                    console.log(err);
+                }
+                if(stats.isFile && stats.size>500000){
+                  console.log(file);
+                  console.log(stats);
+                  Movie.findOne({originalname: file})
+                      .exec(function(err, movie) {
+                          if(err) {
+                              console.log(err);
+                          }
+                          if(!movie) {
+                            var movieobj = {
+                                originalname: file,
+                                status: "waiting",
+                                path: path+file,
+                                size: stats.size
+                            }
+                            var movie = new Movie(movieobj);
+                            movie.save(function(err) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                            })
+                          }
+                      })
+                }
+            })
+        })
+        res.json({success: 1});
+    });
+}
