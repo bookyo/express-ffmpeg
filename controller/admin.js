@@ -86,6 +86,7 @@ exports.getmovies = function(req, res) {
     var perPage = 10;
     Movie
         .find()
+        .sort('-createAt')
         .limit(perPage)
         .skip(perPage * (page-1))
         .exec(function(err, movies) {

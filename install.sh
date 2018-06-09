@@ -84,3 +84,7 @@ echo "module.exports = {
 };" > auth.js
 cd ..
 pm2 start bin/www -i 0
+sudo add-apt-repository ppa:djcj/hybrid
+sudo apt-get update  
+sudo apt-get install ffmpeg
+echo "success"
