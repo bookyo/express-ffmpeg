@@ -46,80 +46,55 @@ exports.transcode = function(movie,cb){
                 if(exists) {
                     vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w,subtitles=' + srtpath + '[out]';
                 }
-                // var codename = metadata.streams[0].codec_name;
                 if (videometa.height <= hd) {
                     size = videometa.width + "x" + videometa.height;
                 }
-                // if (videometa.height <= hd && codename == "h264") {
-                //     chunk(path,des,function(){
-                //         Movie.findOne({_id:id})
-                //             .exec(function(err,movie){
-                //                 if(err){
-                //                     console.log(err);
-                //                 }
-                //                 fs.unlinkSync(path);
-                //                 movie.status = "finished";
-                //                 movie.save(function(err){
-                //                     console.log(err);
-                //                 })
-                //             })
-                //     })
-                // } else {
-                ffmpeg(path)
-                .addOptions([
-                    '-s '+size,
-                    '-b:v '+bv,
-                    '-vcodec libx264',
-                    '-acodec aac',
-                    '-ac 2',
-                    '-b:a 128k',
-                    '-bufsize '+bufsize,
-                    '-maxrate '+maxrate,
-                    '-q:v 6'
-                ])
-                .addOption('-vf', vf)
-                .output(des + '/index.mp4')
-                    .on('start',cb)
-                    .on('error', function(err, stdout, stderr) {
-                      console.log('Cannot process video: ' + err.message);
-                    })
-                    .on('end', function(){
-                        Movie.findOne({_id:id})
-                            .exec(function(err,movie) {
-                                if(err) {
-                                    console.log(err);
-                                }
-                                console.log("transcoded");
-                                movie.status = "transcoded";
-                                movie.save(function(err) {
-                                    console.log(err);
-                                })
-                            });
-                        chunk(des, function () {
-                            Movie.findOne({_id:id})
-                                .exec(function(err,movie){
-                                    if(err){
-                                        console.log(err);
-                                    }
-                                    fs.unlinkSync(path);
-                                    fs.unlinkSync(des + '/index.mp4');
-                                    movie.status = "finished";
-                                    movie.save(function(err){
-                                        console.log(err);
-                                    })
-                                })
-                        })
-                    })
-                    .run()
+                if(setting[0].miaoqie == "on") {
+                    var vidoewidth;
+                    if(hd == 480) {
+                        vidoewidth = 720;
+                    } else {
+                        vidoewidth = 1280;
+                    }
+                    if (videometa.width <= vidoewidth && metadata.streams[0].codec_name == "h264") {
+                        chunk(path,des,id);
+                    } else {
+                        ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb);
+                    }
+                } else {
+                    ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb);
+                }
                 // }
             })
     });
     
 }
-
-function chunk(des, cb) {
-    var moviepath = des +"/index.mp4";
-    ffmpeg(moviepath)
+function ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb){
+    ffmpeg(path)
+    .addOptions([
+        '-s '+size,
+        '-b:v '+bv,
+        '-vcodec libx264',
+        '-acodec aac',
+        '-ac 2',
+        '-b:a 128k',
+        '-bufsize '+bufsize,
+        '-maxrate '+maxrate,
+        '-q:v 6'
+    ])
+    .addOption('-vf', vf)
+    .output(des + '/index.mp4')
+        .on('start',cb)
+        .on('error', function(err, stdout, stderr) {
+            console.log('Cannot process video: ' + err.message);
+        })
+        .on('end', function(){
+            chunk(des + "/index.mp4", des, id);
+        })
+        .run()
+}
+function chunk(path, des, id) {
+    ffmpeg(path)
         .addOptions([
             '-start_number 0',
             '-hls_time 10',
@@ -127,12 +102,39 @@ function chunk(des, cb) {
             '-f hls',
             '-strict -2'
         ]).output(des+"/index.m3u8")
-            .on('end', cb)
+            .on('end', function() {
+                Movie.findOne({_id:id})
+                .exec(function(err,movie){
+                    if(err){
+                        console.log(err);
+                    }
+                    fs.unlinkSync(movie.path);
+                    fs.exists(des+"/index.mp4", function(exists) {
+                        if(exists) {
+                            fs.unlinkSync(des + '/index.mp4');
+                        }
+                    });
+                    movie.status = "finished";
+                    movie.save(function(err){
+                        console.log(err);
+                    })
+                })
+            })
             .on('error', function(err, stdout, stderr) {
               console.log('Cannot chunk video: ' + err.message);
             })
             .on("start", function(){
-              console.log("start chunking");
+              Movie.findOne({_id:id})
+                .exec(function(err,movie) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    console.log("chunking");
+                    movie.status = "chunking";
+                    movie.save(function(err) {
+                        console.log(err);
+                    })
+                });
             })
             .run()
 }

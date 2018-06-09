@@ -6,6 +6,7 @@ var SettingSchema = new Schema({
     antiurl: String,
     antikey: String,
     wmpath: String,
+    miaoqie: String,
     createAt: {
         type: Date,
         default: Date.now()

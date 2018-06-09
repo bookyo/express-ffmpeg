@@ -20,6 +20,13 @@ block content
                 input(type="radio",name="hd",value="480",title="480P",checked)
                 input(type="radio",name="hd",value="720",title="720P")
           .layui-form-item
+            label.layui-form-label 秒切
+            .layui-input-block
+              if setting.miaoqie=="on"
+                input(type="checkbox",name="miaoqie",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input(type="checkbox",name="miaoqie",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
             label.layui-form-label 引用网址（防盗链）
             .layui-input-block
               input.layui-input(type="text",value="#{setting.antiurl}",name="antiurl",placeholder="http://youurl,必须加http://前缀，设置之后只能指定域名通过ifream调用")
