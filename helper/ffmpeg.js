@@ -124,17 +124,27 @@ function chunk(path, des, id) {
               console.log('Cannot chunk video: ' + err.message);
             })
             .on("start", function(){
-              Movie.findOne({_id:id})
-                .exec(function(err,movie) {
-                    if(err) {
-                        console.log(err);
-                    }
-                    console.log("chunking");
-                    movie.status = "chunking";
-                    movie.save(function(err) {
-                        console.log(err);
-                    })
-                });
+                screenshots(path, des);
+                Movie.findOne({_id:id})
+                    .exec(function(err,movie) {
+                        if(err) {
+                            console.log(err);
+                        }
+                        console.log("chunking");
+                        movie.status = "chunking";
+                        movie.save(function(err) {
+                            console.log(err);
+                        })
+                    });
             })
             .run()
+}
+
+function screenshots(path,des) {
+    ffmpeg(path)
+        .screenshots({
+            count:4,
+            filename: "%i.jpg",
+            folder:des
+        });
 }
