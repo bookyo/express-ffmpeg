@@ -42,8 +42,8 @@ exports.transcode = function(movie,cb){
                     bufsize = "1000k";
                     maxrate = "1400k";
                 }
-                var exists = fs.existsSync(srtpath);
-                if(exists) {
+                var srtexists = fs.existsSync(srtpath);
+                if(srtexists) {
                     vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w,subtitles=' + srtpath + '[out]';
                 }
                 if (videometa.height <= hd) {
@@ -57,7 +57,11 @@ exports.transcode = function(movie,cb){
                         vidoewidth = 1280;
                     }
                     if (videometa.width <= vidoewidth && metadata.streams[0].codec_name == "h264") {
-                        chunk(path,des,id);
+                        if(srtexists) {
+                            ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb);
+                        } else {
+                            chunk(path, des, id);
+                        }
                     } else {
                         ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb);
                     }
