@@ -36,6 +36,8 @@ sudo apt-get install ffmpeg
 访问localhost:3000/server
 登陆账号密码在/config/auth.js中设置
 
+4. ffmpeg烧录字幕的时候会查找字体配置文件，/etc/fonts，如果里边没有fonts.conf，请将本源码中fonts.conf上传到/etc/fonts，有些linux系统没有中文字体支持，请将msyh.ttf上传至/usr/share/fonts里边。
+
 ##### 利用sh文件安装
 * ./install.sh 使用前请给予权限。
 

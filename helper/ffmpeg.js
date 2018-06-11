@@ -80,7 +80,8 @@ function ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb){
         '-b:a 128k',
         '-bufsize '+bufsize,
         '-maxrate '+maxrate,
-        '-q:v 6'
+        '-q:v 6',
+        '-strict -2'
     ])
     .addOption('-vf', vf)
     .output(des + '/index.mp4')
