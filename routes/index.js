@@ -28,10 +28,6 @@ module.exports = function(app) {
         res.redirect('https://baidu.com');
       }
     });
-    function extendTimeout (req, res, next) {
-      res.setTimeout(480000000, function () { /* Handle timeout */ });
-      next();
-    };
     function posttimeout (req, res, next) {
       req.setTimeout(10000, function() {
         res.statusCode = 500;
@@ -52,6 +48,7 @@ module.exports = function(app) {
     app.get("/admin/setting", checkLogin, Admincontroller.setting);
     app.post("/admin/setting", checkLogin, Admincontroller.postsetting);
     app.post("/ruku", checkLogin, Admincontroller.ruku);
+    app.get("/playmagnet", Admincontroller.playmagnet);
     var storage1 = multer.diskStorage({
       destination: function (req, file, cb) {
         cb(null, './public/mark');
@@ -64,7 +61,18 @@ module.exports = function(app) {
       storage: storage1
     });
     app.post("/upwm", checkLogin, upload1.single('img'), Admincontroller.uploadwatermark);
-
+    var storage2 = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, './public/videos/');
+      },
+      filename: function (req, file, cb) {
+        cb(null, file.originalname);
+      }
+    });
+    var upload2 = multer({
+      storage: storage2
+    });
+    app.post("/upvtt", checkLogin, upload2.single('vtt'), Admincontroller.uploadvtt);
     function checkLogin(req, res, next) {
       if( !req.session.user ) {
         return res.redirect('/hlsserver');

@@ -263,11 +263,39 @@ exports.uploadwatermark = function(req, res) {
         img: path
     })
 }
-
+exports.uploadvtt = function(req, res) {
+    var path = req.file.path;
+    var des = './public/videos/'+req.body.id;
+    var exists = fs.existsSync(des);
+    if(exists) {
+        fs.rename(path,des+"/1.vtt",function(err) {
+            if(err) {
+                console.log(err);
+            }
+            res.json({
+                code:0
+            })
+        })
+    }
+}
 exports.postzimu = function(req, res) {
     res.json({
         code:0
     })
+}
+
+exports.playmagnet = function(req, res) {
+    Setting.find()
+    .exec(function(err, setting){
+        if(err) {
+            console.log(err);
+        }
+        res.render("playmagnet", {
+            title: "在线播放磁力链接",
+            antiurl: setting[0].antiurl
+        })
+    })
+    
 }
 
 exports.ruku = function(req, res) {
@@ -282,8 +310,6 @@ exports.ruku = function(req, res) {
                     console.log(err);
                 }
                 if(stats.isFile && stats.size>500000){
-                  console.log(file);
-                  console.log(stats);
                   Movie.findOne({originalname: file})
                       .exec(function(err, movie) {
                           if(err) {
@@ -294,10 +320,11 @@ exports.ruku = function(req, res) {
                                 originalname: file,
                                 status: "waiting",
                                 path: path+file,
-                                size: stats.size
+                                size: stats.size,
+                                createAt: Date.now()
                             }
-                            var movie = new Movie(movieobj);
-                            movie.save(function(err) {
+                            var newmovie = new Movie(movieobj);
+                            newmovie.save(function(err) {
                                 if(err) {
                                     console.log(err);
                                 }

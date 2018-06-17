@@ -1,0 +1,95 @@
+doctype html
+html.playbody
+  head
+    meta(charset="utf-8")
+    meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href='/stylesheets/DPlayer.min.css')
+    style.
+      .playmagnet{
+        height:100%;
+      }
+      #player{
+        margin-top:-42px;
+      }
+      .inputline{
+        text-align:center;
+      }
+      .inputline .input{
+      width:80%;  
+      height: 38px;
+      line-height: 1.3;
+      line-height: 38px\9;
+      border-width: 1px;
+      border-style: solid;
+      background-color: #fff;
+      border-radius: 2px;}
+      .inputline .btn{
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        background-color: #009688;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+      }
+  body.playbody
+    .playmagnet
+      .inputline
+        input.input(type="text", name="magnet",placeholder="输入magnet开头磁力链接") 
+        button.btn#submagnet 播放
+      #player
+    script(src="https://cdn.jsdelivr.net/webtorrent/latest/webtorrent.min.js")
+    script(src="/javascripts/DPlayer.min.js")
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    script.
+      function getParentUrl() {   
+         var url = null;  
+         if (parent !== window) {   
+             try {  
+                url = parent.location.href;   
+             }catch (e) {   
+                url = document.referrer;   
+             }   
+          }  
+          return url;  
+      }
+      var parenturl = getParentUrl();
+      var antiurl = "#{antiurl}";
+      $("#submagnet").click(function(e) {
+        var magnet = $(".inputline input").val();
+        if(antiurl != ""){
+          if(parenturl != null && parenturl.indexOf("#{antiurl}")==0){
+            var dp = new DPlayer({
+                container: document.getElementById('player'),
+                screenshot: true,
+                lang:  'zh-cn',
+                autoplay: true,
+                mutex: true,
+                video: {
+                    url: magnet,
+                    type: 'webtorrent'
+                }
+            });
+          }
+        } else {
+          var dp = new DPlayer({
+              container: document.getElementById('player'),
+              screenshot: true,
+              lang:  'zh-cn',
+              autoplay: true,
+              mutex: true,
+              video: {
+                  url: magnet,
+                  type: 'webtorrent'
+              }
+          });
+        }
+      });
+      

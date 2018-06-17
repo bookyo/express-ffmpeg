@@ -5,9 +5,11 @@ html.playbody
     meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href='/stylesheets/DPlayer.min.css')
   body.playbody
-    .player
-    script(src="/ckplayer/ckplayer.min.js")
+    #player
+    script(src="/javascripts/hls.min.js")
+    script(src="/javascripts/DPlayer.min.js")
     script.
       function getParentUrl() {   
          var url = null;  
@@ -24,21 +26,39 @@ html.playbody
       var antiurl = "#{antiurl}";
       if(antiurl != ""){
         if(parenturl != null && parenturl.indexOf("#{antiurl}")==0){
-          var videoObject = {
-            container: '.player',//“#”代表容器的ID，“.”或“”代表容器的class
-            variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
-            autoplay:false,//自动播放
-            video:'/videos/#{id}/index.m3u8?token=#{token}'//视频地址
-          };
-          var player=new ckplayer(videoObject);
+          var dp = new DPlayer({
+              container: document.getElementById('player'),
+              screenshot: true,
+              lang:  'zh-cn',
+              autoplay: false,
+              mutex: true,
+              video: {
+                  url: '/videos/#{id}/index.m3u8?token=#{token}',
+                  type: 'hls'
+              },
+              subtitle: {
+                  url: '/videos/#{id}/1.vtt',
+                  fontSize: '25px',
+                  bottom: '10%'
+              }
+          });
         }
       } else {
-        var videoObject = {
-          container: '.player',//“#”代表容器的ID，“.”或“”代表容器的class
-          variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
-          autoplay:false,//自动播放
-          video:'/videos/#{id}/index.m3u8?token=#{token}'//视频地址
-        };
-        var player=new ckplayer(videoObject);
+        var dp = new DPlayer({
+            container: document.getElementById('player'),
+            screenshot: true,
+            lang:  'zh-cn',
+            autoplay: false,
+            mutex: true,
+            video: {
+                url: '/videos/#{id}/index.m3u8?token=#{token}',
+                type: 'hls'
+            },
+            subtitle: {
+                url: '/videos/#{id}/1.vtt',
+                fontSize: '25px',
+                bottom: '10%'
+            }
+        });
       }
       

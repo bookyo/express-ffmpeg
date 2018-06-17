@@ -41,7 +41,20 @@ layui.use(['jquery','form','element','layer','upload'], function(){
           layer.msg("字幕文件上传成功");
         }
       }
-    })
+    });
+    upload.render({
+      elem: ".uploadvtt",
+      url: "/upvtt",
+      field: "vtt",
+      accept: "file",
+      exts: "vtt",
+      method: 'POST',
+      done: function(res, index, upload) {
+        if(res.code==0){
+          layer.msg("vtt字幕文件上传成功");
+        }
+      }
+    });
 });
 $(".zhuanma").click(function(e){
   $.ajax({

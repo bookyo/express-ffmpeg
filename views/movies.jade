@@ -15,7 +15,7 @@ block content
               th 电影名
               th 大小
               th 状态
-              th(width="120px") 操作
+              th(width="200px") 操作
           tbody
             each movie in movies
               tr
@@ -24,6 +24,7 @@ block content
                 td #{movie.status}
                 td
                   .layui-btn-group
+                    button.layui-btn.layui-btn-sm.uploadvtt(lay-data="{data: {id: '#{movie._id}'}}") 上传vtt字幕
                     button.layui-btn.layui-btn-sm.geturl(id="#{movie._id}") 分享链接
                     button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-movie(data-id="#{movie._id}") 删除
         nav.pages
