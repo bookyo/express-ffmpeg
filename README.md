@@ -87,4 +87,4 @@ module.exports = {
 ![转码页面](https://gitee.com/uploads/images/2018/0606/185709_88123554_145248.jpeg "屏幕快照 2018-06-06 下午6.55.37.jpg")
 ![设置页面](https://gitee.com/uploads/images/2018/0606/185721_9fa0c0c5_145248.jpeg "屏幕快照 2018-06-06 下午6.55.56.jpg")
 
-有问题请联系我。
+有问题请联系我，q 195996048，邮mwm0022@qq.com
