@@ -7,7 +7,7 @@
 三、视频批量添加水印。
 四、一键获取分享链接，防盗链设置，只允许指定域名ifream调用，token防盗链等。
 
-文档更新地址：[https://moejj.com/yun-zhuan-ma-qie-pian/](https://moejj.com/yun-zhuan-ma-qie-pian/)   这里不会再更新文档和版本更新内容
+文档更新地址：[https://moejj.com/yun-zhuan-ma-qie-pian/](https://moejj.com/yun-zhuan-ma-qie-pian/)   这里不会再更新文档和版本内容
 
 本开源项目采用nodejs、expressjs、mongodb开发。
 使用前请安装ffmpeg。
