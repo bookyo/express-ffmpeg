@@ -36,6 +36,11 @@ exports.transcode = function(movie,cb){
                 var vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w [out]';
                 if (hd==480) {
                     size = "720x480";
+                } else if (hd==1080) {
+                    size = "1920x1080";
+                    bv = "2000k";
+                    bufsize = "2000k";
+                    maxrate = "2600k";
                 } else {
                     size = "1280x720";
                     bv = "1000k";

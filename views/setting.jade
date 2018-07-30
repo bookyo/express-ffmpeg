@@ -16,9 +16,15 @@ block content
               if setting.hd=="720" || setting.hd==""
                 input(type="radio",name="hd",value="480",title="480P")
                 input(type="radio",name="hd",value="720",title="720P",checked)
+                input(type="radio",name="hd",value="1080",title="1080P")
+              else if setting.hd=="1080"
+                input(type="radio",name="hd",value="480",title="480P")
+                input(type="radio",name="hd",value="720",title="720P")
+                input(type="radio",name="hd",value="1080",title="1080P",checked)
               else
                 input(type="radio",name="hd",value="480",title="480P",checked)
                 input(type="radio",name="hd",value="720",title="720P")
+                input(type="radio",name="hd",value="1080",title="1080P")
           .layui-form-item
             label.layui-form-label 秒切
             .layui-input-block
