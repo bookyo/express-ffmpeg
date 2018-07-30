@@ -1,5 +1,6 @@
 var Movie = require('../models/movie');
 var Setting = require("../models/setting");
+var Fenfa = require("../models/fenfa");
 var FFmpeghelper = require('../helper/ffmpeg');
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
@@ -200,15 +201,66 @@ exports.setting = function(req, res) {
                     wmpath: ""
                 }
             }
-            res.render("setting",{
-                user: req.session.user,
-                title: "云转码设置",
-                setting: newset
-            })
+            Fenfa.find()
+                .exec(function(err, fenfa) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    var newfenfa;
+                    if(fenfa.length>0) {
+                        newfenfa = fenfa[0]
+                    } else {
+                        newfenfa = {
+                            kaiguan: "off",
+                            domains: [""]
+                        }
+                    }
+                    res.render("setting",{
+                        user: req.session.user,
+                        title: "云转码设置",
+                        setting: newset,
+                        fenfa: newfenfa
+                    })
+                });
         })
     
 }
-
+exports.postfenfa = function(req, res) {
+    var kaiguan = req.body.kaiguan;
+    var domains = req.body.domains;
+    if(!kaiguan) {
+        kaiguan = "";
+    }
+    console.log(kaiguan);
+    Fenfa.find()
+        .exec(function(err, fenfa) {
+            if(err) {
+                console.log(err);
+            }
+            console.log(fenfa[0]);
+            if(fenfa.length>0) {
+                fenfa[0].kaiguan = kaiguan;
+                fenfa[0].domains = domains;
+                fenfa[0].save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            } else {
+                var fenfaobj = {
+                    kaiguan: kaiguan,
+                    domains: domains
+                }
+                var newfenfa = new Fenfa(fenfaobj);
+                newfenfa.save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            }
+            res.redirect("/admin/setting");
+        })
+}
 exports.postsetting = function(req, res) {
     var host = req.body.host;
     var hd = req.body.hd;

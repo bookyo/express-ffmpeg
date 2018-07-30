@@ -94,6 +94,15 @@ $(".btn-delete-movie").click(function(e){
     }
   });
 });
+var row = "<div class='layui-input-block mb5'><input type='text' value='' name='domains' placeholder='输入分发域名需要前缀http://或者https://' style='display:inline-block;width:80%;' class='layui-input'><button style='float:right;' class='layui-btn delrow'>删除此行</button></div>";
+$(".addrow").click( function(){
+   $(".domains").append(row);
+   return false;
+});
+$(".domains").on('click', '.delrow', function () {
+    $(this).parent().remove();
+    return false;
+});
 var previewNode = document.querySelector("#template");
 previewNode.id = "";
 var previewTemplate = previewNode.parentNode.innerHTML;

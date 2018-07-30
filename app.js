@@ -7,6 +7,7 @@ var config = require("./config/auth");
 var session = require('express-session');
 var flash = require('connect-flash');
 var jwt = require('jsonwebtoken');
+var fs = require("fs");
 var expressValidator = require('express-validator');
 var mongoose = require("mongoose");
 var MongoStore = require('connect-mongo')(session);
@@ -14,9 +15,11 @@ var routes = require('./routes/index');
 var app = express();
 mongoose.connect("mongodb://" + config.dbuser + ":"+config.dbpassword+"@127.0.0.1/"+config.db);
 var Setting = require('./models/setting');
+var Fenfa = require("./models/fenfa");
 // view engine setup
-app.use("/videos/*/index.m3u8", function(req, res, next){
+app.use("/videos/:id/index.m3u8", function(req, res, next){
   var token = req.query.token;
+  var id = req.params.id;
   Setting.find()
       .exec(function(err, setting) {
         if(err) {
@@ -28,9 +31,41 @@ app.use("/videos/*/index.m3u8", function(req, res, next){
             res.statusCode = 404;
             return res.send("对不起，您没有权限");
           }
-          if(decoded.access == "view"){
-            next();
-          }
+          Fenfa.find()
+              .exec(function(err, fenfa) {
+                if(err) {
+                  console.log(err);
+                }
+                if(fenfa[0].kaiguan=="on"){
+                  var path = "./public/videos/" + id + "/index.m3u8";
+                  var m3u8exists = fs.existsSync(path);
+                  if(m3u8exists) {
+                    var data = fs.readFileSync(path);
+                    var datastring = data.toString('utf-8');
+                    var m3u8arr = datastring.split("index");
+                    var domains = fenfa[0].domains;
+                    var domainslength = fenfa[0].domains.length;
+                    var index = 0;
+                    for (let i = 0; i < m3u8arr.length; i++) {
+                      if(i>0) {
+                        if(index<domainslength){
+                          m3u8arr[i] = domains[index]+"/videos/"+id+"/index"+m3u8arr[i];
+                          index++;
+                        } else {
+                          index = 0;
+                          m3u8arr[i] = domains[index] + "/videos/" + id + "/index" + m3u8arr[i];
+                        }
+                      }
+                    }
+                    var newm3u8 = m3u8arr.join("");
+                    res.send(newm3u8);
+                  }
+                } else {
+                  if(decoded.access == "view"){
+                    next();
+                  }
+                }
+              })
         })
       });
 });

@@ -46,7 +46,8 @@ module.exports = function(app) {
     app.delete("/delete/movie", checkLogin, Admincontroller.delete);
     app.get("/share/:id", Admincontroller.getmovie);
     app.get("/admin/setting", checkLogin, Admincontroller.setting);
-    app.post("/admin/setting", checkLogin, Admincontroller.postsetting);
+    app.post("/admin/setting/basic", checkLogin, Admincontroller.postsetting);
+    app.post("/admin/setting/fenfa", checkLogin, Admincontroller.postfenfa);
     app.post("/ruku", checkLogin, Admincontroller.ruku);
     app.get("/playmagnet", Admincontroller.playmagnet);
     var storage1 = multer.diskStorage({
