@@ -91,6 +91,6 @@ module.exports = {
 ![ts文件域名分发](https://images.gitee.com/uploads/images/2018/0731/102414_be8e1a72_145248.jpeg "屏幕快照 2018-07-31 上午10.18.51.jpg")
 ![上传截图](https://gitee.com/uploads/images/2018/0606/185630_b769b67c_145248.jpeg "屏幕快照 2018-06-06 下午6.55.28.jpg")
 ![转码页面](https://gitee.com/uploads/images/2018/0606/185709_88123554_145248.jpeg "屏幕快照 2018-06-06 下午6.55.37.jpg")
-![设置页面](https://gitee.com/uploads/images/2018/0606/185721_9fa0c0c5_145248.jpeg "屏幕快照 2018-06-06 下午6.55.56.jpg")
+![设置](https://images.gitee.com/uploads/images/2018/0731/102525_c3f5c8ae_145248.jpeg "屏幕快照 2018-07-31 上午10.18.37.jpg")
 
 有问题请联系我，q 195996048，邮mwm0022@qq.com
