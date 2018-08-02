@@ -98,7 +98,7 @@ function ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb){
     .output(des + '/index.mp4')
         .on('start',cb)
         .on('error', function(err, stdout, stderr) {
-            console.log('Cannot process video: ' + err.message);
+            console.log('Cannot process video: ' + path + err.message);
         })
         .on('end', function(){
             chunk(des + "/index.mp4", des, id);

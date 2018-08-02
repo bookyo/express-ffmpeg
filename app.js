@@ -52,8 +52,8 @@ app.use("/videos/:id/index.m3u8", function(req, res, next){
                           m3u8arr[i] = domains[index]+"/videos/"+id+"/index"+m3u8arr[i];
                           index++;
                         } else {
-                          index = 0;
-                          m3u8arr[i] = domains[index] + "/videos/" + id + "/index" + m3u8arr[i];
+                          index = 1;
+                          m3u8arr[i] = domains[0] + "/videos/" + id + "/index" + m3u8arr[i];
                         }
                       }
                     }
