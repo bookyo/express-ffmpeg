@@ -55,13 +55,15 @@ exports.transcode = function(movie,cb){
                     size = videometa.width + "x" + videometa.height;
                 }
                 if(setting[0].miaoqie == "on") {
-                    var vidoewidth;
+                    var videowidth;
                     if(hd == 480) {
-                        vidoewidth = 720;
+                        videowidth = 720;
+                    } else if(hd == 1080) {
+                        videowidth = 1920;
                     } else {
-                        vidoewidth = 1280;
+                        videowidth = 1280;
                     }
-                    if (videometa.width <= vidoewidth && metadata.streams[0].codec_name == "h264") {
+                    if (videometa.width <= videowidth && metadata.streams[0].codec_name == "h264") {
                         if(srtexists) {
                             ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb);
                         } else {
