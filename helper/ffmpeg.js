@@ -24,6 +24,7 @@ exports.transcode = function(movie,cb){
         if(err) {
             console.log(err);
         }
+        console.log(metadata);
         Setting.find()
             .exec(function(err, setting) {
                 var wmimage = setting[0].wmpath;
@@ -31,21 +32,21 @@ exports.transcode = function(movie,cb){
                 var videometa = metadata.streams[0];
                 var size = "";
                 var bv = "500k";
-                var bufsize = "500k";
-                var maxrate = "600k";
+                var bufsize = "1000k";
+                var maxrate = "500k";
                 var vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w [out]';
                 if (hd==480) {
                     size = "720x480";
                 } else if (hd==1080) {
                     size = "1920x1080";
                     bv = "2000k";
-                    bufsize = "2000k";
-                    maxrate = "2600k";
+                    bufsize = "4000k";
+                    maxrate = "2000k";
                 } else {
                     size = "1280x720";
                     bv = "1000k";
-                    bufsize = "1000k";
-                    maxrate = "1400k";
+                    bufsize = "2000k";
+                    maxrate = "1000k";
                 }
                 var srtexists = fs.existsSync(srtpath);
                 if(srtexists) {
@@ -73,12 +74,68 @@ exports.transcode = function(movie,cb){
                         ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb);
                     }
                 } else {
-                    ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb);
+                    ffmpegtransandchunk(path, des, size, bv, bufsize, maxrate, vf, id);
                 }
                 // }
             })
     });
     
+}
+function ffmpegtransandchunk(path, des, size, bv, bufsize, maxrate, vf, id) {
+    ffmpeg(path)
+        .addOptions([
+            '-s ' + size,
+            '-b:v ' + bv,
+            '-vcodec libx264',
+            '-acodec aac',
+            '-ac 2',
+            '-b:a 128k',
+            '-bufsize ' + bufsize,
+            '-maxrate ' + maxrate,
+            '-q:v 6',
+            '-strict -2',
+            '-start_number 0',
+            '-hls_time 10',
+            '-hls_list_size 0',
+            '-f hls'
+        ])
+        .addOption('-vf', vf)
+        .output(des + '/index.mp4')
+        .on('start', function(){
+            screenshots(path, des);
+            Movie.findOne({_id:id})
+                .exec(function(err,movie) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    movie.status = "trans&chunk";
+                    movie.save(function(err) {
+                        console.log(err);
+                    })
+                });
+        })
+        .on('error', function (err, stdout, stderr) {
+            console.log('Cannot process video: ' + path + err.message);
+        })
+        .on('end', function () {
+            Movie.findOne({_id:id})
+            .exec(function(err,movie){
+                if(err){
+                    console.log(err);
+                }
+                fs.unlinkSync(movie.path);
+                fs.exists(des+"/index.mp4", function(exists) {
+                    if(exists) {
+                        fs.unlinkSync(des + '/index.mp4');
+                    }
+                });
+                movie.status = "finished";
+                movie.save(function(err){
+                    console.log(err);
+                })
+            })
+        })
+        .run()
 }
 function ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb){
     ffmpeg(path)

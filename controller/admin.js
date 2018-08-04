@@ -1,7 +1,7 @@
 var Movie = require('../models/movie');
 var Setting = require("../models/setting");
 var Fenfa = require("../models/fenfa");
-var FFmpeghelper = require('../helper/ffmpeg');
+var FFmpeghelper = require('../helper/newffmpeg');
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var path = require('path');
@@ -116,18 +116,7 @@ exports.transcode = function(req, res) {
                 console.log(err);
             }
             for (let i = 0; i < movies.length; i++) {
-                FFmpeghelper.transcode(movies[i],function(){
-                    Movie.findOne({_id:movies[i]._id})
-                        .exec(function(err,movie){
-                            if(err){
-                                console.log(err);
-                            }
-                            movie.status = "transcoding";
-                            movie.save(function(err) {
-                                console.log(err);
-                            })
-                        })
-                });
+                FFmpeghelper.transcode(movies[i]);
             }
             res.json({
                 success: 1
