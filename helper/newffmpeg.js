@@ -154,12 +154,18 @@ function ffmpegtransandchunk(des, path, config, vf, id) {
         .run()
 }
 function screenshots(path, des) {
-    ffmpeg(path)
-        .screenshots({
-            count: 4,
-            filename: "%i.jpg",
-            folder: des
-        });
+    Setting.find()
+        .exec(function(err, setting) {
+            if(err) {
+                console.log(err);
+            }
+            ffmpeg(path)
+                .screenshots({
+                    count: setting[0].screenshots,
+                    filename: "%i.jpg",
+                    folder: des
+                });
+        });  
 }
 function chunk(path, des, id, config, vf) {
     ffmpeg(path)

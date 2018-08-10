@@ -7,6 +7,7 @@ var SettingSchema = new Schema({
     antikey: String,
     wmpath: String,
     miaoqie: String,
+    screenshots: Number,
     createAt: {
         type: Date,
         default: Date.now()

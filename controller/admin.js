@@ -188,7 +188,9 @@ exports.setting = function(req, res) {
                     hd: "",
                     antiurl: "",
                     antikey: "",
-                    wmpath: ""
+                    wmpath: "",
+                    miaoqie: "",
+                    screenshots: 0
                 }
             }
             Fenfa.find()
@@ -258,6 +260,7 @@ exports.postsetting = function(req, res) {
     var antikey = req.body.key;
     var wmpath = req.body.watermark;
     var miaoqie = req.body.miaoqie;
+    var screenshots = req.body.screenshots;
     if(!miaoqie) {
         miaoqie = "";
     }
@@ -273,6 +276,7 @@ exports.postsetting = function(req, res) {
                 setting[0].wmpath = wmpath;
                 setting[0].antiurl = antiurl;
                 setting[0].miaoqie = miaoqie;
+                setting[0].screenshots = screenshots;
                 setting[0].save(function(err) {
                     if(err) {
                         console.log(err);
@@ -284,6 +288,8 @@ exports.postsetting = function(req, res) {
                     hd: hd,
                     antiurl: antiurl,
                     antikey: antikey,
+                    miaoqie: miaoqie,
+                    screenshots: screenshots,
                     wmpath: wmpath
                 }
                 var setting = new Setting(settingobj);

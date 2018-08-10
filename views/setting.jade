@@ -47,6 +47,10 @@ block content
                   .layui-input-block
                     input.layui-input(type="text",value="#{setting.antikey}",name="key",placeholder="推荐八位英文数字组合")
                 .layui-form-item
+                  label.layui-form-label 生成截图数
+                  .layui-input-block
+                    input.layui-input(type="number",value="#{setting.screenshots}",name="screenshots",placeholder="输入生成截图数")
+                .layui-form-item
                   label.layui-form-label 水印
                   .layui-input-inline
                     img.watermark(src="")
