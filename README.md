@@ -1,4 +1,16 @@
-# 云转码切片平台 linux版本
+# 自带CMS系统的云转码系统，一体化自动发布云转码cms系统
+
+## 2018年9月4日大更新
+这次完全更改了项目了定位，云转码不再是简单的云转码系统，而是CMS系统+云转码系统一体化，自带整个完备的并且对移动端友好的，而且非常利于SEO优化的自适应CMS系统，根据后台的分类系统和门户CMS管理系统，直接在首页达成完备的在线视频播放系统，适用于在线教育、企业内部培训视频、在线视频自媒体门户等多种运用方向。这次更新完善了视频的分类系统，完善了视频的搜索功能。
+
+一体化自动发布云转码系统截图：
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192811_2f198ea3_145248.jpeg "在这里输入图片标题")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192833_58d6b693_145248.jpeg "FireShot Capture 3 - 在线教育，美丽人生 - http___localhost_3000_.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192842_6a95e52a_145248.jpeg "FireShot Capture 4 - 门户cms设置 - http___localhost_3000_admin_portal.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192851_cfc5123c_145248.jpeg "FireShot Capture 5 - 分类管理 - http___localhost_3000_admin_categories.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192907_42fa526f_145248.jpeg "FireShot Capture 6 - 全部电影库 - http___localhost_3000_admin_movies.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192931_5918d089_145248.jpeg "FireShot Capture 8 - [喵萌奶茶屋][繁体中文][与僧侣交合的色欲之_ - http___localhost_3000_movie_5b8e49643c3ee95a185469a7.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/193021_c2a5a140_145248.jpeg "FireShot Capture 7 - [喵萌奶茶屋][繁体中文][与僧侣交合的色欲之_ - http___localhost_3000_movie_5b8e49643c3ee95a185469a7.jpg")
 
 #### 项目介绍
 主要实现功能：
@@ -6,6 +18,7 @@
 二、视频批量转码并且切片，切片完成删除原视频文件。
 三、视频批量添加水印。
 四、一键获取分享链接，防盗链设置，只允许指定域名ifream调用，token防盗链等。
+五、自带完备的CMS系统。
 
 文档更新地址：[https://moejj.com/yun-zhuan-ma-qie-pian/](https://moejj.com/yun-zhuan-ma-qie-pian/)   
 官网地址：[http://ffmpeg.moejj.com](http://ffmpeg.moejj.com)
@@ -97,7 +110,6 @@ module.exports = {
 #### 截图
 ![ts文件域名分发](https://images.gitee.com/uploads/images/2018/0731/102414_be8e1a72_145248.jpeg "屏幕快照 2018-07-31 上午10.18.51.jpg")
 ![上传截图](https://gitee.com/uploads/images/2018/0606/185630_b769b67c_145248.jpeg "屏幕快照 2018-06-06 下午6.55.28.jpg")
-![转码页面](https://gitee.com/uploads/images/2018/0606/185709_88123554_145248.jpeg "屏幕快照 2018-06-06 下午6.55.37.jpg")
 ![设置](https://images.gitee.com/uploads/images/2018/0731/102525_c3f5c8ae_145248.jpeg "屏幕快照 2018-07-31 上午10.18.37.jpg")
 
 有问题请联系我，q 195996048，邮mwm0022@qq.com
