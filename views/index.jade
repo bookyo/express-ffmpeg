@@ -1,8 +1,11 @@
 extends cmslayout
 block header
-  title #{portal.seotitle}
-  meta(name="keywords",content="#{portal.keywords}")
-  meta(name="description",content="#{portal.description}")
+  if currentcategory
+    title #{currentcategory} - #{portal.title}
+  else
+    title #{portal.seotitle}
+    meta(name="keywords",content="#{portal.keywords}")
+    meta(name="description",content="#{portal.description}")
 block content
   .layui-container.mt-20
     .layui-row.layui-col-space20
