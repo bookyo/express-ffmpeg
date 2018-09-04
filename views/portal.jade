@@ -1,0 +1,42 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 门户CMS设置
+        form.layui-form(method="post",action="")
+          .layui-form-item
+            label.layui-form-label 是否开启
+            .layui-input-block
+              if portal.kaiguan=="on"
+                input(type="checkbox",name="kaiguan",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input(type="checkbox",name="kaiguan",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
+            label.layui-form-label 站点网址
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.host}",name="host",placeholder="网址，需带http://或者https://前缀")
+          .layui-form-item
+            label.layui-form-label 显示截图数
+            .layui-input-block
+              input.layui-input(type="number",value="#{portal.screenshots}",name="screenshots",placeholder="视频页面显示截图数")
+          .layui-form-item
+            label.layui-form-label 站点名称
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.title}",name="title",placeholder="输入站点名称，显示在logo处。")
+          .layui-form-item
+            label.layui-form-label seo标题
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.seotitle}",name="seotitle",placeholder="输入seo标题，显示在首页title中。") 
+          .layui-form-item
+            label.layui-form-label Keywords
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.keywords}",name="keywords",placeholder="输入seo的关键字")
+          .layui-form-item
+            label.layui-form-label Description
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.description}",name="description",placeholder="输入seo的描述")
+          .layui-form-item
+            .layui-input-block
+              button.layui-btn(lay-submit,lay-filter="submitportal") 提交

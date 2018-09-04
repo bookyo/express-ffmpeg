@@ -5,13 +5,26 @@ block content
     .layui-row
       .layui-col-md8.layui-col-md-offset2
         h1.title 全部电影库
-        .layui-btn-group#actions
-          button.layui-btn.zhuanma 转码并切片
-          button.layui-btn.ruku 扫描入库
-          button.layui-btn.zimu 上传字幕
+        .flex
+          .layui-btn-group#actions
+            button.layui-btn.zhuanma 转码并切片
+            button.layui-btn.ruku 扫描入库
+            button.layui-btn.zimu 上传字幕
+          form.layui-form(action="").float-right
+            .layui-form-item
+              label.layui-form-label 搜索
+              .layui-input-inline
+                input.layui-input(type="text", name="keyword", placeholder="搜索视频，ID或者标题")
+        .layui-form
+          .layui-inline
+            select(name="shaixuan" lay-search lay-filter="shaixuan")
+              option(value="") 筛选视频
+              each category in categories
+                option(value="#{category.title}") #{category.title}
         table.layui-table
           thead
             tr
+              th 分类
               th 电影名
               th 大小
               th 状态
@@ -19,6 +32,7 @@ block content
           tbody
             each movie in movies
               tr
+                td #{movie.category}
                 td #{movie.originalname}
                 td #{parseInt(movie.size/1000000)}MB
                 td #{movie.status}
@@ -26,10 +40,18 @@ block content
                   .layui-btn-group
                     button.layui-btn.layui-btn-sm.uploadvtt(lay-data="{data: {id: '#{movie._id}'}}") 上传vtt字幕
                     button.layui-btn.layui-btn-sm.geturl(id="#{movie._id}") 分享链接
+                    button.layui-btn.layui-btn-sm.category(data-id="#{movie._id}") 分类
                     button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-movie(data-id="#{movie._id}") 删除
         nav.pages
-          if( pages> 1) 
+          if( pages> 1)
             ul.pagination
               != createPagination(pages, page)
+        .addcategory.layui-form
+          select.selectcategory(name="category" lay-filter="" lay-search)
+            option(value="") 请选择分类
+            each category in categories
+              option(value="#{category.title}") #{category.title}
+          input.layui-input.inputcategory(type="text" placeholder="添加分类，多个分类以英文半角,分开")
+          button.layui-btn.layui-btn-sm.doaddcategory 保存
         
           

@@ -17,6 +17,41 @@ layui.use(['jquery','form','element','layer','upload'], function(){
         content:'<div class="share-url"><p>分享链接：（点击进入）</p><a href="/share/'+id+'" target="_blank">/share/'+id+'</a></div>'
       })
     });
+    $(".category").click(function(e) {
+      var id = $(e.target).data("id");
+      $('.addcategory').attr('data-id',id);
+      layer.open({
+        type:1,
+        title:"设置或添加分类",
+        area: ['auto', '300px'],
+        shadeClose: true,
+        content: $('.addcategory')
+      })
+    });
+    $(".doaddcategory").click(function(e) {
+      var id = $(this).parent().data("id");
+      var selectcategory = $('.selectcategory').val();
+      var inputcategory = $('.inputcategory').val();
+      $.ajax({
+        type: "post",
+        url: "/addcategory",
+        data: {selectcategory: selectcategory,inputcategory: inputcategory,id: id},
+        dataType: "JSON",
+        success: function (response) {
+          if(response.success==1) {
+            location.reload();
+          }
+        }
+      });
+    });
+    $(".add-category-btn").click(function(e) {
+      layer.open({
+        type:1,
+        title:"添加分类",
+        shadeClose: true,
+        content: $('.addcategory')
+      })
+    });
     upload.render({
       elem: '#upload-wm',
       url: '/upwm',
@@ -55,6 +90,9 @@ layui.use(['jquery','form','element','layer','upload'], function(){
         }
       }
     });
+    form.on('select(shaixuan)', function(data) {
+      window.location = "/admin/movies?category=" + data.value;
+    });
 });
 $(".zhuanma").click(function(e){
   $.ajax({
@@ -79,7 +117,20 @@ $(".ruku").click(function(e) {
       }
     }
   });
-})
+});
+$(".btn-delete-category").click(function(e) {
+  var id = $(e.target).data("id");
+  $.ajax({
+    type: "DELETE",
+    url: "/delete/category?id="+id,
+    dataType: "JSON",
+    success: function (response) {
+      if(response.success == 1) {
+        location.reload();
+      }
+    }
+  });
+});
 $(".btn-delete-movie").click(function(e){
   var target = $(e.target);
   var id = target.data("id");

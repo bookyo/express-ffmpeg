@@ -1,5 +1,7 @@
 var auth = require("../config/auth");
 var Admincontroller = require("../controller/admin");
+var Cmscontroller = require("../controller/cms");
+var Portal = require('../models/portal');
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -44,12 +46,20 @@ module.exports = function(app) {
     app.post("/upload", checkLogin, posttimeout, upload.single('file'), Admincontroller.postupload);
     app.post("/transcode", checkLogin, Admincontroller.transcode);
     app.delete("/delete/movie", checkLogin, Admincontroller.delete);
+    app.delete("/delete/category",checkLogin, Admincontroller.delcategory);
     app.get("/share/:id", Admincontroller.getmovie);
+    app.get("/", Cmscontroller.index);
+    app.get("/movie/:id", checkopen, Cmscontroller.getmovie);
+    app.get("/category/:category", checkopen, Cmscontroller.getcategory);
     app.get("/admin/setting", checkLogin, Admincontroller.setting);
     app.post("/admin/setting/basic", checkLogin, Admincontroller.postsetting);
     app.post("/admin/setting/fenfa", checkLogin, Admincontroller.postfenfa);
     app.post("/ruku", checkLogin, Admincontroller.ruku);
     app.get("/playmagnet", Admincontroller.playmagnet);
+    app.post("/addcategory", checkLogin, Admincontroller.addcategory);
+    app.get("/admin/categories", checkLogin, Admincontroller.getCategories);
+    app.get("/admin/portal", checkLogin, Admincontroller.portal);
+    app.post("/admin/portal", checkLogin, Admincontroller.postportal);
     var storage1 = multer.diskStorage({
       destination: function (req, file, cb) {
         cb(null, './public/mark');
@@ -86,5 +96,23 @@ module.exports = function(app) {
         return res.redirect('/admin');
       }
       next();
+    }
+    function checkopen(req, res, next) {
+      Portal.find()
+          .exec(function(err, portals) {
+            if(err) {
+              console.log(err);
+            }
+            if(portals.length>0) {
+              if(portals[0].kaiguan=="on"){
+                req.portal = portals[0];
+                return next();
+              } else {
+                return res.status(404).send('对不起，cms未开启');
+              }
+            } else {
+              return res.status(404).send('对不起，cms未开启');
+            }
+          })
     }
 };

@@ -2,6 +2,8 @@ var Movie = require('../models/movie');
 var Setting = require("../models/setting");
 var Fenfa = require("../models/fenfa");
 var FFmpeghelper = require('../helper/newffmpeg');
+var Category = require("../models/category");
+var Portal = require("../models/portal");
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var path = require('path');
@@ -85,26 +87,74 @@ exports.postupload = function(req, res) {
 exports.getmovies = function(req, res) {
     var page = req.query.page > 0 ? req.query.page : 1;
     var perPage = 10;
-    Movie
-        .find()
-        .sort('-createAt')
-        .limit(perPage)
-        .skip(perPage * (page-1))
-        .exec(function(err, movies) {
-            if(err) {
-                console.log(err);
-            }
-            Movie.find().count(function (err, count){
-                res.render("movies", {
-                    user: req.session.user,
-                    title: "全部电影库",
-                    movies: movies,
-                    page: page,
-                    pages: Math.ceil(count / perPage)
+    var keyword = req.query.keyword;
+    if(keyword&&keyword!=""){
+        var reg = /^[A-Za-z0-9]{24}$/;
+        if(reg.test(keyword)) {
+            Movie
+                .find({_id: keyword})
+                .exec(function(err, movies) {
+                    Category.find()
+                        .exec(function(err,categories) {
+                            return res.render("movies", {
+                                user: req.session.user,
+                                title: '搜索结果',
+                                movies: movies,
+                                categories: categories,
+                                page: 1,
+                                pages: 1
+                            })
+                        })
                 })
+        } else {
+            var reg = new RegExp(keyword);
+            Movie
+                .find({originalname: reg})
+                .exec(function(err, movies) {
+                    Category.find()
+                        .exec(function(err,categories) {
+                            return res.render("movies", {
+                                user: req.session.user,
+                                title: '搜索结果',
+                                movies: movies,
+                                categories: categories,
+                                page: 1,
+                                pages: 1
+                            })
+                        })
+                })
+        }
+    } else {
+        var category = req.query.category;
+        var search = {};
+        if(category&&category!=""){
+            search = {category: category};
+        }
+        Movie
+            .find(search)
+            .sort('-createAt')
+            .limit(perPage)
+            .skip(perPage * (page-1))
+            .exec(function(err, movies) {
+                if(err) {
+                    console.log(err);
+                }
+                Movie.find().count(function (err, count){
+                    Category.find()
+                        .exec(function(err, categories) {
+                            res.render("movies", {
+                                user: req.session.user,
+                                title: "全部电影库",
+                                movies: movies,
+                                categories: categories,
+                                page: page,
+                                pages: Math.ceil(count / perPage)
+                            })
+                        })
+                })
+                
             })
-            
-        })
+    }
     
 }
 
@@ -145,7 +195,15 @@ exports.delete = function(req,res) {
             })
          });
 }
-
+exports.delcategory = function(req, res) {
+    var id = req.query.id;
+    Category.deleteOne({_id: id}, function(err) {
+        if(err) {
+            console.log(err);
+        }
+        res.json({success:1});
+    })
+}
 exports.getmovie = function(req, res) {
     var id = req.params.id;
     Movie.findOne({_id:id})
@@ -385,7 +443,124 @@ exports.ruku = function(req, res) {
         res.json({success: 1});
     });
 }
-
+exports.addcategory = function(req, res) {
+    var id = req.body.id;
+    var inputcategory = req.body.inputcategory;
+    var selectcategory = req.body.selectcategory;
+    if(selectcategory&&selectcategory!="") {
+        Movie.findOne({_id: id})
+            .exec(function(err, movie) {
+                if(err) {
+                    console.log(err);
+                }
+                movie.category = selectcategory;
+                movie.save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            })
+    }
+    if(inputcategory&&inputcategory!="") {
+        var categoryarr = inputcategory.split(",");
+        var newcategoryarr = [];
+        categoryarr.forEach(element => {
+            newcategoryarr.push({title: element});
+        });
+        Category.insertMany(newcategoryarr, function(err) {
+            if(err) {
+                console.log(err);
+            }
+        });
+    }
+    res.json({
+        success:1
+    });
+}
+exports.getCategories = function(req, res) {
+    Category.find()
+        .exec(function(err, categories) {
+            if(err) {
+                console.log(err);
+            }
+            res.render('categories', {
+                title:"分类管理",
+                categories: categories
+            })
+        })
+}
+exports.portal = function(req, res) {
+    var portal;
+    Portal.find()
+        .exec(function(err, portals) {
+            if(err) {
+                console.log(err);
+            }
+            if(portals.length>0) {
+                portal=portals[0];
+            } else {
+                portal = {
+                    title: '',
+                    seotitle: '',
+                    kaiguan: '',
+                    host: '',
+                    screenshots: 0,
+                    keywords: '',
+                    description: ''
+                }
+            }
+            res.render('portal', {
+                title: '门户cms设置',
+                portal: portal
+            })
+        });
+}
+exports.postportal = function(req, res) {
+    var title = req.body.title;
+    var seotitle = req.body.seotitle;
+    var keywords = req.body.keywords;
+    var kaiguan = req.body.kaiguan;
+    var host = req.body.host;
+    var screenshots = req.body.screenshots;
+    var description = req.body.description;
+    Portal.find()
+        .exec(function(err, portals) {
+            if(err) {
+                console.log(err);
+            }
+            if(portals.length>0) {
+                portals[0].screenshots = screenshots;
+                portals[0].host = host;
+                portals[0].title = title;
+                portals[0].seottile = seotitle;
+                portals[0].kaiguan = kaiguan;
+                portals[0].keywords = keywords;
+                portals[0].description = description;
+                portals[0].save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            } else {
+                var portalobj = {
+                    host: host,
+                    screenshots: screenshots,
+                    title: title,
+                    seotitle: seotitle,
+                    keywords: keywords,
+                    kaiguan: kaiguan,
+                    description: description,
+                }
+                var newportal = new Portal(portalobj);
+                newportal.save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            }
+            res.redirect("/admin/portal");
+        })
+}
 function deleteall(path) {
     var files = [];
     if (fs.existsSync(path)) {

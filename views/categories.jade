@@ -1,0 +1,27 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 全部分类
+        .flex
+          .layui-btn-group#actions
+            button.layui-btn.add-category-btn 添加分类
+        table.layui-table
+          thead
+            tr
+              th 分类
+              th(width="200px") 操作
+          tbody
+            each category in categories
+              tr
+                td #{category.title}
+                td
+                  .layui-btn-group
+                    button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-category(data-id="#{category._id}") 删除
+  .addcategory.layui-form
+    input.layui-input.inputcategory(type="text" placeholder="添加分类，多个分类以英文半角,分开")
+    button.layui-btn.layui-btn-sm.doaddcategory 添加
+        
+          
