@@ -39,6 +39,7 @@ ffmpeg.ffprobe(path,function(err,metadata){
             var config = [];
             var videooriginH = 0;
             var videooriginC = "";
+            var audiooriginC = "";
             if(!wmimage || wmimage == "") {
                 wmimage = markdir;
             }
@@ -74,6 +75,12 @@ ffmpeg.ffprobe(path,function(err,metadata){
                     break;
                 }
             }
+            for (var i = 0; i < videostreams.length; i++) {
+                if (videostreams[i].codec_type == 'audio') {
+                    audiooriginC = videostreams[i].codec_name;
+                    break;
+                }
+            }
             size = wd + "x" + hd;
             var srtexists = fs.existsSync(srtpath);
             if(srtexists) {
@@ -96,7 +103,7 @@ ffmpeg.ffprobe(path,function(err,metadata){
                 '-f hls'
             ];
             if(setting[0].miaoqie == "on") {
-                if (videooriginH <= setting[0].hd * 1 && videooriginC == "h264") {
+                if (videooriginH <= setting[0].hd * 1 && videooriginC == "h264" && audiooriginC == "aac") {
                     if(srtexists) {
                         ffmpegtransandchunk(des, path, config, vf, id);
                     } else {
