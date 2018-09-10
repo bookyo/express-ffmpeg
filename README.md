@@ -114,6 +114,7 @@ module.exports = {
 
 
 #### 截图
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0910/120203_ea18551d_145248.png "播放器设置 - http___localhost_3000_admin_bofangqi.png")
 ![ts文件域名分发](https://images.gitee.com/uploads/images/2018/0731/102414_be8e1a72_145248.jpeg "屏幕快照 2018-07-31 上午10.18.51.jpg")
 ![上传截图](https://gitee.com/uploads/images/2018/0606/185630_b769b67c_145248.jpeg "屏幕快照 2018-06-06 下午6.55.28.jpg")
 ![设置](https://images.gitee.com/uploads/images/2018/0731/102525_c3f5c8ae_145248.jpeg "屏幕快照 2018-07-31 上午10.18.37.jpg")
