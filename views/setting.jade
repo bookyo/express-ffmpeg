@@ -53,7 +53,9 @@ block content
                 .layui-form-item
                   label.layui-form-label 水印
                   .layui-input-inline
-                    img.watermark(src="")
+                    - var imgpath = setting.wmpath.split("/");
+                    - var path = '/'+imgpath[2]+'/'+imgpath[3];
+                    img.watermark(src="#{path}")
                     .layui-btn#upload-wm
                       i.layui-icon &#xe67c;
                       | 上传水印

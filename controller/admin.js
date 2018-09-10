@@ -4,6 +4,7 @@ var Fenfa = require("../models/fenfa");
 var FFmpeghelper = require('../helper/newffmpeg');
 var Category = require("../models/category");
 var Portal = require("../models/portal");
+var Player = require("../models/player");
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var path = require('path');
@@ -220,14 +221,21 @@ exports.getmovie = function(req, res) {
                     if(err) {
                         console.log(err);
                     }
-                    var token = jwt.sign({access: "view"},setting[0].antikey,{expiresIn: '1h'});
-                    res.render("movie",{
-                        user:req.session.user,
-                        title: movie.originalname+"在线播放",
-                        id:id,
-                        token: token,
-                        antiurl: setting[0].antiurl
-                    })
+                    Player.find()
+                        .exec(function(err, players) {
+                            if(err) {
+                                console.log(err);
+                            }
+                            var token = jwt.sign({access: "view"},setting[0].antikey,{expiresIn: '1h'});
+                            res.render("movie",{
+                                user:req.session.user,
+                                title: movie.originalname+"在线播放",
+                                id:id,
+                                token: token,
+                                player: players[0],
+                                antiurl: setting[0].antiurl
+                            })
+                        })
                 })
         })
 }
@@ -246,7 +254,7 @@ exports.setting = function(req, res) {
                     hd: "",
                     antiurl: "",
                     antikey: "",
-                    wmpath: "",
+                    wmpath: "./public/mark/mark.png",
                     miaoqie: "",
                     screenshots: 0
                 }
@@ -559,6 +567,123 @@ exports.postportal = function(req, res) {
                 })
             }
             res.redirect("/admin/portal");
+        })
+}
+
+exports.bofangqi = function(req, res) {
+   var player;
+   Player.find()
+       .exec(function(err, players) {
+           if(err) {
+               console.log(err);
+           }
+           if(players.length>0) {
+               player=players[0];
+           } else {
+               player = {
+                   kaiguan: '',
+                   mark: '/mark/mark.png',
+                   position: 'lefttop',
+                   markx: 20,
+                   marky: 20,
+                   font: 'Microsoft Yahei',
+                   fontsize: 14,
+                   opacity: 0.8,
+                   bold: 'on',
+                   color: '#701919',
+                   text: '云转码express-ffmpeg',
+                   wenzikaiguan: 'on',
+                   italic: 'on',
+                   underline: 'on',
+                   link: 'http://ffmpeg.moejj.com',
+                   wenziposition: 'lefttop',
+                   wenzix: 20,
+                   wenziy: 20
+               }
+           }
+           res.render('adminplayer', {
+               title: '播放器设置',
+               player: player
+           })
+       });
+}
+exports.postbofangqi = function(req, res) {
+    var kaiguan = req.body.kaiguan;
+    var position = req.body.position;
+    var mark = req.body.watermark;
+    var markx = req.body.markx;
+    var marky = req.body.marky;
+    var wenzikaiguan = req.body.wenzikaiguan;
+    var font = req.body.font;
+    var fontsize = req.body.fontsize;
+    var opacity = req.body.opacity;
+    var link = req.body.link;
+    var wenziposition = req.body.wenziposition;
+    var wenzix = req.body.wenzix;
+    var wenziy = req.body.wenziy;
+    var color = req.body.color;
+    var bold = req.body.bold;
+    var text = req.body.text;
+    var italic = req.body.italic;
+    var underline = req.body.underline;
+    Player.find()
+        .exec(function(err, players) {
+            if(err) {
+                console.log(err);
+            }
+            if(players.length>0) {
+                players[0].kaiguan = kaiguan;
+                players[0].mark = mark;
+                players[0].position = position;
+                players[0].markx = markx;
+                players[0].marky = marky;
+                players[0].wenzikaiguan = wenzikaiguan;
+                players[0].font = font;
+                players[0].fontsize = fontsize;
+                players[0].opacity = opacity;
+                players[0].link = link;
+                players[0].wenziposition = wenziposition;
+                players[0].wenzix = wenzix;
+                players[0].wenziy = wenziy;
+                players[0].color = color;
+                players[0].bold = bold;
+                players[0].text = text;
+                players[0].italic = italic;
+                players[0].underline = underline;
+                players[0].save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            } else {
+                var playerobj = {
+                    kaiguan: kaiguan,
+                    mark: mark,
+                    position: position,
+                    markx: markx,
+                    marky: marky,
+                    text: text,
+                    wenzikaiguan: wenzikaiguan,
+                    font: font,
+                    fontsize: fontsize,
+                    opacity: opacity,
+                    bold: bold,
+                    color: color,
+                    underline: underline,
+                    italic: italic,
+                    link: link,
+                    wenziposition: wenziposition,
+                    wenzix: wenzix,
+                    wenziy: wenziy
+                };
+                var newplayer = new Player(playerobj);
+                newplayer.save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            }
+            res.redirect("/admin/bofangqi");
         })
 }
 function deleteall(path) {

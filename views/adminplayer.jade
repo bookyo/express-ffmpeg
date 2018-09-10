@@ -1,0 +1,104 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 播放器配置
+        form.layui-form(method="post",action="")
+          .layui-form-item
+            label.layui-form-label 开启水印
+            .layui-input-block
+              if player.kaiguan=="on"
+                input(type="checkbox",name="kaiguan",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input(type="checkbox",name="kaiguan",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
+            label.layui-form-label 上传水印
+            .layui-input-inline
+              img.watermark(src="#{player.mark}")
+              .layui-btn#upload-player-mark
+                i.layui-icon &#xe67c;
+                | 上传水印
+              input#input-player-mark(type="hidden",name="watermark",value="#{player.mark}")
+            .layui-form-mid.layui-word-aux 播放器水印请与视频水印不同文件名
+          .layui-form-item
+            label.layui-form-label 位置
+            .layui-input-block
+              input(type="radio" name="position" value="lefttop" title="左上" checked=player.position==="lefttop"?true:false)
+              input(type="radio" name="position" value="leftbottom" title="左下" checked=player.position==="leftbottom"?true:false)
+              input(type="radio" name="position" value="righttop" title="右上" checked=player.position==="righttop"?true:false)
+              input(type="radio" name="position" value="rightbottom" title="右下" checked=player.position==="rightbottom"?true:false)
+          .layui-form-item
+            .layui-inline
+              label.layui-form-label 水平距离
+              .layui-input-inline
+                input.layui-input(type="number" name="markx" value="#{player.markx}")
+            .layui-inline
+              label.layui-form-label 垂直距离
+              .layui-input-inline
+                input.layui-input(type="number" name="marky", value="#{player.marky}")
+          .layui-form-item
+            label.layui-form-label 文字广告
+            .layui-input-block
+              if player.wenzikaiguan=="on"
+                input(type="checkbox",name="wenzikaiguan",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input(type="checkbox",name="wenzikaiguan",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
+            label.layui-form-label 广告内容
+            .layui-input-block
+              input.layui-input(type="text",name="text",value="#{player.text}")
+          .layui-form-item
+            label.layui-form-label 文字字体
+            .layui-input-inline
+              input.layui-input(type="text",name="font",value="#{player.font}")
+            .layui-form-mid.layui-word-aux 常见字体：宋体，楷体，Microsoft YaHei，黑体
+          .layui-form-item
+            label.layui-form-label 文字大小
+            .layui-input-inline
+              input.layui-input(type="number",name="fontsize",value="#{player.fontsize}")
+            .layui-form-mid.layui-word-aux 常见字体大小范围：14-30，填入数字无需加px
+          .layui-form-item
+            label.layui-form-label 文字透明度
+            .layui-input-inline
+              input.layui-input(type="number",name="opacity",step="0.1",value="#{player.opacity}")
+            .layui-form-mid.layui-word-aux 范围：0-1，小写一位数
+          .layui-form-item
+            label.layui-form-label 文字颜色
+            .layui-input-inline
+              input.layui-input.inputcolor(type="text",name="color",value="#{player.color}",placeholder="请选择颜色")
+            .layui-inline
+              #selectcolor
+          .layui-form-item
+            label.layui-form-label 文字样式
+            .layui-input-block
+              input(type="checkbox",name="bold",title="加粗",checked=player.bold==="on"?true:false)
+              input(type="checkbox",name="italic",title="斜体",checked=player.italic==="on"?true:false)
+              input(type="checkbox",name="underline",title="下划线",checked=player.underline==="on"?true:false)
+          .layui-form-item
+            label.layui-form-label 广告链接
+            .layui-input-block
+              input.layui-input(type="text",name="link",value="#{player.link}")
+          .layui-form-item
+            label.layui-form-label 广告位置
+            .layui-input-block
+              input(type="radio" name="wenziposition" value="lefttop" title="左上" checked=player.wenziposition==="lefttop"?true:false)
+              input(type="radio" name="wenziposition" value="leftbottom" title="左下" checked=player.wenziposition==="leftbottom"?true:false)
+              input(type="radio" name="wenziposition" value="righttop" title="右上" checked=player.wenziposition==="righttop"?true:false)
+              input(type="radio" name="wenziposition" value="rightbottom" title="右下" checked=player.wenziposition==="rightbottom"?true:false)
+          .layui-form-item
+            .layui-inline
+              label.layui-form-label 广告水平距离
+              .layui-input-inline
+                input.layui-input(type="number" name="wenzix" value="#{player.wenzix}")
+            .layui-inline
+              label.layui-form-label 广告垂直距离
+              .layui-input-inline
+                input.layui-input(type="number" name="wenziy", value="#{player.wenziy}")
+          .layui-form-item
+            .layui-input-block
+              button.layui-btn(lay-submit,lay-filter="submitplayer") 提交
+          style.
+            .layui-form-label{width:100px;}
+            .layui-input-block{margin-left:130px;}

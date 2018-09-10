@@ -93,6 +93,7 @@ div.table {
   border: 1px solid #ddd;
 }
 #player{
+  position: relative;
   width:100%;
   height:100%;
 }
@@ -100,6 +101,7 @@ div.table {
   padding:15px;
 }
 .playbody{
+  position: relative;
   background-color: black;
   padding: 0;
   margin: 0;
@@ -223,6 +225,9 @@ body.gray {
   text-align:center;
   padding: 20px 0;
   font-size:14px;
+}
+.watermark{
+  background-color:#000;
 }
 @media (min-width: 768px) {
   .col-md-4 {

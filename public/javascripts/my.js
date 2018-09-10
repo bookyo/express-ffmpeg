@@ -1,9 +1,10 @@
-layui.use(['jquery','form','element','layer','upload'], function(){
+layui.use(['jquery','form','colorpicker','element','layer','upload'], function(){
     var form = layui.form;
     var $ = layui.$;
     var element = layui.element;
     var layer = layui.layer;
     var upload = layui.upload;
+    var colorpicker = layui.colorpicker;
     form.on('submit(loginform)', function(data){
         $("#login").submit();
         return false;
@@ -66,6 +67,19 @@ layui.use(['jquery','form','element','layer','upload'], function(){
       }
     });
     upload.render({
+      elem: '#upload-player-mark',
+      url: '/upwm',
+      field: "img",
+      done: function(res, index, upload) {
+        if(res.code == 0 ) {
+          var file = res.img.split("/");
+          var path = "/"+file[1]+"/"+file[2];
+          $("#input-player-mark").val(path);
+          $(".watermark").attr("src", path);
+        }
+      }
+    });
+    upload.render({
       elem:".zimu",
       url: "/upzimu",
       field: "zimu",
@@ -88,6 +102,14 @@ layui.use(['jquery','form','element','layer','upload'], function(){
         if(res.code==0){
           layer.msg("vtt字幕文件上传成功");
         }
+      }
+    });
+    var color = $('.inputcolor').val();
+    colorpicker.render({
+      elem: '#selectcolor',
+      color: color,
+      done: function(color) {
+        $('.inputcolor').val(color);
       }
     });
     form.on('select(shaixuan)', function(data) {

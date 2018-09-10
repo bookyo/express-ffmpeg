@@ -9,9 +9,50 @@ html.playbody
     link(rel="stylesheet", href='/stylesheets/DPlayer.min.css')
   body.playbody
     #player
+    - var logo = player.mark || '';
+    if !player.kaiguan
+      - logo = '';
+    if player.wenzikaiguan
+      - var bold = player.bold == 'on'? "bold":"normal";
+      - var italic = player.italic == 'on'? "italic":"normal";
+      - var underline = player.underline == 'on'?"underline":"none";
+      - var wenzix = player.wenzix + "px";
+      - var wenziy = player.wenziy + "px";
+      - var opacity = player.opacity;
+      - var font = player.font;
+      - var fontsize = player.fontsize + 'px';
+      - var color = player.color;
+      - var wenziposition = player.wenziposition;
+      - var style = '';
+      case wenziposition
+        when "lefttop"
+          - style = {left:wenzix,top:wenziy,right:'auto',bottom:'auto'};
+        when "leftbottom"
+          - style = {left:wenzix,top:'auto',right:'auto',bottom:wenziy};
+        when "righttop"
+          - style = {left:'auto',top:wenziy,right:wenzix,bottom:'auto'};
+        when "rightbottom"
+          - style = {left:'auto',top:'auto',right:wenzix,bottom:wenziy};
+      .adwrap
+        .wenziad(style=style)
+          a(href="#{player.link}" target="_blank") #{player.text}
+      style.
+        .wenziad{
+          position:fixed;
+        }
+        .wenziad a{
+          font-family:"#{font}",sans-serif;
+          font-size:#{fontsize};
+          font-weight:#{bold};
+          font-style:#{italic};
+          opacity:#{opacity};
+          color: #{color};
+          text-decoration: #{underline};
+        }
     script(src="/javascripts/hls.min.js")
     script(src="/javascripts/DPlayer.min.js")
     script(src="//cdn.btjson.com/p2pjs/1.1/p2p.js")
+    script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
     script.
       function getParentUrl() {   
          var url = null;  
@@ -33,6 +74,7 @@ html.playbody
               screenshot: true,
               lang:  'zh-cn',
               autoplay: false,
+              logo: '#{logo}',
               mutex: true,
               video: {
                   url: '/videos/#{id}/index.m3u8?token=#{token}',
@@ -54,12 +96,17 @@ html.playbody
               }]
           });
         }
+        var ad = $(".adwrap").html();
+        dp.on('play',function () {
+          $(".dplayer-video-wrap").append(ad);
+        });
       } else {
         var dp = new DPlayer({
             container: document.getElementById('player'),
             screenshot: true,
             lang:  'zh-cn',
             autoplay: false,
+            logo: '#{logo}',
             mutex: true,
             video: {
                 url: '/videos/#{id}/index.m3u8?token=#{token}',
@@ -80,5 +127,60 @@ html.playbody
                 link: 'https://moejj.com/'
             }]
         });
+        var ad = $(".adwrap").html();
+        dp.on('play',function () {
+          $(".dplayer-video-wrap").append(ad);
+        });
       }
-      
+    if player.kaiguan
+      - var markx = player.markx + "px";
+      - var marky = player.marky + "px";
+      case player.position
+        when 'lefttop'
+          style.
+            .dplayer-logo {
+                pointer-events: none;
+                position: absolute;
+                right:auto;
+                left: #{markx};
+                top: #{marky};
+                bottom: auto;
+                max-width: 200px;
+                max-height: 50px;
+            }
+        when 'leftbottom'
+          style.
+            .dplayer-logo {
+                pointer-events: none;
+                position: absolute;
+                right:auto;
+                left: #{markx};
+                top: auto;
+                bottom: #{marky};
+                max-width: 200px;
+                max-height: 50px;
+            }
+        when 'righttop'
+          style.
+            .dplayer-logo {
+                pointer-events: none;
+                position: absolute;
+                right:#{markx};
+                left: auto;
+                top: #{marky};
+                bottom: auto;
+                max-width: 200px;
+                max-height: 50px;
+            }
+        when 'rightbottom'
+          style.
+            .dplayer-logo {
+                pointer-events: none;
+                position: absolute;
+                right:#{markx};
+                left: auto;
+                top: auto;
+                bottom: #{marky};
+                max-width: 200px;
+                max-height: 50px;
+            }
