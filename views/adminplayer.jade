@@ -39,6 +39,13 @@ block content
               .layui-input-inline
                 input.layui-input(type="number" name="marky", value="#{player.marky}")
           .layui-form-item
+            label.layui-form-label 显示p2p
+            .layui-input-block
+              if player.p2p=="on"
+                input(type="checkbox",name="p2p",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input(type="checkbox",name="p2p",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
             label.layui-form-label 文字广告
             .layui-input-block
               if player.wenzikaiguan=="on"

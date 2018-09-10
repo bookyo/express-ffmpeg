@@ -18,6 +18,7 @@ var playerSchema = new Schema({
     italic: String,
     wenzix: Number,
     wenziy: Number,
+    p2p: String,
     wenziposition: String,
     createAt: {
         type: Date

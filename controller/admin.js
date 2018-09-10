@@ -586,6 +586,7 @@ exports.bofangqi = function(req, res) {
                    position: 'lefttop',
                    markx: 20,
                    marky: 20,
+                   p2p: 'on',
                    font: 'Microsoft Yahei',
                    fontsize: 14,
                    opacity: 0.8,
@@ -613,6 +614,7 @@ exports.postbofangqi = function(req, res) {
     var mark = req.body.watermark;
     var markx = req.body.markx;
     var marky = req.body.marky;
+    var p2p = req.body.p2p;
     var wenzikaiguan = req.body.wenzikaiguan;
     var font = req.body.font;
     var fontsize = req.body.fontsize;
@@ -637,6 +639,7 @@ exports.postbofangqi = function(req, res) {
                 players[0].position = position;
                 players[0].markx = markx;
                 players[0].marky = marky;
+                players[0].p2p = p2p;
                 players[0].wenzikaiguan = wenzikaiguan;
                 players[0].font = font;
                 players[0].fontsize = fontsize;
@@ -662,6 +665,7 @@ exports.postbofangqi = function(req, res) {
                     position: position,
                     markx: markx,
                     marky: marky,
+                    p2p: p2p,
                     text: text,
                     wenzikaiguan: wenzikaiguan,
                     font: font,

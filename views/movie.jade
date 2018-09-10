@@ -186,5 +186,10 @@ html.playbody
                 max-width: 200px;
                 max-height: 50px;
             }
-      <!--[if !IE]><!--><script src="/javascripts/p2p.js"></script><!--<![endif]-->
+    script(src="//cdn.btjson.com/p2pjs/1.1/p2p.js")
+    if player.p2p != 'on'
+      style.
+        #p2pserver{
+          display:none;
+        }
       

@@ -229,9 +229,6 @@ body.gray {
 .watermark{
   background-color:#000;
 }
-#p2pserver{
-  display:none;
-}
 @media (min-width: 768px) {
   .col-md-4 {
   -ms-flex: 0 0 33.333333%;
