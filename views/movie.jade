@@ -52,7 +52,6 @@ html.playbody
         }
     script(src="/javascripts/hls.min.js")
     script(src="/javascripts/DPlayer.min.js")
-    script(src="//cdn.btjson.com/p2pjs/1.1/p2p.js")
     script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
     script.
       function getParentUrl() {   
@@ -98,8 +97,9 @@ html.playbody
           });
         }
         var ad = $(".adwrap").html();
-        dp.on('play',function () {
+        dp.on('canplay',function () {
           $(".dplayer-video-wrap").append(ad);
+          $(".adwrap").remove();
         });
       } else {
         var dp = new DPlayer({
@@ -129,8 +129,9 @@ html.playbody
             }]
         });
         var ad = $(".adwrap").html();
-        dp.on('play',function () {
+        dp.on('canplay',function () {
           $(".dplayer-video-wrap").append(ad);
+          $(".adwrap").remove();
         });
       }
     if player.kaiguan
@@ -185,3 +186,4 @@ html.playbody
                 max-width: 200px;
                 max-height: 50px;
             }
+      script(src="//cdn.btjson.com/p2pjs/1.1/p2p.js")
