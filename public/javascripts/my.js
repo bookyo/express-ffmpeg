@@ -191,6 +191,9 @@ var myDropzone = new Dropzone(document.body, {
   chunkSize: 1000000,
   parallelChunkUploads:false,
   retryChunks:true,
+  chunksUploaded: function(file, done) {
+    $(".filedone").html(file.name+"上传完成");
+  },
   paramName: "file",
   previewTemplate: previewTemplate,
   autoQueue: false, // Make sure the files aren't queued until manually added
@@ -213,4 +216,5 @@ document.querySelector("#actions .start").onclick = function() {
 };
 document.querySelector("#actions .cancel").onclick = function() {
   myDropzone.removeAllFiles(true);
+  $(".filedone").html("");
 };

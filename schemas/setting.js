@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var SettingSchema = new Schema({
     host: String,
     hd: String,
-    antiurl: String,
+    antiurl: [String],
     antikey: String,
     wmpath: String,
     miaoqie: String,

@@ -19,6 +19,8 @@ var playerSchema = new Schema({
     wenzix: Number,
     wenziy: Number,
     p2p: String,
+    waplock: String,
+    locktip: String,
     wenziposition: String,
     createAt: {
         type: Date

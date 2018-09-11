@@ -226,12 +226,25 @@ exports.getmovie = function(req, res) {
                             if(err) {
                                 console.log(err);
                             }
+                            var waplock = false;
+                            if(players[0].waplock == 'on') {
+                                var agent = req.headers["user-agent"].toLowerCase();
+                                console.log(agent);
+                                var phoneviewer = agent.match(/(iphone|ipod|ipad|android)/);
+                                var browser = agent.match(/browser/);
+                                if(phoneviewer) {
+                                    if(browser) {
+                                        waplock = true;
+                                    }
+                                }
+                            }
                             var token = jwt.sign({access: "view"},setting[0].antikey,{expiresIn: '1h'});
                             res.render("movie",{
                                 user:req.session.user,
                                 title: movie.originalname+"在线播放",
                                 id:id,
                                 token: token,
+                                waplock: waplock,
                                 player: players[0],
                                 antiurl: setting[0].antiurl
                             })
@@ -327,6 +340,7 @@ exports.postsetting = function(req, res) {
     var wmpath = req.body.watermark;
     var miaoqie = req.body.miaoqie;
     var screenshots = req.body.screenshots;
+    antiurlarr = antiurl.split("|");
     if(!miaoqie) {
         miaoqie = "";
     }
@@ -340,7 +354,7 @@ exports.postsetting = function(req, res) {
                 setting[0].hd = hd;
                 setting[0].antikey = antikey;
                 setting[0].wmpath = wmpath;
-                setting[0].antiurl = antiurl;
+                setting[0].antiurl = antiurlarr;
                 setting[0].miaoqie = miaoqie;
                 setting[0].screenshots = screenshots;
                 setting[0].save(function(err) {
@@ -352,7 +366,7 @@ exports.postsetting = function(req, res) {
                 var settingobj = {
                     host: host,
                     hd: hd,
-                    antiurl: antiurl,
+                    antiurl: antiurlarr,
                     antikey: antikey,
                     miaoqie: miaoqie,
                     screenshots: screenshots,
@@ -587,6 +601,8 @@ exports.bofangqi = function(req, res) {
                    markx: 20,
                    marky: 20,
                    p2p: 'on',
+                   waplock: 'on',
+                   locktip: '<p style="color:#fff;">请使用谷歌浏览器或者火狐浏览器观看</p>',
                    font: 'Microsoft Yahei',
                    fontsize: 14,
                    opacity: 0.8,
@@ -628,6 +644,8 @@ exports.postbofangqi = function(req, res) {
     var text = req.body.text;
     var italic = req.body.italic;
     var underline = req.body.underline;
+    var waplock = req.body.waplock;
+    var locktip = req.body.locktip;
     Player.find()
         .exec(function(err, players) {
             if(err) {
@@ -640,6 +658,8 @@ exports.postbofangqi = function(req, res) {
                 players[0].markx = markx;
                 players[0].marky = marky;
                 players[0].p2p = p2p;
+                players[0].waplock = waplock;
+                players[0].locktip = locktip;
                 players[0].wenzikaiguan = wenzikaiguan;
                 players[0].font = font;
                 players[0].fontsize = fontsize;
@@ -666,6 +686,8 @@ exports.postbofangqi = function(req, res) {
                     markx: markx,
                     marky: marky,
                     p2p: p2p,
+                    waplock: waplock,
+                    locktip: locktip,
                     text: text,
                     wenzikaiguan: wenzikaiguan,
                     font: font,

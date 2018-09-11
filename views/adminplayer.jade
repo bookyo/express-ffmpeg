@@ -104,6 +104,16 @@ block content
               .layui-input-inline
                 input.layui-input(type="number" name="wenziy", value="#{player.wenziy}")
           .layui-form-item
+            .layui-inline
+              label.layui-form-label 强制浏览器
+              .layui-input-inline
+                input(type="checkbox",name="waplock",lay-skin="switch",lay-text="开启|关闭",checked=player.waplock=='on'?true:false)
+              .layui-form-mid.layui-word-aux 强制手机浏览器只能谷歌或者火狐浏览器
+          .layui-form-item
+            label.layui-form-label 强制时提醒
+            .layui-input-block
+              input.layui-input(type="text",name="locktip",placeholder="可使用html代码",value="#{player.locktip}")
+          .layui-form-item
             .layui-input-block
               button.layui-btn(lay-submit,lay-filter="submitplayer") 提交
           style.

@@ -41,7 +41,7 @@ block content
                 .layui-form-item
                   label.layui-form-label 引用网址（防盗链）
                   .layui-input-block
-                    input.layui-input(type="text",value="#{setting.antiurl}",name="antiurl",placeholder="http://youurl,必须加http://前缀，设置之后只能指定域名通过ifream调用")
+                    input.layui-input(type="text",value="#{setting.antiurl.join('|')}",name="antiurl",placeholder="http://youurl,必须加http://前缀，多个域名由|分开，设置之后只能指定域名通过ifream调用")
                 .layui-form-item
                   label.layui-form-label 防盗链KEY
                   .layui-input-block

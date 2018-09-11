@@ -8,68 +8,115 @@ html.playbody
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel="stylesheet", href='/stylesheets/DPlayer.min.css')
   body.playbody
-    #player
-    - var logo = player.mark || '';
-    if !player.kaiguan
-      - logo = '';
-    if player.wenzikaiguan
-      - var bold = player.bold == 'on'? "bold":"normal";
-      - var italic = player.italic == 'on'? "italic":"normal";
-      - var underline = player.underline == 'on'?"underline":"none";
-      - var wenzix = player.wenzix + "px";
-      - var wenziy = player.wenziy + "px";
-      - var opacity = player.opacity;
-      - var font = player.font;
-      - var fontsize = player.fontsize + 'px';
-      - var color = player.color;
-      - var wenziposition = player.wenziposition;
-      - var style = '';
-      case wenziposition
-        when "lefttop"
-          - style = {left:wenzix,top:wenziy,right:'auto',bottom:'auto'};
-        when "leftbottom"
-          - style = {left:wenzix,top:'auto',right:'auto',bottom:wenziy};
-        when "righttop"
-          - style = {left:'auto',top:wenziy,right:wenzix,bottom:'auto'};
-        when "rightbottom"
-          - style = {left:'auto',top:'auto',right:wenzix,bottom:wenziy};
-      .adwrap
-        .wenziad(style=style)
-          a(href="#{player.link}" target="_blank") #{player.text}
-      style.
-        .wenziad{
-          z-index:1000;
-          position:fixed;
+    if !waplock
+      #player
+      - var logo = player.mark || '';
+      if !player.kaiguan
+        - logo = '';
+      if player.wenzikaiguan
+        - var bold = player.bold == 'on'? "bold":"normal";
+        - var italic = player.italic == 'on'? "italic":"normal";
+        - var underline = player.underline == 'on'?"underline":"none";
+        - var wenzix = player.wenzix + "px";
+        - var wenziy = player.wenziy + "px";
+        - var opacity = player.opacity;
+        - var font = player.font;
+        - var fontsize = player.fontsize + 'px';
+        - var color = player.color;
+        - var wenziposition = player.wenziposition;
+        - var style = '';
+        case wenziposition
+          when "lefttop"
+            - style = {left:wenzix,top:wenziy,right:'auto',bottom:'auto'};
+          when "leftbottom"
+            - style = {left:wenzix,top:'auto',right:'auto',bottom:wenziy};
+          when "righttop"
+            - style = {left:'auto',top:wenziy,right:wenzix,bottom:'auto'};
+          when "rightbottom"
+            - style = {left:'auto',top:'auto',right:wenzix,bottom:wenziy};
+        .adwrap
+          .wenziad(style=style)
+            a(href="#{player.link}" target="_blank") #{player.text}
+        style.
+          .wenziad{
+            z-index:1000;
+            position:fixed;
+          }
+          .wenziad a{
+            font-family:"#{font}",sans-serif;
+            font-size:#{fontsize};
+            font-weight:#{bold};
+            font-style:#{italic};
+            opacity:#{opacity};
+            color: #{color};
+            text-decoration: #{underline};
+          }
+      script(src="/javascripts/fixie.js")
+      script(src="/javascripts/hls.min.js")
+      script(src="/javascripts/DPlayer.min.js")
+      script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
+      script.
+        function getParentUrl() {   
+          var url = null;  
+          if (parent !== window) {   
+              try {  
+                  url = parent.location.href;   
+              }catch (e) {   
+                  url = document.referrer;   
+              }   
+            }  
+            return url;  
         }
-        .wenziad a{
-          font-family:"#{font}",sans-serif;
-          font-size:#{fontsize};
-          font-weight:#{bold};
-          font-style:#{italic};
-          opacity:#{opacity};
-          color: #{color};
-          text-decoration: #{underline};
-        }
-    script(src="/javascripts/fixie.js")
-    script(src="/javascripts/hls.min.js")
-    script(src="/javascripts/DPlayer.min.js")
-    script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
-    script.
-      function getParentUrl() {   
-         var url = null;  
-         if (parent !== window) {   
-             try {  
-                url = parent.location.href;   
-             }catch (e) {   
-                url = document.referrer;   
-             }   
-          }  
-          return url;  
-      }
-      var parenturl = getParentUrl();
-      var antiurl = "#{antiurl}";
-      if(antiurl != ""){
-        if(parenturl != null && parenturl.indexOf("#{antiurl}")==0){
+        var parenturl = getParentUrl();
+        var antiurl = "#{antiurl}";
+        var antiarr = antiurl.split(",");
+        var anti= false;
+        if(antiurl != ""){
+          if(parenturl == null) {
+            anti = true;
+          } else {
+            for(var i=0;i<antiarr.length;i++) {
+              if(parenturl.indexOf(antiarr[i])==0) {
+                anti = false;
+              } else {
+                anti = true;
+              }
+            }
+          }
+          if(!anti){
+            var dp = new DPlayer({
+                container: document.getElementById('player'),
+                screenshot: true,
+                lang:  'zh-cn',
+                autoplay: false,
+                logo: '#{logo}',
+                mutex: true,
+                video: {
+                    url: '/videos/#{id}/index.m3u8?token=#{token}',
+                    pic: '/videos/#{id}/1.jpg',
+                    type: 'hls'
+                },
+                subtitle: {
+                    url: '/videos/#{id}/1.vtt',
+                    fontSize: '25px',
+                    bottom: '10%'
+                },
+                contextmenu: [{
+                    text: '云转码express-ffmpeg',
+                    link: 'http://ffmpeg.moejj.com/'
+                },
+                {
+                    text: '萌JJ博客',
+                    link: 'https://moejj.com/'
+                }]
+            });
+            var ad = $(".adwrap").html();
+            dp.on('canplay',function () {
+              $(".dplayer-video-wrap").append(ad);
+              $(".adwrap").remove();
+            });
+          }
+        } else {
           var dp = new DPlayer({
               container: document.getElementById('player'),
               screenshot: true,
@@ -96,101 +143,70 @@ html.playbody
                   link: 'https://moejj.com/'
               }]
           });
+          var ad = $(".adwrap").html();
+          dp.on('canplay',function () {
+            $(".dplayer-video-wrap").append(ad);
+            $(".adwrap").remove();
+          });
         }
-        var ad = $(".adwrap").html();
-        dp.on('canplay',function () {
-          $(".dplayer-video-wrap").append(ad);
-          $(".adwrap").remove();
-        });
-      } else {
-        var dp = new DPlayer({
-            container: document.getElementById('player'),
-            screenshot: true,
-            lang:  'zh-cn',
-            autoplay: false,
-            logo: '#{logo}',
-            mutex: true,
-            video: {
-                url: '/videos/#{id}/index.m3u8?token=#{token}',
-                pic: '/videos/#{id}/1.jpg',
-                type: 'hls'
-            },
-            subtitle: {
-                url: '/videos/#{id}/1.vtt',
-                fontSize: '25px',
-                bottom: '10%'
-            },
-            contextmenu: [{
-                text: '云转码express-ffmpeg',
-                link: 'http://ffmpeg.moejj.com/'
-            },
-            {
-                text: '萌JJ博客',
-                link: 'https://moejj.com/'
-            }]
-        });
-        var ad = $(".adwrap").html();
-        dp.on('canplay',function () {
-          $(".dplayer-video-wrap").append(ad);
-          $(".adwrap").remove();
-        });
-      }
-    if player.kaiguan
-      - var markx = player.markx + "px";
-      - var marky = player.marky + "px";
-      case player.position
-        when 'lefttop'
-          style.
-            .dplayer-logo {
-                pointer-events: none;
-                position: absolute;
-                right:auto;
-                left: #{markx};
-                top: #{marky};
-                bottom: auto;
-                max-width: 200px;
-                max-height: 50px;
-            }
-        when 'leftbottom'
-          style.
-            .dplayer-logo {
-                pointer-events: none;
-                position: absolute;
-                right:auto;
-                left: #{markx};
-                top: auto;
-                bottom: #{marky};
-                max-width: 200px;
-                max-height: 50px;
-            }
-        when 'righttop'
-          style.
-            .dplayer-logo {
-                pointer-events: none;
-                position: absolute;
-                right:#{markx};
-                left: auto;
-                top: #{marky};
-                bottom: auto;
-                max-width: 200px;
-                max-height: 50px;
-            }
-        when 'rightbottom'
-          style.
-            .dplayer-logo {
-                pointer-events: none;
-                position: absolute;
-                right:#{markx};
-                left: auto;
-                top: auto;
-                bottom: #{marky};
-                max-width: 200px;
-                max-height: 50px;
-            }
-    script(src="//cdn.btjson.com/p2pjs/1.1/p2p.js")
-    if player.p2p != 'on'
-      style.
-        #p2pserver{
-          display:none;
-        }
-      
+      if player.kaiguan
+        - var markx = player.markx + "px";
+        - var marky = player.marky + "px";
+        case player.position
+          when 'lefttop'
+            style.
+              .dplayer-logo {
+                  pointer-events: none;
+                  position: absolute;
+                  right:auto;
+                  left: #{markx};
+                  top: #{marky};
+                  bottom: auto;
+                  max-width: 200px;
+                  max-height: 50px;
+              }
+          when 'leftbottom'
+            style.
+              .dplayer-logo {
+                  pointer-events: none;
+                  position: absolute;
+                  right:auto;
+                  left: #{markx};
+                  top: auto;
+                  bottom: #{marky};
+                  max-width: 200px;
+                  max-height: 50px;
+              }
+          when 'righttop'
+            style.
+              .dplayer-logo {
+                  pointer-events: none;
+                  position: absolute;
+                  right:#{markx};
+                  left: auto;
+                  top: #{marky};
+                  bottom: auto;
+                  max-width: 200px;
+                  max-height: 50px;
+              }
+          when 'rightbottom'
+            style.
+              .dplayer-logo {
+                  pointer-events: none;
+                  position: absolute;
+                  right:#{markx};
+                  left: auto;
+                  top: auto;
+                  bottom: #{marky};
+                  max-width: 200px;
+                  max-height: 50px;
+              }
+      script(src="//cdn.btjson.com/p2pjs/1.1/p2p.js")
+      if player.p2p != 'on'
+        style.
+          #p2pserver{
+            display:none;
+          }
+    else
+      #locktip
+        p!=player.locktip
