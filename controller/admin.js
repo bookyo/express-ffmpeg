@@ -243,6 +243,7 @@ exports.getmovie = function(req, res) {
                                 title: movie.originalname+"在线播放",
                                 id:id,
                                 token: token,
+                                phoneviewer: phoneviewer,
                                 waplock: waplock,
                                 player: players[0],
                                 antiurl: setting[0].antiurl

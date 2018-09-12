@@ -9,7 +9,7 @@ html.playbody
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel="stylesheet", href='/stylesheets/DPlayer.min.css')
   body.playbody
-    if !waplock
+    if !phoneviewer||!waplock
       #player
       - var logo = player.mark || '';
       if !player.kaiguan
@@ -214,6 +214,6 @@ html.playbody
           #p2pserver{
             display:none;
           }
-    else
+    else if phoneviewer&&waplock
       #locktip
         p!=player.locktip
