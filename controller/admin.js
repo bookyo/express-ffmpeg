@@ -226,15 +226,14 @@ exports.getmovie = function(req, res) {
                             if(err) {
                                 console.log(err);
                             }
-                            var waplock = false;
+                            var waplock = true;
                             if(players[0].waplock == 'on') {
                                 var agent = req.headers["user-agent"].toLowerCase();
-                                console.log(agent);
                                 var phoneviewer = agent.match(/(iphone|ipod|ipad|android)/);
-                                var browser = agent.match(/browser/);
+                                var browser = agent.match(/mqqbrowser/);
                                 if(phoneviewer) {
                                     if(browser) {
-                                        waplock = true;
+                                        waplock = false;
                                     }
                                 }
                             }
@@ -602,7 +601,7 @@ exports.bofangqi = function(req, res) {
                    marky: 20,
                    p2p: 'on',
                    waplock: 'on',
-                   locktip: '<p style="color:#fff;">请使用谷歌浏览器或者火狐浏览器观看</p>',
+                   locktip: '<p style="color:#fff;">请使用qq浏览器观看</p>',
                    font: 'Microsoft Yahei',
                    fontsize: 14,
                    opacity: 0.8,

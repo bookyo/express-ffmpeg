@@ -4,6 +4,7 @@ html.playbody
     meta(charset="utf-8")
     meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
     meta(http-equiv="X-UA-Compatible",content="IE=edge, chrome=1")
+    meta(name="renderer",content="webkit")
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel="stylesheet", href='/stylesheets/DPlayer.min.css')
@@ -114,6 +115,9 @@ html.playbody
             dp.on('canplay',function () {
               $(".dplayer-video-wrap").append(ad);
               $(".adwrap").remove();
+              $(".dplayer-video").attr("x5-video-player-type","h5");
+              $(".dplayer-video").attr("x5-video-orientation","landscape");
+              $(".dplayer-video").attr("x5-video-player-fullscreen","true");
             });
           }
         } else {
@@ -147,6 +151,9 @@ html.playbody
           dp.on('canplay',function () {
             $(".dplayer-video-wrap").append(ad);
             $(".adwrap").remove();
+            $(".dplayer-video").attr("x5-video-player-type","h5");
+            $(".dplayer-video").attr("x5-video-orientation","landscape");
+            $(".dplayer-video").attr("x5-video-player-fullscreen","true");
           });
         }
       if player.kaiguan
