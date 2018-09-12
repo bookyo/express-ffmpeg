@@ -78,7 +78,7 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-  secret: "hlsccccc",
+  secret: config.secret,
   resave: true,
   saveUninitialized: false,
   key: "hls",

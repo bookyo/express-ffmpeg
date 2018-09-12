@@ -265,7 +265,7 @@ exports.setting = function(req, res) {
                 newset = {
                     host:"",
                     hd: "",
-                    antiurl: "",
+                    antiurl: [""],
                     antikey: "",
                     wmpath: "./public/mark/mark.png",
                     miaoqie: "",
