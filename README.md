@@ -68,7 +68,8 @@ module.exports = {
     password: "password",
     db: "dbname",
     dbuser: "dbuser",
-    dbpassword: "dbpassword"
+    dbpassword: "dbpassword",
+    secret: "yoursecret"
 };
 ```
 
