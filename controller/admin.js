@@ -27,7 +27,9 @@ exports.postupload = function(req, res) {
     var body = req.body;
     var des = "./movies/";
     var filename = file.originalname;
-    var path = filename.split(".")[0];
+    var filearr = filename.split(".");
+    filearr.pop();
+    var path = filearr.join('.');
     var tmppath = des + path;
     var exitst = fs.existsSync(tmppath);
     if(!exitst) {
