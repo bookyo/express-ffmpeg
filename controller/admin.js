@@ -725,8 +725,20 @@ exports.postbofangqi = function(req, res) {
 exports.tongji = function(req, res) {
     var page = req.query.page > 0 ? req.query.page : 1;
     var perPage = 10;
+    var sort = req.query.sort?req.query.sort:"newtime";
+    var sortquery = '';
+    if(sort=="hot") {
+        sortquery = '-count';
+    } else if (sort == 'nothot') {
+        sortquery = 'count';
+    } else if (sort == 'newtime') {
+        sortquery = '-createAt';
+    } else if (sort == 'oldtime') {
+        sortquery = 'createAt';
+    }
+    console.log(sortquery);
     Movie.find()
-        .sort('-createAt')
+        .sort(sortquery)
         .limit(perPage)
         .skip(perPage * (page-1))
         .exec(function(err, movies) {

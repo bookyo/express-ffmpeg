@@ -11,12 +11,24 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
     });
     $(".geturl").click(function(e){
       var id = $(this).attr("id");
-      layer.open({
-        type:1,
-        title:"分享链接",
-        shadeClose: true,
-        content:'<div class="share-url"><p>分享链接：（点击进入）</p><a href="/share/'+id+'" target="_blank">/share/'+id+'</a></div>'
-      })
+      var host = window.location.host;
+      var schma = window.location.protocol;
+      var url = schma +'//'+ host+'/share/'+id;
+      var shorturl = ""
+      $.ajax({
+        type: "get",
+        url: "http://api.weibo.com/2/short_url/shorten.json?source=2849184197&url_long="+url,
+        dataType: "JSONP",
+        success: function (response) {
+          shorturl = response.data.urls[0].url_short;
+          layer.open({
+            type:1,
+            title:"分享链接",
+            shadeClose: true,
+            content: '<div class="share-url"><p>分享链接：（点击进入）</p><a href="/share/' + id + '" target="_blank">/share/' + id + '</a><p>iframe调用:（双击框选复制）</p><input class="layui-input" value="<iframe height=498 width=510 src=' + url + ' frameborder=0 allowfullscreen></iframe>" disabled/><p>短网址：</p><a href="'+shorturl+'" target="_blank">' + shorturl + '</a></div>'
+          })
+        }
+      });
     });
     $(".category").click(function(e) {
       var id = $(e.target).data("id");
@@ -114,6 +126,9 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
     });
     form.on('select(shaixuan)', function(data) {
       window.location = "/admin/movies?category=" + data.value;
+    });
+    form.on('select(sorttongji)', function(data) {
+      window.location = "/admin/tongji?sort=" + data.value;
     });
 });
 $(".zhuanma").click(function(e){
