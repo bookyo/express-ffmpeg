@@ -13,6 +13,13 @@ block content
               option(value="nothot") 冷门排序
               option(value="newtime") 时间倒序
               option(value="oldtime") 时间正序
+          .layui-inline
+            select#tongjicounts(name="tongjicounts" lay-search lay-filter="tongjicounts")
+              option(value="") 显示数量
+              option(value="10") 10
+              option(value="50") 50
+              option(value="100") 100
+          .layui-btn#submitsort 确定筛选
         table.layui-table
           thead
             tr
@@ -43,9 +50,16 @@ block content
     });
     var sort = getQueryVariable('sort');
     var select = document.getElementById("sorttongji");
+    var counts = getQueryVariable("counts");
+    var selectcounts = document.getElementById("tongjicounts");
     for(var i=0;i<select.length;i++){
       if(select[i].value==sort) {
         select[i].selected = true;
+      }
+    };
+    for(var i=0;i<selectcounts.length;i++){
+      if(selectcounts[i].value==counts) {
+        selectcounts[i].selected = true;
       }
     };
     function getQueryVariable(variable)

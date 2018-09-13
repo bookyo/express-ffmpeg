@@ -127,8 +127,18 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
     form.on('select(shaixuan)', function(data) {
       window.location = "/admin/movies?category=" + data.value;
     });
+    var tongjisortquery = "";
+    var sorttongji = $("#sorttongji").val();
+    var tongjicounts = $("#tongjicounts").val();
     form.on('select(sorttongji)', function(data) {
-      window.location = "/admin/tongji?sort=" + data.value;
+      sorttongji = data.value;
+    });
+    form.on('select(tongjicounts)', function(data) {
+      tongjicounts = data.value;
+    });
+    $("#submitsort").click(function(e) {
+      tongjisortquery = "?sort="+sorttongji + "&counts="+tongjicounts;
+      window.location = "/admin/tongji" + tongjisortquery;
     });
 });
 $(".zhuanma").click(function(e){

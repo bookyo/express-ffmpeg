@@ -724,8 +724,9 @@ exports.postbofangqi = function(req, res) {
 }
 exports.tongji = function(req, res) {
     var page = req.query.page > 0 ? req.query.page : 1;
-    var perPage = 10;
+    var perPage = req.query.counts?req.query.counts:10;
     var sort = req.query.sort?req.query.sort:"newtime";
+    var perPage = parseInt(perPage);
     var sortquery = '';
     if(sort=="hot") {
         sortquery = '-count';
@@ -736,7 +737,6 @@ exports.tongji = function(req, res) {
     } else if (sort == 'oldtime') {
         sortquery = 'createAt';
     }
-    console.log(sortquery);
     Movie.find()
         .sort(sortquery)
         .limit(perPage)
