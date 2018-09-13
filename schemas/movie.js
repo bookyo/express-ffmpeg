@@ -5,10 +5,10 @@ var MovieSchema = new Schema({
     size: String,
     category: String,
     originalname: String,
+    count: {type:Number, default: 0},
     path:String,
     createAt: {
-        type: Date,
-        default: Date.now()
+        type: Date
     }
 });
 MovieSchema.pre('save', function (next) {

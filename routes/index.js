@@ -62,6 +62,7 @@ module.exports = function(app) {
     app.post("/admin/portal", checkLogin, Admincontroller.postportal);
     app.get("/admin/bofangqi", checkLogin, Admincontroller.bofangqi);
     app.post("/admin/bofangqi", checkLogin, Admincontroller.postbofangqi);
+    app.get("/admin/tongji", checkLogin, Admincontroller.tongji);
     var storage1 = multer.diskStorage({
       destination: function (req, file, cb) {
         cb(null, './public/mark');

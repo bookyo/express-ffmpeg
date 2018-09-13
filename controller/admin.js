@@ -7,6 +7,8 @@ var Portal = require("../models/portal");
 var Player = require("../models/player");
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
+var _ = require('underscore');
+var moment = require('moment');
 var path = require('path');
 exports.getadmin = function(req,res){
     res.render('admin',{
@@ -209,7 +211,13 @@ exports.delcategory = function(req, res) {
 }
 exports.getmovie = function(req, res) {
     var id = req.params.id;
-    Movie.findOne({_id:id})
+    Movie.findOneAndUpdate({
+        _id: id
+    }, {
+        $inc: {
+            count: 1
+        }
+    })
         .exec(function(err,movie){
             if(err) {
                 console.log(err);
@@ -713,6 +721,50 @@ exports.postbofangqi = function(req, res) {
             }
             res.redirect("/admin/bofangqi");
         })
+}
+exports.tongji = function(req, res) {
+    var page = req.query.page > 0 ? req.query.page : 1;
+    var perPage = 10;
+    Movie.find()
+        .sort('-createAt')
+        .limit(perPage)
+        .skip(perPage * (page-1))
+        .exec(function(err, movies) {
+            if(err) {
+                console.log(err);
+            }
+            var backgroundColor = [];
+            for (let index = 0; index < movies.length; index++) {
+                backgroundColor.push(randomcolor());
+                movies[index].formatdate=moment(movies[index].createAt).format('YYYY年MM月DD日, h:mm:ss');
+            }
+            var data = {};
+            var dataarr = _.pluck(movies,'count');
+            data.datasets = [{
+                data: dataarr,
+                backgroundColor: backgroundColor
+            }];
+            var labelarr = _.pluck(movies, 'originalname');
+            data.labels = labelarr;
+            Movie.find().count(function (err, count) {
+               if(err) {
+                   console.log(err);
+               }
+               res.render('tongji', {
+                   title: "播放统计",
+                   movies: movies,
+                   data: JSON.stringify(data),
+                   page: page,
+                   pages: Math.ceil(count / perPage)
+               })
+            })
+        })
+}
+function randomcolor(){
+    var r=Math.floor(Math.random()*256);
+    var g=Math.floor(Math.random()*256);
+    var b=Math.floor(Math.random()*256);
+    return "rgb("+r+','+g+','+b+")";
 }
 function deleteall(path) {
     var files = [];

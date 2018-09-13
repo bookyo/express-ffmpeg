@@ -1,0 +1,35 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        canvas#tongji(width="100%",height="100%")
+        table.layui-table
+          thead
+            tr
+              th 电影名
+              th 播放次数
+              th 创建时间
+              th 分享链接
+          tbody
+            each movie in movies
+              tr
+                td #{movie.originalname}
+                td #{movie.count}
+                th #{movie.formatdate}
+                td
+                  a(href="/share/#{movie._id}" target="_blank") 链接
+        nav.pages
+          if( pages> 1)
+            ul.pagination
+              != createPagination(pages, page)
+  script(src="https://cdn.bootcss.com/Chart.js/2.7.2/Chart.min.js")
+  p(style="display:none")#data #{data}
+  script.
+    var data = document.getElementById("data").innerText;
+    var ctx = document.getElementById("tongji");
+    new Chart(ctx, {
+      data: JSON.parse(data),
+      type: 'polarArea'
+    })
