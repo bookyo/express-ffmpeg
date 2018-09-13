@@ -81,6 +81,12 @@ module.exports = {
 7. 秒切功能，开启之后，无需进行转码的视频会直接切片。（后台可设置）
 
 #### 版本
+##### V2.1版本
+* 增加防盗链域名多域名支持
+* 针对手机QQ浏览器优化，支持显示播放器水印广告和文字链接广告
+* 增加图表统计页面，炫酷图表统计和表格统计。
+* 增加P2P功能，待测试效果。
+
 ##### V2版本：
 * 大更新，增加门户CMS设置，内嵌CMS系统
 * 增加播放器配置
@@ -115,6 +121,7 @@ module.exports = {
 
 
 #### 截图
+![图表统计](https://images.gitee.com/uploads/images/2018/0913/144939_3ba18b3c_145248.jpeg "屏幕快照 2018-09-13 下午2.46.55.jpg")
 ![输入图片说明](https://images.gitee.com/uploads/images/2018/0910/120203_ea18551d_145248.png "播放器设置 - http___localhost_3000_admin_bofangqi.png")
 ![ts文件域名分发](https://images.gitee.com/uploads/images/2018/0731/102414_be8e1a72_145248.jpeg "屏幕快照 2018-07-31 上午10.18.51.jpg")
 ![上传截图](https://gitee.com/uploads/images/2018/0606/185630_b769b67c_145248.jpeg "屏幕快照 2018-06-06 下午6.55.28.jpg")
