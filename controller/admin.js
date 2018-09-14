@@ -1021,7 +1021,7 @@ exports.postcard = function(req, res) {
         })
 }
 exports.getcardtxt = function(req, res) {
-    Card.find()
+    Card.find({status: 'notuse'})
         .exec(function(err, cards){
             if(err) {
                 console.log(err);
@@ -1030,7 +1030,8 @@ exports.getcardtxt = function(req, res) {
                 'Content-Type': 'application/octet-stream', 
                 'Content-Disposition': 'attachment; filename=card.txt'
             });
-            res.send(cards.join("\n"));
+            var thecards = _.pluck(cards,'card');
+            res.send(thecards.join("\n"));
         })
 }
 function randomcard() {
