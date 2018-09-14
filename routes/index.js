@@ -133,7 +133,7 @@ module.exports = function(app) {
       }
       next();
     }
-
+    app.get("/admin/card.txt", checkLogin, Admincontroller.getcardtxt);
     function checkNotLogin(req, res, next) {
       if(req.session.user) {
         return res.redirect('/admin');

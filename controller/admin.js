@@ -1020,6 +1020,19 @@ exports.postcard = function(req, res) {
             }
         })
 }
+exports.getcardtxt = function(req, res) {
+    Card.find()
+        .exec(function(err, cards){
+            if(err) {
+                console.log(err);
+            }
+            res.set({
+                'Content-Type': 'application/octet-stream', 
+                'Content-Disposition': 'attachment; filename=card.txt'
+            });
+            res.send(cards.join("\n"));
+        })
+}
 function randomcard() {
     var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","A","B","C","D","E","F","G"];
     for (var j = 0; j < 500; j++) {
