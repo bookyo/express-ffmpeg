@@ -2,7 +2,9 @@ var auth = require("../config/auth");
 var Admincontroller = require("../controller/admin");
 var Cmscontroller = require("../controller/cms");
 var Portal = require('../models/portal');
+var User = require('../models/user');
 var multer = require('multer');
+const { body } = require('express-validator/check');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './movies');
@@ -21,8 +23,8 @@ module.exports = function(app) {
       });
     });
     app.post("/hlsserver", checkNotLogin, function(req, res) {
-      var user = req.sanitize('user').trim();
-      var password = req.sanitize('password').trim();
+      var user = req.body.user;
+      var password = req.body.password;
       if(user == auth.user && password == auth.password) {
         req.session.user = user;
         res.redirect("/admin");
@@ -47,7 +49,8 @@ module.exports = function(app) {
     app.post("/transcode", checkLogin, Admincontroller.transcode);
     app.delete("/delete/movie", checkLogin, Admincontroller.delete);
     app.delete("/delete/category",checkLogin, Admincontroller.delcategory);
-    app.get("/share/:id", Admincontroller.getmovie);
+    app.delete("/delete/user", checkLogin, Admincontroller.deluser);
+    app.get("/share/:id", checkLevel, Admincontroller.getmovie);
     app.get("/", Cmscontroller.index);
     app.get("/movie/:id", checkopen, Cmscontroller.getmovie);
     app.get("/category/:category", checkopen, Cmscontroller.getcategory);
@@ -63,6 +66,43 @@ module.exports = function(app) {
     app.get("/admin/bofangqi", checkLogin, Admincontroller.bofangqi);
     app.post("/admin/bofangqi", checkLogin, Admincontroller.postbofangqi);
     app.get("/admin/tongji", checkLogin, Admincontroller.tongji);
+    app.get("/login", checkUsersystemOpen, checkLevelNotLogin, Admincontroller.login);
+    app.post("/login", checkUsersystemOpen, checkLevelNotLogin, [
+      body('email')
+        .isEmail()
+        .normalizeEmail(),
+      body('password')
+        .not().isEmpty()
+        .trim()
+        .escape()],
+      Admincontroller.postlogin);
+    app.get("/logout", checkUsersystemOpen, checkLevelLogin, Admincontroller.logout);
+    app.get("/register", checkUsersystemOpen, checkLevelNotLogin, Admincontroller.reg);
+    app.post("/register", checkUsersystemOpen, checkLevelNotLogin, [
+      body('username')
+        .trim()
+        .isLength({min:6,max:16})
+        .escape(),
+      body('email')
+        .isEmail()
+        .normalizeEmail(),
+      body('password')
+        .trim()
+        .isLength({min:6,max:16})
+        .escape()
+    ],
+    Admincontroller.postreg);
+    app.get("/admin/users", checkLogin, Admincontroller.adminusers);
+    app.post("/admin/gencard", checkLogin, Admincontroller.gencard);
+    app.get("/admin/cards", checkLogin, Admincontroller.cards);
+    app.get("/addcard", checkLevelLogin, Admincontroller.addcard);
+    app.post("/addcard",checkLevelLogin, [
+      body('card')
+        .trim()
+        .matches(/^[\S]{20}$/).withMessage('必须20个非空字符')
+        .escape()
+    ],
+    Admincontroller.postcard);
     var storage1 = multer.diskStorage({
       destination: function (req, file, cb) {
         cb(null, './public/mark');
@@ -100,6 +140,20 @@ module.exports = function(app) {
       }
       next();
     }
+
+    function checkLevelLogin(req, res, next) {
+      if( !req.session.leveluser ) {
+        return res.redirect('/login');
+      }
+      next();
+    }
+
+    function checkLevelNotLogin(req, res, next) {
+      if(req.session.leveluser) {
+        return res.redirect('/');
+      }
+      next();
+    }
     function checkopen(req, res, next) {
       Portal.find()
           .exec(function(err, portals) {
@@ -117,5 +171,49 @@ module.exports = function(app) {
               return res.status(404).send('对不起，cms未开启');
             }
           })
+    }
+    function checkUsersystemOpen(req, res, next) {
+      Portal.find()
+          .exec(function(err, portals) {
+            if(err) {
+              console.log(err);
+            }
+            if(portals[0].usersystem!='on'){
+              return res.status(404).send("会员系统未开启");
+            } else {
+              next();
+            };
+          });
+    }
+    function checkLevel(req, res, next) {
+      req.level = 2;
+      if(req.session.leveluser) {
+        User.findOne({username:req.session.leveluser})
+            .exec(function(err, user) {
+              if(err) {
+                console.log(err);
+              }
+              if(user.level == 2) {
+                req.level = 2;
+                next();
+              } else {
+                req.level = 1;
+                next();
+              }
+            })
+      } else {
+        Portal.find()
+            .exec(function(err, portals){
+              if(err) {
+                console.log(err);
+              }
+              if(portals[0].usersystem == 'on') {
+                req.level = 0;
+                next();
+              } else {
+                next();
+              }
+            })
+      }
     }
 };

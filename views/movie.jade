@@ -11,6 +11,7 @@ html.playbody
   body.playbody
     if !phoneviewer||!waplock
       #player
+      p.level #{level}
       - var logo = player.mark || '';
       if !player.kaiguan
         - logo = '';
@@ -56,6 +57,7 @@ html.playbody
       script(src="/javascripts/hls.min.js")
       script(src="/javascripts/DPlayer.min.js")
       script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
+      script(src="/layer/layer.js")
       script.
         function getParentUrl() {   
           var url = null;  
@@ -72,6 +74,7 @@ html.playbody
         var antiurl = "#{antiurl}";
         var antiarr = antiurl.split(",");
         var anti= false;
+        var level = $(".level").text();
         if(antiurl != ""){
           if(parenturl == null) {
             anti = true;
@@ -119,6 +122,13 @@ html.playbody
               $(".dplayer-video").attr("x5-video-orientation","landscape");
               $(".dplayer-video").attr("x5-video-player-fullscreen","true");
             });
+            dp.on('ended', function() {
+              if(level=="0") {
+                layer.msg('想要继续观看，请注册账号');
+              } else if(level=='1') {
+                layer.msg('想要继续观看，请开通会员');
+              }
+            });
           }
         } else {
           var dp = new DPlayer({
@@ -154,6 +164,13 @@ html.playbody
             $(".dplayer-video").attr("x5-video-player-type","h5");
             $(".dplayer-video").attr("x5-video-orientation","landscape");
             $(".dplayer-video").attr("x5-video-player-fullscreen","true");
+          });
+          dp.on('ended', function() {
+            if(level=="0") {
+              layer.msg('想要继续观看，请注册账号');
+            } else if(level=="1") {
+              layer.msg('想要继续观看，请开通会员');
+            }
           });
         }
       if player.kaiguan

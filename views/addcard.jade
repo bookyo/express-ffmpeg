@@ -1,0 +1,21 @@
+extends cmslayout
+block header
+  title 升级会员 | #{portal.title}
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md6.layui-col-md-offset3
+        .card
+          h2.login-title.text-center 使用卡劵成为会员
+          form.layui-form#usecard(action="",method="post")
+            .layui-form-item
+              label.layui-form-label 卡劵
+              .layui-input-block
+                input.layui-input(type="text", name="card", required, lay-verify="required|card", placeholder="输入升级卡劵")
+            .layui-form-item
+              .layui-input-block
+                button.layui-btn(lay-submit, lay-filter="usecardform") 提交
+        p.flash #{info}
+          
+              
+          

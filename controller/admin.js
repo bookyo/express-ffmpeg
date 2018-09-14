@@ -5,11 +5,15 @@ var FFmpeghelper = require('../helper/newffmpeg');
 var Category = require("../models/category");
 var Portal = require("../models/portal");
 var Player = require("../models/player");
+var User = require("../models/user");
+var Card = require("../models/card");
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var _ = require('underscore');
 var moment = require('moment');
+var crypto = require('crypto');
 var path = require('path');
+const { validationResult } = require('express-validator/check');
 exports.getadmin = function(req,res){
     res.render('admin',{
         user: req.session.user,
@@ -209,6 +213,15 @@ exports.delcategory = function(req, res) {
         res.json({success:1});
     })
 }
+exports.deluser = function(req, res) {
+    var id = req.query.id;
+    User.deleteOne({_id: id}, function(err) {
+        if(err) {
+            console.log(err);
+        }
+        res.json({success:1});
+    })
+}
 exports.getmovie = function(req, res) {
     var id = req.params.id;
     Movie.findOneAndUpdate({
@@ -249,7 +262,7 @@ exports.getmovie = function(req, res) {
                             }
                             var token = jwt.sign({access: "view"},setting[0].antikey,{expiresIn: '1h'});
                             res.render("movie",{
-                                user:req.session.user,
+                                level:req.level,
                                 title: movie.originalname+"在线播放",
                                 id:id,
                                 token: token,
@@ -535,6 +548,7 @@ exports.portal = function(req, res) {
                     title: '',
                     seotitle: '',
                     kaiguan: '',
+                    usersystem: '',
                     host: '',
                     screenshots: 0,
                     keywords: '',
@@ -555,6 +569,7 @@ exports.postportal = function(req, res) {
     var host = req.body.host;
     var screenshots = req.body.screenshots;
     var description = req.body.description;
+    var usersystem = req.body.usersystem;
     Portal.find()
         .exec(function(err, portals) {
             if(err) {
@@ -566,6 +581,7 @@ exports.postportal = function(req, res) {
                 portals[0].title = title;
                 portals[0].seottile = seotitle;
                 portals[0].kaiguan = kaiguan;
+                portals[0].usersystem = usersystem;
                 portals[0].keywords = keywords;
                 portals[0].description = description;
                 portals[0].save(function(err) {
@@ -581,6 +597,7 @@ exports.postportal = function(req, res) {
                     seotitle: seotitle,
                     keywords: keywords,
                     kaiguan: kaiguan,
+                    usersystem: usersystem,
                     description: description,
                 }
                 var newportal = new Portal(portalobj);
@@ -771,6 +788,249 @@ exports.tongji = function(req, res) {
                })
             })
         })
+}
+
+exports.login = function(req, res) {
+    var user = req.session.leveluser;
+    Portal.find()
+        .exec(function(err, portal) {
+            if(err) {
+                console.log(err);
+            }
+            res.render("cmslogin", {
+                user: user,
+                portal: portal[0],
+                title: "用户登陆",
+                info: req.flash('info')
+            })
+        })
+}
+exports.reg = function(req, res) {
+    Portal.find()
+        .exec(function(err, portal) {
+            if(err) {
+                console.log(err);
+            }
+            res.render('cmsreg', {
+                portal: portal[0],
+                title: '用户注册',
+                info: req.flash('info')
+            })
+        })
+}
+exports.postreg = function(req, res) {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(422).json({
+            errors: errors.array()
+        });
+    }
+    var username = req.body.username;
+    var email = req.body.email;
+    var md5 = crypto.createHash('md5');
+    var password = md5.update(req.body.password).digest('hex');
+    var newuserobj = {
+        username: username,
+        email: email,
+        password: password
+    }
+    User.findOne({username: username})
+        .exec(function(err,user) {
+            if(err) {
+                console.log(err);
+            }
+            if(user) {
+                req.flash('info', '此用户名已经被注册');
+                return res.redirect('/register');
+            }
+            User.findOne({email: email})
+                .exec(function(err, user) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    if(user) {
+                        req.flash('info', '此邮箱已经被注册');
+                        return res.redirect("/register");
+                    }
+                    var newuser = new User(newuserobj);
+                    newuser.save(function(err,user) {
+                        if(err) {
+                            console.log(err);
+                        }
+                        req.session.leveluser = user.username;
+                        res.redirect('/');
+                    });
+                })
+        });
+}
+exports.postlogin = function(req, res) {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(422).json({
+            errors: errors.array()
+        });
+    }
+    var email = req.body.email;
+    var md5 = crypto.createHash('md5');
+    var password = md5.update(req.body.password).digest('hex');
+    User.findOne({email:email,password:password})
+        .exec(function(err,user){
+            if(err) {
+                console.log(err);
+            }
+            if(!user) {
+                req.flash('info','对不起，邮箱或密码错误');
+                return res.redirect("/login");
+            }
+            req.session.leveluser = user.username;
+            res.redirect("/");
+        });
+
+}
+exports.logout = function(req, res) {
+    req.session.leveluser = null;
+    res.redirect("/");
+}
+exports.adminusers = function(req ,res) {
+    var page = req.query.page > 0 ? req.query.page : 1;
+    var perPage = 15;
+    User.find()
+        .sort("-createAt")
+        .limit(perPage)
+        .skip(perPage * (page - 1))
+        .exec(function(err, users) {
+            if(err) {
+                console.log(err);
+            }
+            User.find().count(function(err, count) {
+                if(err) {
+                    console.log(err);
+                }
+                res.render("adminusers", {
+                    title: '后台用户管理',
+                    users: users,
+                    page: page,
+                    pages: Math.ceil(count/perPage)
+                })
+            })
+        })
+}
+exports.gencard = function(req, res) {
+    var days = req.body.days;
+    var counts = req.body.counts;
+    var cards = [];
+    for (let index = 0; index < parseInt(counts); index++) {
+        cards.push({
+            card: randomcard(),
+            days: days,
+            status: 'notuse',
+            createAt: Date.now()
+        })
+    }
+    Card.insertMany(cards, function(err) {
+        if(err) {
+            console.log(err);
+        }
+        res.redirect("/admin/users");
+    })
+}
+exports.cards = function(req, res) {
+    var page = req.query.page > 0 ? req.query.page : 1;
+    var perPage = 15;
+    Card.find()
+        .sort("-createAt")
+        .limit(perPage)
+        .skip(perPage * (page - 1))
+        .exec(function(err, cards) {
+            if(err) {
+                console.log(err);
+            }
+            Card.find().count(function(err, count) {
+                if(err) {
+                    console.log(err);
+                }
+                res.render("admincards", {
+                    title: '后台用户管理',
+                    cards: cards,
+                    page: page,
+                    pages: Math.ceil(count/perPage)
+                })
+            })
+        })
+}
+exports.addcard = function(req, res) {
+    Portal.find()
+        .exec(function(err, portal) {
+            if(err) {
+                console.log(err);
+            }
+            res.render('addcard', {
+                portal: portal[0],
+                title: '升级成会员',
+                user: req.session.leveluser,
+                info: req.flash('info')
+            })
+        })
+}
+exports.postcard = function(req, res) {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(422).json({
+            errors: errors.array()
+        });
+    }
+    var card = req.body.card;
+    Card.findOne({card: card,status:'notuse'})
+        .exec(function(err, card) {
+            if(err) {
+                console.log(err);
+            }
+            if(card) {
+                User.findOne({username: req.session.leveluser})
+                    .exec(function(err, user) {
+                        if(err) {
+                            console.log(err);
+                        }
+                        var duedate = user.duedate;
+                        if(duedate&&moment(duedate).isAfter(Date.now())) {
+                            duedate = moment(duedate).add(card.days, 'days');
+                        } else {
+                            duedate = moment().add(card.days, 'days');
+                        }
+                        user.duedate = duedate;
+                        user.level = 2;
+                        user.save(function(err,newuser){
+                            if(err) {
+                                console.log(err);
+                            }
+                            card.status = 'used';
+                            card.useby = newuser.username;
+                            card.save(function(err) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                                req.flash('info', '开通会员成功，会员时间到' + moment(newuser.duedate).format("YYYY MM DD"));
+                                return res.redirect("/addcard");
+                            })
+                        })
+                    })
+            } else {
+                req.flash('info', '对不起卡劵错误或已使用，请重新核对输入');
+                return res.redirect("/addcard");
+            }
+        })
+}
+function randomcard() {
+    var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","A","B","C","D","E","F","G"];
+    for (var j = 0; j < 500; j++) {
+        var result = "";
+        for (var i = 0; i < 20; i++) {
+            r = Math.floor(Math.random() * data.length);
+
+            result += data[r];
+        }
+        return result;
+    }
 }
 function randomcolor(){
     var r=Math.floor(Math.random()*256);

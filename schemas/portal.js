@@ -7,6 +7,7 @@ var portalSchema = new Schema({
     seotitle: String,
     keywords: String,
     kaiguan: String,
+    usersystem: String,
     description: String,
     createAt: {
         type: Date

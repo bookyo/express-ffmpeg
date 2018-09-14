@@ -237,6 +237,16 @@ body.gray {
   justify-content: center;
   align-items: center;
 }
+.login-title{
+  text-align:center;
+  margin:40px 0;
+}
+.flash{
+  display:none;
+}
+.level{
+  display:none;
+}
 @media (min-width: 768px) {
   .col-md-4 {
   -ms-flex: 0 0 33.333333%;

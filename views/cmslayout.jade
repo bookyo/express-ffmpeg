@@ -15,6 +15,13 @@ html
         ul.layui-nav(lay-filter="navbar")
           li.layui-nav-item
             a(href="/") 首页
+          if portal.usersystem == 'on'
+            if user
+              li.layui-nav-item
+                a(href="/addcard") 开通会员
+            else
+              li.layui-nav-item
+                a.layui-btn(href="/login") 登陆
     block content
     block footer
       .footer 
@@ -24,3 +31,4 @@ html
         a(href="https://gitee.com/quazero") by屈阿零
     script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
     script(src="/layui/layui.js")
+    script(src="/javascripts/cms.js")

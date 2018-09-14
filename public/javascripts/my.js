@@ -178,6 +178,19 @@ $(".btn-delete-category").click(function(e) {
     }
   });
 });
+$(".btn-delete-user").click(function(e) {
+  var id = $(e.target).data("id");
+  $.ajax({
+    type: "DELETE",
+    url: "/delete/user?id="+id,
+    dataType: "JSON",
+    success: function (response) {
+      if(response.success==1) {
+        location.reload();
+      }
+    }
+  });
+});
 $(".btn-delete-movie").click(function(e){
   var target = $(e.target);
   var id = target.data("id");

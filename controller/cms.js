@@ -34,6 +34,7 @@ exports.index = function(req, res) {
                                         categories: categories,
                                         movies: results,
                                         page: page,
+                                        user: req.session.leveluser,
                                         pages: Math.ceil(count / perPage),
                                         portal: portals[0]
                                     })
@@ -65,6 +66,7 @@ exports.getmovie = function(req, res) {
                     res.render('cmsmovie', {
                         portal: req.portal,
                         movie: movie,
+                        user: req.session.leveluser,
                         categories: categories
                     })
                 })
@@ -103,6 +105,7 @@ exports.getcategory = function(req, res) {
                             categories: categories,
                             movies: results,
                             page: page,
+                            user: req.session.leveluser,
                             currentcategory: category,
                             pages: Math.ceil(count / perPage),
                             portal: req.portal

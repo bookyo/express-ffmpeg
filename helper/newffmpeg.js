@@ -126,7 +126,6 @@ function ffmpegtransandchunk(des, path, config, vf, id) {
         .addOption('-vf', vf)
         .output(des + '/index.m3u8')
         .on('start', function () {
-            screenshots(path, des);
             Movie.findOne({
                     _id: id
                 })
@@ -144,6 +143,7 @@ function ffmpegtransandchunk(des, path, config, vf, id) {
             console.log('Cannot process video: ' + path + err.message);
         })
         .on('end', function () {
+            screenshots(path, des);
             Movie.findOne({
                     _id: id
                 })
@@ -151,7 +151,6 @@ function ffmpegtransandchunk(des, path, config, vf, id) {
                     if (err) {
                         console.log(err);
                     }
-                    fs.unlinkSync(movie.path);
                     movie.status = "finished";
                     movie.save(function (err) {
                         console.log(err);
@@ -171,6 +170,9 @@ function screenshots(path, des) {
                     count: setting[0].screenshots,
                     filename: "%i.jpg",
                     folder: des
+                })
+                .on('end', function () {
+                    fs.unlinkSync(path);
                 });
         });  
 }
@@ -186,6 +188,7 @@ function chunk(path, des, id, config, vf) {
             '-strict -2'
         ]).output(des + "/index%d.ts")
         .on('end', function () {
+            screenshots(path, des);
             Movie.findOne({
                     _id: id
                 })
@@ -193,7 +196,6 @@ function chunk(path, des, id, config, vf) {
                     if (err) {
                         console.log(err);
                     }
-                    fs.unlinkSync(movie.path);
                     movie.status = "finished";
                     movie.save(function (err) {
                         console.log(err);
@@ -206,7 +208,6 @@ function chunk(path, des, id, config, vf) {
             ffmpegtransandchunk(des, path, config, vf, id);
         })
         .on("start", function () {
-            screenshots(path, des);
             Movie.findOne({
                     _id: id
                 })

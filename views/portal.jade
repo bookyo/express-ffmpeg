@@ -14,6 +14,13 @@ block content
               else
                 input(type="checkbox",name="kaiguan",lay-skin="switch",lay-text="开启|关闭")
           .layui-form-item
+            label.layui-form-label 开启会员系统
+            .layui-input-block
+              if portal.usersystem == "on"
+                input.layui-inpu(type="checkbox",name="usersystem",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input.layui-inpu(type="checkbox",name="usersystem",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
             label.layui-form-label 站点网址
             .layui-input-block
               input.layui-input(type="text",value="#{portal.host}",name="host",placeholder="网址，需带http://或者https://前缀")

@@ -1,0 +1,30 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 卡劵管理
+          table.layui-table
+            thead
+              tr
+                th 卡号
+                th 会员时长
+                th 状态
+                th 使用者
+                th 生成时间
+            tbody
+              each card in cards
+                tr
+                  td #{card.card}
+                  td #{card.days}
+                  td #{card.status}
+                  td #{card.useby}
+                  td #{card.createAt}
+          nav.pages
+            if( pages> 1)
+              ul.pagination
+                != createPagination(pages, page)
+          
+        
+          

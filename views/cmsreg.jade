@@ -1,0 +1,30 @@
+extends cmslayout
+block header
+  title 会员注册 | #{portal.title}
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md6.layui-col-md-offset3
+        .card
+          h2.login-title.text-center 用户注册
+          form.layui-form#login(action="",method="post")
+            .layui-form-item
+              label.layui-form-label 用户名
+              .layui-input-block
+                input.layui-input(type="text", name="username", required, lay-verify="length", placeholder="输入用户名")
+            .layui-form-item
+              label.layui-form-label 邮箱
+              .layui-input-block
+                input.layui-input(type="text", name="email", required, lay-verify="required|email", placeholder="输入邮箱")
+            .layui-form-item
+              label.layui-form-label 密码
+              .layui-input-block
+                input.layui-input(type="password", name="password", required, lay-verify="length", placeholder="输入密码")
+            .layui-form-item
+              .layui-input-block
+                button.layui-btn(lay-submit, lay-filter="regform") 注册
+                a.layui-btn(href="/login") 登陆
+        p.flash #{info}
+          
+              
+          

@@ -1,0 +1,51 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 用户系统和卡劵生成
+        .layui-tab
+          ul.layui-tab-title
+            li.layui-this(lay-id="users") 用户列表
+            li(lay-id="gencard") 生成卡劵
+          .layui-tab-content
+            .layui-tab-item.layui-show
+              table.layui-table
+                thead
+                  tr
+                    th 用户名
+                    th 邮箱
+                    th 注册时间
+                    th 等级
+                    th(width="200px") 操作
+                tbody
+                  each user in users
+                    tr
+                      td #{user.username}
+                      td #{user.email}
+                      td #{user.createAt}
+                      td #{user.level}
+                      td
+                        .layui-btn-group
+                          button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-user(data-id="#{user._id}") 删除
+              nav.pages
+                if( pages> 1)
+                  ul.pagination
+                    != createPagination(pages, page)
+            .layui-tab-item
+              form.layui-form(method="post",action="/admin/gencard")
+                .layui-form-item
+                  label.layui-form-label 会员天数
+                  .layui-input-block
+                    input.layui-input(type="number",name="days",required,lay-verify="required|number",placeholder="输入天数，建议31天为基数")
+                .layui-form-item.domains
+                  label.layui-form-label 生成张数
+                  .layui-input-block
+                    input.layui-input(type="number",name="counts",required,lay-verify="required|number",placeholder="输入一次性生成张数，建议100张")
+                .layui-form-item
+                  .layui-input-block
+                    button.layui-btn(lay-submit,lay-filter="submitgencard") 提交
+          
+        
+          
