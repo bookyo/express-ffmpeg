@@ -22,6 +22,7 @@ var playerSchema = new Schema({
     waplock: String,
     locktip: String,
     wenziposition: String,
+    tongji: String,
     createAt: {
         type: Date
     }

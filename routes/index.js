@@ -47,6 +47,7 @@ module.exports = function(app) {
     app.post("/upzimu", checkLogin, upload.single('zimu'), Admincontroller.postzimu);
     app.post("/upload", checkLogin, posttimeout, upload.single('file'), Admincontroller.postupload);
     app.post("/transcode", checkLogin, Admincontroller.transcode);
+    app.post("/listszhuanma",checkLogin, Admincontroller.listszhuanma);
     app.delete("/delete/movie", checkLogin, Admincontroller.delete);
     app.delete("/delete/category",checkLogin, Admincontroller.delcategory);
     app.delete("/delete/user", checkLogin, Admincontroller.deluser);

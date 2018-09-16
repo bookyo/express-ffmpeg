@@ -45,5 +45,9 @@ block content
             .layui-input-block
               input.layui-input(type="text",value="#{portal.description}",name="description",placeholder="输入seo的描述")
           .layui-form-item
+            label.layui-form-label 统计代码
+            .layui-input-block
+              textarea.layui-textarea(name="tongji",placeholder="可填入统计代码")!= portal.tongji
+          .layui-form-item
             .layui-input-block
               button.layui-btn(lay-submit,lay-filter="submitportal") 提交

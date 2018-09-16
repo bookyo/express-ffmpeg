@@ -114,6 +114,10 @@ block content
             .layui-input-block
               input.layui-input(type="text",name="locktip",placeholder="可使用html代码",value="#{player.locktip}")
           .layui-form-item
+            label.layui-form-label 统计代码
+            .layui-input-block
+              textarea.layui-textarea(name="tongji",placeholder="输入播放器统计代码")!=player.tongji
+          .layui-form-item
             .layui-input-block
               button.layui-btn(lay-submit,lay-filter="submitplayer") 提交
           style.

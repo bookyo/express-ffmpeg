@@ -2,6 +2,7 @@ var Movie = require('../models/movie');
 var Setting = require("../models/setting");
 var Fenfa = require("../models/fenfa");
 var FFmpeghelper = require('../helper/newffmpeg');
+var ListsFFmpegHelper = require("../helper/listsffmpeg");
 var Category = require("../models/category");
 var Portal = require("../models/portal");
 var Player = require("../models/player");
@@ -182,7 +183,12 @@ exports.transcode = function(req, res) {
             });
         })
 }
-
+exports.listszhuanma = function(req, res) {
+    ListsFFmpegHelper.transcode();
+    res.json({
+        success:1
+    })
+}
 exports.delete = function(req,res) {
     var id = req.query.id;
     Movie.findOne({_id:id})
@@ -260,7 +266,7 @@ exports.getmovie = function(req, res) {
                                     }
                                 }
                             }
-                            var token = jwt.sign({access: "view"},setting[0].antikey,{expiresIn: '1h'});
+                            var token = jwt.sign({access: "view"},setting[0].antikey,{expiresIn: '100s'});
                             res.render("movie",{
                                 level:req.level,
                                 title: movie.originalname+"在线播放",
@@ -552,7 +558,8 @@ exports.portal = function(req, res) {
                     host: '',
                     screenshots: 0,
                     keywords: '',
-                    description: ''
+                    description: '',
+                    tongji: ''
                 }
             }
             res.render('portal', {
@@ -570,6 +577,7 @@ exports.postportal = function(req, res) {
     var screenshots = req.body.screenshots;
     var description = req.body.description;
     var usersystem = req.body.usersystem;
+    var tongji = req.body.tongji;
     Portal.find()
         .exec(function(err, portals) {
             if(err) {
@@ -584,6 +592,7 @@ exports.postportal = function(req, res) {
                 portals[0].usersystem = usersystem;
                 portals[0].keywords = keywords;
                 portals[0].description = description;
+                portals[0].tongji = tongji;
                 portals[0].save(function(err) {
                     if(err) {
                         console.log(err);
@@ -599,6 +608,7 @@ exports.postportal = function(req, res) {
                     kaiguan: kaiguan,
                     usersystem: usersystem,
                     description: description,
+                    tongji: tongji
                 }
                 var newportal = new Portal(portalobj);
                 newportal.save(function(err) {
@@ -641,6 +651,7 @@ exports.bofangqi = function(req, res) {
                    underline: 'on',
                    link: 'http://ffmpeg.moejj.com',
                    wenziposition: 'lefttop',
+                   tongji: '',
                    wenzix: 20,
                    wenziy: 20
                }
@@ -673,6 +684,7 @@ exports.postbofangqi = function(req, res) {
     var underline = req.body.underline;
     var waplock = req.body.waplock;
     var locktip = req.body.locktip;
+    var tongji = req.body.tongji;
     Player.find()
         .exec(function(err, players) {
             if(err) {
@@ -700,6 +712,7 @@ exports.postbofangqi = function(req, res) {
                 players[0].text = text;
                 players[0].italic = italic;
                 players[0].underline = underline;
+                players[0].tongji = tongji;
                 players[0].save(function(err) {
                     if(err) {
                         console.log(err);
@@ -727,7 +740,8 @@ exports.postbofangqi = function(req, res) {
                     link: link,
                     wenziposition: wenziposition,
                     wenzix: wenzix,
-                    wenziy: wenziy
+                    wenziy: wenziy,
+                    tongji: tongji
                 };
                 var newplayer = new Player(playerobj);
                 newplayer.save(function(err) {

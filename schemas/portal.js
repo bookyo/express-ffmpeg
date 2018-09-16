@@ -9,6 +9,7 @@ var portalSchema = new Schema({
     kaiguan: String,
     usersystem: String,
     description: String,
+    tongji: String,
     createAt: {
         type: Date
     }

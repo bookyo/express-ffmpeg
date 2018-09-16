@@ -153,6 +153,18 @@ $(".zhuanma").click(function(e){
     }
   });
 });
+$(".listszhuanma").click(function(e) {
+  $.ajax({
+    type: "POST",
+    url: "/listszhuanma",
+    dataType: "JSON",
+    success: function (response) {
+      if(response.success ==1 ) {
+        location.reload();
+      }
+    }
+  });
+});
 $(".ruku").click(function(e) {
   $.ajax({
     type: "POST",
