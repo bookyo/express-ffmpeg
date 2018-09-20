@@ -298,6 +298,7 @@ exports.setting = function(req, res) {
                     antikey: "",
                     wmpath: "./public/mark/mark.png",
                     miaoqie: "",
+                    tsjiami: "",
                     screenshots: 0
                 }
             }
@@ -369,6 +370,7 @@ exports.postsetting = function(req, res) {
     var wmpath = req.body.watermark;
     var miaoqie = req.body.miaoqie;
     var screenshots = req.body.screenshots;
+    var tsjiami = req.body.tsjiami;
     antiurlarr = antiurl.split("|");
     if(!miaoqie) {
         miaoqie = "";
@@ -386,6 +388,7 @@ exports.postsetting = function(req, res) {
                 setting[0].antiurl = antiurlarr;
                 setting[0].miaoqie = miaoqie;
                 setting[0].screenshots = screenshots;
+                setting[0].tsjiami = tsjiami;
                 setting[0].save(function(err) {
                     if(err) {
                         console.log(err);
@@ -399,7 +402,8 @@ exports.postsetting = function(req, res) {
                     antikey: antikey,
                     miaoqie: miaoqie,
                     screenshots: screenshots,
-                    wmpath: wmpath
+                    wmpath: wmpath,
+                    tsjiami: tsjiami
                 }
                 var setting = new Setting(settingobj);
                 setting.save(function(err) {

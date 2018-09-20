@@ -8,6 +8,7 @@ var SettingSchema = new Schema({
     wmpath: String,
     miaoqie: String,
     screenshots: Number,
+    tsjiami: String,
     createAt: {
         type: Date,
         default: Date.now()

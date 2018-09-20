@@ -40,6 +40,7 @@ ffmpeg.ffprobe(path,function(err,metadata){
             var videooriginH = 0;
             var videooriginC = "";
             var audiooriginC = "";
+            var tsjiami = setting[0].tsjiami;
             if(!wmimage || wmimage == "") {
                 wmimage = markdir;
             }
@@ -102,12 +103,19 @@ ffmpeg.ffprobe(path,function(err,metadata){
                 '-hls_list_size 0',
                 '-f hls'
             ];
+            if(tsjiami=='on') {
+                fs.writeFileSync(des+"/key.info",setting[0].host+"/videos/"+id+"/ts.key\n"+des+"/ts.key");
+                var key = randomkey();
+                fs.writeFileSync(des+"/ts.key",key);
+                var jiamiconfig = '-hls_key_info_file '+des+'/key.info';
+                config.push(jiamiconfig);
+            }
             if(setting[0].miaoqie == "on") {
                 if (videooriginH <= setting[0].hd * 1 && videooriginC == "h264" && audiooriginC == "aac") {
                     if(srtexists) {
                         ffmpegtransandchunk(des, path, config, vf, id);
                     } else {
-                        chunk(path, des, id, config, vf);
+                        chunk(path, des, id, config, vf, tsjiami);
                     }
                 } else {
                     ffmpegtransandchunk(des, path, config, vf, id);
@@ -172,21 +180,24 @@ function screenshots(path, des) {
                     folder: des
                 })
                 .on('end', function () {
-                    fs.unlinkSync(path);
+                    thumbnails(des, path);
                 });
         });  
 }
-function chunk(path, des, id, config, vf) {
+function chunk(path, des, id, config, vf, tsjiami) {
+    var chunkconfig = [
+        '-c copy',
+        '-bsf:v h264_mp4toannexb',
+        '-hls_time 10',
+        '-strict -2',
+        '-start_number 0',
+        '-hls_list_size 0'
+    ];
+    if(tsjiami=='on') {
+        chunkconfig.push('-hls_key_info_file '+des+'/key.info');
+    }
     ffmpeg(path)
-        .addOptions([
-            '-codec copy',
-            '-vbsf h264_mp4toannexb',
-            '-map 0',
-            '-f segment',
-            '-segment_list ' + des + '/index.m3u8',
-            '-segment_time 10',
-            '-strict -2'
-        ]).output(des + "/index%d.ts")
+        .addOptions(chunkconfig).output(des + "/index.m3u8")
         .on('end', function () {
             screenshots(path, des);
             Movie.findOne({
@@ -239,3 +250,28 @@ function deleteall(path) {
         fs.rmdirSync(path);
     }
 };
+function thumbnails(des, path) {
+    var exec = require('child_process').exec; 
+    var cmdStr = 'dplayer-thumbnails -o '+des+'/thumbnails.jpg -q 60 '+path;
+    exec(cmdStr, function(err,stdout,stderr){
+    if(err) {
+      console.log('thumbnails error:'+stderr);
+    } 
+    console.log(`stdout: ${stdout}`);
+    if(stdout.match(/Done/)) {
+        fs.unlinkSync(path);
+    }
+    });
+}
+function randomkey() {
+    var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","A","B","C","D","E","F","G"];
+    for (var j = 0; j < 500; j++) {
+        var result = "";
+        for (var i = 0; i < 16; i++) {
+            r = Math.floor(Math.random() * data.length);
+
+            result += data[r];
+        }
+        return result;
+    }
+}

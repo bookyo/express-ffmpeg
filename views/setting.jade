@@ -51,6 +51,13 @@ block content
                   .layui-input-block
                     input.layui-input(type="number",value="#{setting.screenshots}",name="screenshots",placeholder="输入生成截图数")
                 .layui-form-item
+                  label.layui-form-label TS加密
+                  .layui-input-block
+                    if setting.tsjiami=="on"
+                      input(type="checkbox",name="tsjiami",lay-skin="switch",lay-text="开启|关闭",checked)
+                    else
+                      input(type="checkbox",name="tsjiami",lay-skin="switch",lay-text="开启|关闭")
+                .layui-form-item
                   label.layui-form-label 水印
                   .layui-input-inline
                     - var imgpath = setting.wmpath.split("/");
