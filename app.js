@@ -38,6 +38,30 @@ app.use(session({
     url: 'mongodb://' + config.dbuser + ':'+config.dbpassword+'@127.0.0.1/'+config.db
   })
 }));
+app.use("/videos/*/ts.key", function(req,res,next) {
+  Setting.find()
+      .exec(function(err, setting) {
+        if(err) {
+          console.log(err);
+        }
+        var antiurlarr = setting[0].antiurl;
+        if(antiurlarr[0]!="") {
+          if(antiurlarr.indexOf(req.headers.origin)!=-1){ 
+            res.header("Access-Control-Allow-Origin", req.headers.origin); 
+            res.header("Access-Control-Allow-Methods", "POST, GET"); 
+            res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
+            res.header("Access-Control-Allow-Headers", "Content-Type"); 
+          } 
+          next(); 
+        } else {
+          res.header("Access-Control-Allow-Origin", "*"); 
+          res.header("Access-Control-Allow-Methods", "POST, GET"); 
+          res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
+          res.header("Access-Control-Allow-Headers", "Content-Type"); 
+          next();
+        }
+      }) 
+});
 app.use("/videos/:id/index.m3u8", openUsersystem, function (req, res, next) {
   var token = req.query.token;
   var id = req.params.id;

@@ -251,17 +251,36 @@ function deleteall(path) {
     }
 };
 function thumbnails(des, path) {
-    var exec = require('child_process').exec; 
-    var cmdStr = 'dplayer-thumbnails -o '+des+'/thumbnails.jpg -q 60 '+path;
-    exec(cmdStr, function(err,stdout,stderr){
-    if(err) {
-      console.log('thumbnails error:'+stderr);
-    } 
-    console.log(`stdout: ${stdout}`);
-    if(stdout.match(/Done/)) {
-        fs.unlinkSync(path);
-    }
-    });
+    var nsg = require('node-sprite-generator');
+    var Jimp = require('jimp');
+    var tmp = des+'/dplayer-thumbnails';
+    var output = des+ '/thumbnails.jpg';
+    ffmpeg(path)
+            .screenshots({
+                count: 100,
+                folder: tmp,
+                filename: 'screenshot%00i.png',
+                size: '160x?'
+            })
+            .on('end', function () {
+                nsg({
+                    src: [
+                        tmp + '/*.png'
+                    ],
+                    spritePath: tmp + '/sprite.png',
+                    stylesheetPath: tmp + '/sprite.css',
+                    layout: 'horizontal',
+                    compositor: 'jimp'
+                }, function (err) {
+                    Jimp.read(tmp + '/sprite.png', function (err, lenna) {
+                        if (err) throw err;
+                        lenna.quality(parseInt(85))
+                            .write(output);
+                        fs.unlinkSync(path);
+                        deleteall(tmp);
+                    });
+                });
+            });
 }
 function randomkey() {
     var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","A","B","C","D","E","F","G"];
