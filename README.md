@@ -64,11 +64,6 @@ sudo apt-get install ffmpeg
 
 4. ffmpeg烧录字幕的时候会查找字体配置文件，/etc/fonts，如果里边没有fonts.conf，请将本源码中fonts.conf上传到/etc/fonts，有些linux系统没有中文字体支持，请将msyh.ttf上传至/usr/share/fonts里边。
 
-5.安装预览图生成模块
-```
-npm install -g dplayer-thumbnails
-```
-
 ##### 利用sh文件安装
 * ./install.sh 使用前请给予权限。(已经弃用，请前往官网按步骤安装)
 
@@ -96,7 +91,7 @@ module.exports = {
 
 #### 版本
 ##### V3.2版本
-* 增加播放器进度条预览效果，鼠标移动到进度条会显示对应时间轴的预览图，记得运行npm install -g dplayer-thumbnails。
+* 增加播放器进度条预览效果，鼠标移动到进度条会显示对应时间轴的预览图。
 * 增加后台设置TS加密，设置加密之后，切片文件TS会全部加密。
 * Ts加密高级特性，每一个视频都对应一个独立的KEY文件，安全性大涨。
 ![输入图片说明](https://images.gitee.com/uploads/images/2018/0920/212642_dc2f0ad0_145248.png "屏幕快照 2018-09-20 下午7.22.39.png")
