@@ -19,6 +19,7 @@ block content
                 td #{category.title}
                 td
                   .layui-btn-group
+                    button.layui-btn.layui-btn-sm.btn-edit-category(data-id="#{category._id}") 编辑
                     button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-category(data-id="#{category._id}") 删除
   .addcategory.layui-form
     input.layui-input.inputcategory(type="text" placeholder="添加分类，多个分类以英文半角,分开")

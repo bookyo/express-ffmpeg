@@ -13,6 +13,7 @@ var jwt = require('jsonwebtoken');
 var _ = require('underscore');
 var moment = require('moment');
 var crypto = require('crypto');
+var async = require('async');
 var path = require('path');
 const { validationResult } = require('express-validator/check');
 exports.getadmin = function(req,res){
@@ -230,56 +231,81 @@ exports.deluser = function(req, res) {
 }
 exports.getmovie = function(req, res) {
     var id = req.params.id;
-    Movie.findOneAndUpdate({
-        _id: id
-    }, {
-        $inc: {
-            count: 1
-        }
-    })
-        .exec(function(err,movie){
-            if(err) {
-                console.log(err);
-            }
-            if(!movie) {
-                res.statusCode = 404;
-                return res.send("对不起，此页面不存在");
-            }
+    async.parallel({
+        movie: function(callback) {
+            Movie.findOneAndUpdate({
+                _id: id
+            }, {
+                $inc: {
+                    count: 1
+                }
+            })
+                .exec(function(err,movie){
+                    if(err) {
+                        console.log(err);
+                    }
+                    callback(null, movie);
+                });
+        },
+        setting: function(callback) {
             Setting.find()
                 .exec(function(err, setting){
                     if(err) {
                         console.log(err);
                     }
-                    Player.find()
-                        .exec(function(err, players) {
-                            if(err) {
-                                console.log(err);
-                            }
-                            var waplock = true;
-                            if(players[0].waplock == 'on') {
-                                var agent = req.headers["user-agent"].toLowerCase();
-                                var phoneviewer = agent.match(/(iphone|ipod|ipad|android)/);
-                                var browser = agent.match(/mqqbrowser/);
-                                if(phoneviewer) {
-                                    if(browser) {
-                                        waplock = false;
-                                    }
-                                }
-                            }
-                            var token = jwt.sign({access: "view"},setting[0].antikey,{expiresIn: '100s'});
-                            res.render("movie",{
-                                level:req.level,
-                                title: movie.originalname+"在线播放",
-                                id:id,
-                                token: token,
-                                phoneviewer: phoneviewer,
-                                waplock: waplock,
-                                player: players[0],
-                                antiurl: setting[0].antiurl
-                            })
-                        })
+                    callback(null, setting[0]);
                 })
-        })
+        },
+        player: function(callback) {
+            Player.find()
+                .exec(function(err, players) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    callback(null, players[0]);
+                });
+        }
+    }, function(err,results) {
+        if(err) {
+            console.log(err);
+        }
+        if(!results.movie) {
+            res.statusCode = 404;
+            return res.send("对不起，此页面不存在");
+        }
+        var waplock = true;
+        if(results.player.waplock == 'on') {
+            var agent = req.headers["user-agent"].toLowerCase();
+            var phoneviewer = agent.match(/(iphone|ipod|ipad|android)/);
+            var browser = agent.match(/mqqbrowser/);
+            if(phoneviewer) {
+                if(browser) {
+                    waplock = false;
+                }
+            }
+        }
+        Category.findOne({title: results.movie.category})
+            .exec(function(err, category) {
+                if(err) {
+                    console.log(err);
+                }
+                var rgba = colorRgba(results.player.wenzibackground,results.player.wenzibackgroundopacity);
+                var token = jwt.sign({access: "view"},results.setting.antikey,{expiresIn: '100s'});
+                res.render("movie",{
+                    level:req.level,
+                    title: results.movie.originalname+"在线播放",
+                    id:id,
+                    token: token,
+                    phoneviewer: phoneviewer,
+                    host: results.setting.host,
+                    waplock: waplock,
+                    player: results.player,
+                    rgba: rgba,
+                    antiurl: results.setting.antiurl,
+                    categoryanti: category.antiurl
+                })
+            })
+    });
 }
 exports.setting = function(req, res) {
     Setting.find()
@@ -563,6 +589,11 @@ exports.portal = function(req, res) {
                     screenshots: 0,
                     keywords: '',
                     description: '',
+                    images: '',
+                    imagesarticle: '',
+                    articles: '',
+                    articlestitle: '',
+                    theme: 'default',
                     tongji: ''
                 }
             }
@@ -581,6 +612,11 @@ exports.postportal = function(req, res) {
     var screenshots = req.body.screenshots;
     var description = req.body.description;
     var usersystem = req.body.usersystem;
+    var images = req.body.images;
+    var imagestitle = req.body.imagestitle;
+    var articles = req.body.articles;
+    var articlestitle = req.body.articlestitle;
+    var theme = req.body.theme;
     var tongji = req.body.tongji;
     Portal.find()
         .exec(function(err, portals) {
@@ -596,6 +632,11 @@ exports.postportal = function(req, res) {
                 portals[0].usersystem = usersystem;
                 portals[0].keywords = keywords;
                 portals[0].description = description;
+                portals[0].images = images;
+                portals[0].imagestitle = imagestitle;
+                portals[0].articles = articles;
+                portals[0].articlestitle = articlestitle;
+                portals[0].theme = theme,
                 portals[0].tongji = tongji;
                 portals[0].save(function(err) {
                     if(err) {
@@ -612,6 +653,11 @@ exports.postportal = function(req, res) {
                     kaiguan: kaiguan,
                     usersystem: usersystem,
                     description: description,
+                    articles: articles,
+                    images: images,
+                    imagestitle: imagestitle,
+                    articlestitle: articlestitle,
+                    theme: theme,
                     tongji: tongji
                 }
                 var newportal = new Portal(portalobj);
@@ -655,6 +701,8 @@ exports.bofangqi = function(req, res) {
                    underline: 'on',
                    link: 'http://ffmpeg.moejj.com',
                    wenziposition: 'lefttop',
+                   wenzibackground: '#fff',
+                   wenzibackgroundopacity: 0.5,
                    tongji: '',
                    wenzix: 20,
                    wenziy: 20
@@ -679,6 +727,8 @@ exports.postbofangqi = function(req, res) {
     var opacity = req.body.opacity;
     var link = req.body.link;
     var wenziposition = req.body.wenziposition;
+    var wenzibackground = req.body.wenzibackground;
+    var wenzibackgroundopacity = req.body.wenzibackgroundopacity;
     var wenzix = req.body.wenzix;
     var wenziy = req.body.wenziy;
     var color = req.body.color;
@@ -709,6 +759,8 @@ exports.postbofangqi = function(req, res) {
                 players[0].opacity = opacity;
                 players[0].link = link;
                 players[0].wenziposition = wenziposition;
+                players[0].wenzibackground = wenzibackground;
+                players[0].wenzibackgroundopacity = wenzibackgroundopacity;
                 players[0].wenzix = wenzix;
                 players[0].wenziy = wenziy;
                 players[0].color = color;
@@ -743,6 +795,8 @@ exports.postbofangqi = function(req, res) {
                     italic: italic,
                     link: link,
                     wenziposition: wenziposition,
+                    wenzibackground:wenzibackground,
+                    wenzibackgroundopacity: wenzibackgroundopacity,
                     wenzix: wenzix,
                     wenziy: wenziy,
                     tongji: tongji
@@ -783,7 +837,7 @@ exports.tongji = function(req, res) {
             var backgroundColor = [];
             for (let index = 0; index < movies.length; index++) {
                 backgroundColor.push(randomcolor());
-                movies[index].formatdate=moment(movies[index].createAt).format('YYYY年MM月DD日, h:mm:ss');
+                movies[index].formatdate=moment(movies[index].createAt).format('YYYY年MM月DD日, HH:mm:ss');
             }
             var data = {};
             var dataarr = _.pluck(movies,'count');
@@ -815,7 +869,7 @@ exports.login = function(req, res) {
             if(err) {
                 console.log(err);
             }
-            res.render("cmslogin", {
+            res.render(req.portal.theme+"/cmslogin", {
                 user: user,
                 portal: portal[0],
                 title: "用户登陆",
@@ -829,7 +883,7 @@ exports.reg = function(req, res) {
             if(err) {
                 console.log(err);
             }
-            res.render('cmsreg', {
+            res.render(req.portal.theme+'/cmsreg', {
                 portal: portal[0],
                 title: '用户注册',
                 info: req.flash('info')
@@ -982,7 +1036,7 @@ exports.addcard = function(req, res) {
             if(err) {
                 console.log(err);
             }
-            res.render('addcard', {
+            res.render(req.portal.theme+'/addcard', {
                 portal: portal[0],
                 title: '升级成会员',
                 user: req.session.leveluser,
@@ -1052,6 +1106,61 @@ exports.getcardtxt = function(req, res) {
             res.send(thecards.join("\n"));
         })
 }
+exports.updatecategory = function(req, res) {
+    var datas = req.body.datas;
+    console.log(JSON.parse(datas));
+    var datasjson = JSON.parse(datas);
+    for (let index = 0; index < datasjson.length; index++) {
+        const element = datasjson[index];
+        Movie.findOne({_id:element.id})
+            .exec(function(err, movie) {
+                if(err) {
+                    console.log(err);
+                }
+                movie.category = element.category;
+                movie.save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            })
+    }
+    res.json({
+        success: 1
+    });
+}
+exports.editcategory = function(req, res) {
+    var id = req.params.id;
+    Category.findOne({_id: id})
+        .exec(function(err, category) {
+            if(err) {
+                console.log(err);
+            }
+            res.render('editcategory', {
+                title: '编辑分类'+category.title,
+                category: category
+            })
+        })
+}
+exports.posteditcategory = function(req, res) {
+    var id = req.params.id;
+    var title = req.body.title;
+    var antiurl = req.body.antiurl;
+    Category.findOne({_id:id})
+        .exec(function(err, category) {
+            if(err) {
+                console.log(err);
+            }
+            category.title = title;
+            category.antiurl = antiurl;
+            category.save(function(err) {
+                if(err) {
+                    console.log(err);
+                }
+                res.redirect("/admin/categories");
+            })
+        })
+}
 function randomcard() {
     var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","A","B","C","D","E","F","G"];
     for (var j = 0; j < 500; j++) {
@@ -1085,3 +1194,26 @@ function deleteall(path) {
         fs.rmdirSync(path);
     }
 };
+function colorRgba (str,n){
+    //十六进制颜色值的正则表达式
+    var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+    var sColor = str.toLowerCase();
+    //十六进制颜色转换为RGB格式  
+    if(sColor && reg.test(sColor)){  
+        if(sColor.length === 4){
+            var sColorNew = "#";  
+            for(var i=1; i<4; i+=1){  //例如：#eee,#fff等
+                sColorNew += sColor.slice(i,i+1).concat(sColor.slice(i,i+1));     
+            }  
+            sColor = sColorNew;  
+        }  
+        //处理六位颜色值  
+        var sColorChange = [];  
+        for(var i=1; i<7; i+=2){  
+            sColorChange.push(parseInt("0x"+sColor.slice(i,i+2)));    
+        }
+        return "rgba(" + sColorChange.join(",") + ","+n+")"; 
+    }else{  
+        return sColor;    
+    }
+}

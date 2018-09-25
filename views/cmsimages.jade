@@ -1,0 +1,35 @@
+extends cmsmanagerlayout
+block content
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 图集管理
+        .layui-btn-group#actions
+          button.layui-btn.postimages 发布图集
+        .layui-tab-content
+          .layui-tab-item.layui-show
+            table.layui-table
+              thead
+                tr
+                  th 标题
+                  th 封面
+                  th 链接
+                  th(width="100px") 操作
+              tbody
+                each image in images
+                  tr
+                    td #{image.title}
+                    td 
+                      image.poster(src="#{image.poster}" width="200" height="150")
+                    td
+                      a(href="/image/"+image._id) 链接
+                    td
+                      .layui-btn-group
+                        button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-image(data-id="#{image._id}") 删除
+            nav.pages
+              if( pages> 1)
+                ul.pagination
+                  != createPagination(pages, page)
+          
+        
+          

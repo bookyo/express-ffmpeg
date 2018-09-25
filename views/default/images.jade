@@ -1,0 +1,20 @@
+extends cmslayout
+block header
+  title #{title} - #{portal.title}
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md12
+        .waterfall
+          each image in images
+            .col-md-4
+              .card.nopadding.images-relative
+                a(href="/image/#{image._id}")
+                  img.images-poster(src="/images/#{image._id}/poster.jpg")
+                .cover-title
+                  a(href="/image/#{image._id}")
+                    h2.imagetuijian #{image.title}
+        nav.pages
+          if( pages> 1)
+            ul.pagination
+              != createPagination(pages, page)

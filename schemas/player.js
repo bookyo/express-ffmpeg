@@ -22,6 +22,8 @@ var playerSchema = new Schema({
     waplock: String,
     locktip: String,
     wenziposition: String,
+    wenzibackground: String,
+    wenzibackgroundopacity: Number,
     tongji: String,
     createAt: {
         type: Date

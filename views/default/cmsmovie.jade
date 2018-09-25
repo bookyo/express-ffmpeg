@@ -1,0 +1,34 @@
+extends cmslayout
+block header
+  title #{movie.originalname} | #{portal.title}
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md12
+        .card
+          a.tag(href="/") 全部
+          each category in categories
+            if movie.category == category.title
+              a.tag.current(href="/category/#{category.title}") #{category.title}
+            else
+              a.tag(href="/category/#{category.title}") #{category.title}
+        .waterfall
+          .card.nopadding.flexauto
+            .play
+              iframe(src="/share/#{movie._id}", frameborder="0",allowfullscreen)
+            .card-body
+              h1 #{movie.originalname}
+              hr
+              h2.title 分享链接
+              p(style="font-size:12px;color:#333;") 粘贴到论坛或博客中
+              input.layui-input(type="text",disabled,value="<iframe height=498 width=510 src='#{portal.host}/share/#{movie._id}' frameborder=0 'allowfullscreen'></iframe>")
+              p(style="font-size:12px;color:#333;margin-top:10px;") 直接粘贴到QQ或微信
+              input.layui-input(type="text",disabled,value="#{portal.host}/share/#{movie._id}")
+              p(style="font-size:12px;color:#333;margin-top:10px;") 友情提示
+              input.layui-input(type="text",disabled,value="无论手机还是电脑，本站都推荐使用火狐浏览器观看")
+              h2.title 视频截图
+              - var n = 0
+              while n < portal.screenshots
+                  img(src="/videos/#{movie._id}/#{++n}.jpg")
+              
+          

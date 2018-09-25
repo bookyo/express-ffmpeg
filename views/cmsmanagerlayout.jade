@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
+    block header
+      title= title
+    block css
+      link(rel="stylesheet", href="/layui/css/layui.css")
+      link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    .layui-header.header
+      .layui-main
+        .logo cms管理
+        ul.layui-nav(lay-filter="navbar")
+          li.layui-nav-item
+            a(href="/admin") 返回云转码
+          li.layui-nav-item
+            a(href="/cms/articles") 文章管理
+          li.layui-nav-item
+            a(href="/cms/images") 图集管理
+    block content
+    block footer
+      script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
+      script(src="/layui/layui.js")
+      script(src="/javascripts/dropzone.js")
+      script(src="/javascripts/my.js")

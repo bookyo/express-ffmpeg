@@ -9,6 +9,11 @@ var portalSchema = new Schema({
     kaiguan: String,
     usersystem: String,
     description: String,
+    images: String,
+    imagestitle: String,
+    articles: String,
+    articlestitle: String,
+    theme: String,
     tongji: String,
     createAt: {
         type: Date

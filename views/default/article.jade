@@ -1,0 +1,14 @@
+extends cmslayout
+block header
+  title #{title} | #{portal.title}
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md12
+        .card
+          h1.image-title #{title}
+          p.postinfo
+            | 发布于 #{data}
+        .waterfall
+          .card.nopadding.flexauto
+            .article-player!=article.content

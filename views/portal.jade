@@ -45,6 +45,33 @@ block content
             .layui-input-block
               input.layui-input(type="text",value="#{portal.description}",name="description",placeholder="输入seo的描述")
           .layui-form-item
+            label.layui-form-label 开启图集系统
+            .layui-input-block
+              if portal.images == "on"
+                input.layui-inpu(type="checkbox",name="images",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input.layui-inpu(type="checkbox",name="images",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
+            label.layui-form-label 图集导航标题
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.imagestitle}",name="imagestitle",placeholder="输入在导航和标题中显示的图集列表标题。")
+          .layui-form-item
+            label.layui-form-label 开启文章系统
+            .layui-input-block
+              if portal.articles == "on"
+                input.layui-inpu(type="checkbox",name="articles",lay-skin="switch",lay-text="开启|关闭",checked)
+              else
+                input.layui-inpu(type="checkbox",name="articles",lay-skin="switch",lay-text="开启|关闭")
+          .layui-form-item
+            label.layui-form-label 文章导航标题
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.articlestitle}",name="articlestitle",placeholder="输入在导航和标题中显示的文章列表标题。")
+          .layui-form-item
+            label.layui-form-label 模板名称
+            .layui-input-inline
+              input.layui-input(type="text",value="#{portal.theme}",name="theme",placeholder="输入模板名")
+            .layui-form-mid.layui-word-aux 默认模板文件夹/public/views/default
+          .layui-form-item
             label.layui-form-label 统计代码
             .layui-input-block
               textarea.layui-textarea(name="tongji",placeholder="可填入统计代码")!= portal.tongji

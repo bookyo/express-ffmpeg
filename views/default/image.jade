@@ -1,0 +1,41 @@
+extends cmslayout
+block header
+  title #{title} | #{portal.title}
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md12
+        .card
+          h1.image-title #{title}
+        .waterfall
+          .card.nopadding.flexauto
+            .image-player
+              image.images-poster(src="#{image}" title="#{title}" alt="#{title}")
+              if page==length
+                a.finalpage.doright(href="javascrit:void(0)")
+              else
+                a.doright(href="?page=#{parseInt(page)+1}")
+              if page==1
+                a.firstpage.doleft(href="javascrit:void(0)")
+              else
+                a.doleft(href="?page=#{parseInt(page)-1}")
+            .text-center
+              if page==1
+                a.firstpage.layui-btn.layui-btn-primary(href="javascrit:void(0)") 前一张
+              else
+                a.layui-btn.layui-btn-primary(href="?page=#{parseInt(page)-1}") 前一张
+              if page==length
+                a.finalpage.layui-btn.layui-btn-primary(href="javascrit:void(0)") 后一张
+              else
+                a.layui-btn.layui-btn-primary(href="?page=#{parseInt(page)+1}") 后一张
+        .layui-row.layui-col-space10
+          each image in newimages
+            .layui-col-md3
+              .card.nopadding.images-relative
+                a(href="/image/#{image._id}")
+                  img.images-poster(src="/images/#{image._id}/poster.jpg")
+                .cover-title
+                  a(href="/image/#{image._id}")
+                    h2.imagetuijian #{image.title}
+              
+          

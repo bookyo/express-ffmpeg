@@ -70,7 +70,7 @@ block content
             label.layui-form-label 文字透明度
             .layui-input-inline
               input.layui-input(type="number",name="opacity",step="0.1",value="#{player.opacity}")
-            .layui-form-mid.layui-word-aux 范围：0-1，小写一位数
+            .layui-form-mid.layui-word-aux 范围：0-1，小数一位数
           .layui-form-item
             label.layui-form-label 文字颜色
             .layui-input-inline
@@ -83,6 +83,17 @@ block content
               input(type="checkbox",name="bold",title="加粗",checked=player.bold==="on"?true:false)
               input(type="checkbox",name="italic",title="斜体",checked=player.italic==="on"?true:false)
               input(type="checkbox",name="underline",title="下划线",checked=player.underline==="on"?true:false)
+          .layui-form-item
+            label.layui-form-label 文字背景颜色
+            .layui-input-inline
+              input.layui-input.inputbackgroundcolor(type="text",name="wenzibackground",value="#{player.wenzibackground}",placeholder="请选择颜色")
+            .layui-inline
+              #selectbackgroundcolor
+          .layui-form-item
+            label.layui-form-label 背景透明度
+            .layui-input-inline
+              input.layui-input(type="number",name="wenzibackgroundopacity",step="0.1",value="#{player.wenzibackgroundopacity}")
+            .layui-form-mid.layui-word-aux 范围：0-1，小数一位数
           .layui-form-item
             label.layui-form-label 广告链接
             .layui-input-block

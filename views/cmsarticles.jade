@@ -1,0 +1,32 @@
+extends cmsmanagerlayout
+block content
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title 文章管理
+        .layui-btn-group#actions
+          button.layui-btn.postarticles 发布文章
+        .layui-tab-content
+          .layui-tab-item.layui-show
+              table.layui-table
+                thead
+                  tr
+                    th 标题
+                    th 链接
+                    th(width="100px") 操作
+                tbody
+                  each article in articles
+                    tr
+                      td #{article.title}
+                      td
+                        a(href="/article/"+article._id) 链接
+                      td
+                        .layui-btn-group
+                          button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-article(data-id="#{article._id}") 删除
+            nav.pages
+              if( pages> 1)
+                ul.pagination
+                  != createPagination(pages, page)
+          
+        
+          

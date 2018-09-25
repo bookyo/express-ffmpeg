@@ -92,6 +92,17 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
       }
     });
     upload.render({
+      elem: '#imagesupload'
+      ,url: '/imagesupload'
+      ,field: 'image'
+      ,multiple: true
+      ,done: function(res){
+        if(res.code==0) {
+          $('#imageslists').append('<div class="image-show"><img src="'+ res.image +'" class="layui-upload-img"><input type="hidden" name="images" value="'+res.imagepath+'"><input class="show" type="radio" name="poster" value="'+res.imagepath+'"> 封面</input></div>')
+        }
+      }
+    });
+    upload.render({
       elem:".zimu",
       url: "/upzimu",
       field: "zimu",
@@ -124,6 +135,14 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
         $('.inputcolor').val(color);
       }
     });
+    var color = $('.inputbackgroundcolor').val();
+    colorpicker.render({
+      elem: '#selectbackgroundcolor',
+      color: color,
+      done: function(color) {
+        $('.inputbackgroundcolor').val(color);
+      }
+    });
     form.on('select(shaixuan)', function(data) {
       window.location = "/admin/movies?category=" + data.value;
     });
@@ -153,6 +172,12 @@ $(".zhuanma").click(function(e){
     }
   });
 });
+$(".postimages").click(function(e) {
+  window.location = "/cms/postimages";
+});
+$(".postarticles").click(function(e) {
+  window.location = "/cms/postarticles";
+});
 $(".listszhuanma").click(function(e) {
   $.ajax({
     type: "POST",
@@ -164,6 +189,10 @@ $(".listszhuanma").click(function(e) {
       }
     }
   });
+});
+$(".btn-edit-category").click(function(e) {
+  var id = $(e.target).data('id');
+  window.location = "/category/"+id+"/edit";
 });
 $(".ruku").click(function(e) {
   $.ajax({
@@ -177,11 +206,63 @@ $(".ruku").click(function(e) {
     }
   });
 });
+$(".savecategory").click(function(e) {
+  var category = $(".moviecategory");
+  var categorys = [];
+  category.each(function(index, element) {
+    var id = $(element).data("id");
+    var selected = $(element).val();
+    categorys.push({
+      id: id,
+      category: selected
+    });
+  });
+  $.ajax({
+    type: "POST",
+    url: "/movies/updatecategory",
+    data: {
+      "datas": JSON.stringify(categorys)
+    },
+    dataType: "JSON",
+    traditional: true,
+    success: function (response) {
+      if(response.success == 1) {
+        location.reload();
+      }
+    }
+  });
+});
 $(".btn-delete-category").click(function(e) {
   var id = $(e.target).data("id");
   $.ajax({
     type: "DELETE",
     url: "/delete/category?id="+id,
+    dataType: "JSON",
+    success: function (response) {
+      if(response.success == 1) {
+        location.reload();
+      }
+    }
+  });
+});
+$(".btn-delete-image").click(function(e) {
+  var id = $(e.target).data("id");
+  $.ajax({
+    type: "DELETE",
+    url: "/delete/image?id=" + id,
+    dataType: "JSON",
+    success: function (response) {
+      if(response.success == 1) {
+        location.reload();
+      }
+    }
+  });
+});
+$(".btn-delete-article").click(function(e) {
+  var id = $(e.target).data("id");
+  $.ajax({
+    type: "DELETE",
+    url: "/delete/article?id=" + id,
     dataType: "JSON",
     success: function (response) {
       if(response.success == 1) {

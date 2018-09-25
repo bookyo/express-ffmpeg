@@ -1,0 +1,21 @@
+extends cmslayout
+block header
+  title #{title} - #{portal.title}
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md10.layui-col-md-offset1
+        .card.p-15
+          span.layui-breadcrumb.p-20
+            a(href="/") 首页
+            a
+             cite #{portal.articlestitle}
+        .waterfall.card
+          ul.articleul
+            each article in articles
+              li.articleli
+                a(href="/article/#{article._id}") #{article.title}     
+        nav.pages
+          if( pages> 1)
+            ul.pagination
+              != createPagination(pages, page)

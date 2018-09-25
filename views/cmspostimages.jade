@@ -1,0 +1,15 @@
+extends cmsmanagerlayout
+block content
+  .layui-container.main
+    .layui-row
+      .layui-col-md10.layui-col-md-offset1
+        form.layui-form(method="post",action="")
+          .layui-form-item
+            input.layui-input(type="text",name="title",placeholder="输入图集标题",required)
+          .layui-form-item
+            button.layui-btn#imagesupload(type="button") 上传图片
+            blockquote.layui-elem-quote.layui-quote-nm(style="margin-top:10px")
+              | 上传图片预览
+              .layui-upload-list#imageslists
+          .layui-form-item
+            button.layui-btn(lay-submit,lay-filter="submitimagespost") 提交

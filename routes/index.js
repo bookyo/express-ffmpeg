@@ -16,6 +16,36 @@ var storage = multer.diskStorage({
 var upload = multer({
   storage: storage
 });
+var imagestorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images');
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+var imagesupload = multer({
+  storage: imagestorage
+});
+var articlestorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/uploads');
+  },
+  filename: function (req, file, cb) {
+    var fileFormat = (file.originalname).split(".");
+    cb(null, file.fieldname + '-' + Date.now() + "." + fileFormat[fileFormat.length - 1]);
+  }
+});
+var articleupload = multer({
+  storage: articlestorage,
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/jpeg') {
+      cb(null, false);
+    } else {
+      cb(null, true);
+    }
+  }
+});
 module.exports = function(app) {
     app.get('/hlsserver', checkNotLogin, function(req, res, next) {
       res.render('hlsserver', {
@@ -44,6 +74,21 @@ module.exports = function(app) {
     app.get("/admin", checkLogin, Admincontroller.getadmin);
     app.get("/admin/upload", checkLogin, Admincontroller.getupload);
     app.get("/admin/movies", checkLogin, Admincontroller.getmovies);
+    // cms
+    app.get("/cms", checkLogin, Cmscontroller.manager);
+    app.get("/cms/images", checkLogin, Cmscontroller.cmsimages);
+    app.get("/cms/articles", checkLogin, Cmscontroller.cmsarticles);
+    app.get("/cms/postimages", checkLogin, Cmscontroller.postimages);
+    app.post("/cms/postimages", checkLogin, Cmscontroller.dopostimages);
+    app.get("/cms/postarticles",checkLogin, Cmscontroller.postarticles);
+    app.post("/cms/postarticles",checkLogin, Cmscontroller.dopostarticles);
+    app.post("/imagesupload", checkLogin, imagesupload.single('image'), Cmscontroller.imagesupload);
+    app.get("/image/:id", checkopen, Cmscontroller.getimage);
+    app.get("/article/:id",checkopen, Cmscontroller.getarticle);
+    app.post("/upload/image", checkLogin, articleupload.single('editormd-image-file'), Cmscontroller.uploadimage);
+    app.get("/imageslist", checkopen, Cmscontroller.getimages);
+    app.get("/articles", checkopen, Cmscontroller.getarticles);
+    // end
     app.post("/upzimu", checkLogin, upload.single('zimu'), Admincontroller.postzimu);
     app.post("/upload", checkLogin, posttimeout, upload.single('file'), Admincontroller.postupload);
     app.post("/transcode", checkLogin, Admincontroller.transcode);
@@ -51,9 +96,12 @@ module.exports = function(app) {
     app.delete("/delete/movie", checkLogin, Admincontroller.delete);
     app.delete("/delete/category",checkLogin, Admincontroller.delcategory);
     app.delete("/delete/user", checkLogin, Admincontroller.deluser);
+    app.delete("/delete/image", checkLogin, Cmscontroller.deleteimage);
+    app.delete("/delete/article", checkLogin, Cmscontroller.deletearticle);
     app.get("/share/:id", checkLevel, Admincontroller.getmovie);
     app.get("/", Cmscontroller.index);
     app.get("/movie/:id", checkopen, Cmscontroller.getmovie);
+    app.post("/movies/updatecategory", checkLogin, Admincontroller.updatecategory);
     app.get("/category/:category", checkopen, Cmscontroller.getcategory);
     app.get("/admin/setting", checkLogin, Admincontroller.setting);
     app.post("/admin/setting/basic", checkLogin, Admincontroller.postsetting);
@@ -62,6 +110,8 @@ module.exports = function(app) {
     app.get("/playmagnet", Admincontroller.playmagnet);
     app.post("/addcategory", checkLogin, Admincontroller.addcategory);
     app.get("/admin/categories", checkLogin, Admincontroller.getCategories);
+    app.get("/category/:id/edit", checkLogin, Admincontroller.editcategory);
+    app.post("/category/:id/edit", checkLogin, Admincontroller.posteditcategory);
     app.get("/admin/portal", checkLogin, Admincontroller.portal);
     app.post("/admin/portal", checkLogin, Admincontroller.postportal);
     app.get("/admin/bofangqi", checkLogin, Admincontroller.bofangqi);
@@ -182,6 +232,7 @@ module.exports = function(app) {
             if(portals[0].usersystem!='on'){
               return res.status(404).send("会员系统未开启");
             } else {
+              req.portal = portals[0];
               next();
             };
           });

@@ -7,6 +7,13 @@ layui.use(['jquery', 'form', 'element', 'layer'], function () {
   if(flash.length>0&&flash.html()!="") {
       layer.msg(flash.html());
   }
+  $(".firstpage").click(function(e) {
+    layer.msg("亲，这是第一页，前面没路了！");
+  });
+  $(".finalpage").click(function(e) {
+    $(window).attr('location',"/imageslist");
+    return false;
+  });
   form.verify({
       length: [
           /^[\S]{6,15}$/

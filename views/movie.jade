@@ -41,8 +41,10 @@ html.playbody
             a(href="#{player.link}" target="_blank") #{player.text}
         style.
           .wenziad{
+            padding:5px;
             z-index:1000;
             position:fixed;
+            background: #{rgba};
           }
           .wenziad a{
             font-family:"#{font}",sans-serif;
@@ -73,15 +75,17 @@ html.playbody
         }
         var parenturl = getParentUrl();
         var antiurl = "#{antiurl}";
+        var categoryantiurl = "#{categoryanti}";
         var antiarr = antiurl.split(",");
+        var categoryantiarr = categoryantiurl.split("|");
         var anti= false;
         var level = $(".level").text();
-        if(antiurl != ""){
-          if(parenturl == null) {
+        if(categoryantiurl!="") {
+          if(parenturl== null) {
             anti = true;
           } else {
-            for(var i=0;i<antiarr.length;i++) {
-              if(parenturl.indexOf(antiarr[i])==0) {
+            for(var i=0;i<categoryantiarr.length;i++) {
+              if(parenturl.indexOf(categoryantiarr[i])==0) {
                 anti = false;
                 break;
               } else {
@@ -89,51 +93,23 @@ html.playbody
               }
             }
           }
-          if(!anti){
-            var dp = new DPlayer({
-                container: document.getElementById('player'),
-                screenshot: true,
-                lang:  'zh-cn',
-                autoplay: false,
-                logo: '#{logo}',
-                mutex: true,
-                video: {
-                    url: '/videos/#{id}/index.m3u8?token=#{token}',
-                    pic: '/videos/#{id}/1.jpg',
-                    thumbnails: '/videos/#{id}/thumbnails.jpg',
-                    type: 'hls'
-                },
-                subtitle: {
-                    url: '/videos/#{id}/1.vtt',
-                    fontSize: '25px',
-                    bottom: '10%'
-                },
-                contextmenu: [{
-                    text: '云转码express-ffmpeg',
-                    link: 'http://ffmpeg.moejj.com/'
-                },
-                {
-                    text: '萌JJ博客',
-                    link: 'https://moejj.com/'
-                }]
-            });
-            var ad = $(".adwrap").html();
-            dp.on('canplay',function () {
-              $(".dplayer-video-wrap").append(ad);
-              $(".adwrap").remove();
-              $(".dplayer-video").attr("x5-video-player-type","h5");
-              $(".dplayer-video").attr("x5-video-orientation","landscape");
-              $(".dplayer-video").attr("x5-video-player-fullscreen","true");
-            });
-            dp.on('ended', function() {
-              if(level=="0") {
-                layer.msg('想要继续观看，请注册账号');
-              } else if(level=='1') {
-                layer.msg('想要继续观看，请开通会员');
-              }
-            });
-          }
         } else {
+          if(antiurl != ""){
+            if(parenturl == null) {
+              anti = true;
+            } else {
+              for(var i=0;i<antiarr.length;i++) {
+                if(parenturl.indexOf(antiarr[i])==0) {
+                  anti = false;
+                  break;
+                } else {
+                  anti = true;
+                }
+              }
+            }
+          }
+        }
+        if(!anti){
           var dp = new DPlayer({
               container: document.getElementById('player'),
               screenshot: true,
@@ -172,10 +148,15 @@ html.playbody
           dp.on('ended', function() {
             if(level=="0") {
               layer.msg('想要继续观看，请注册账号');
-            } else if(level=="1") {
+            } else if(level=='1') {
               layer.msg('想要继续观看，请开通会员');
             }
           });
+        } else {
+          layer.msg('无权播放此视频，将在2秒后跳转到首页。');
+          setTimeout(function(){
+              window.location="#{host}";
+            },2000)
         }
       if player.kaiguan
         - var markx = player.markx + "px";
