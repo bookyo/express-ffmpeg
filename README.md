@@ -1,16 +1,7 @@
 # 自带CMS系统的云转码系统，一体化自动发布云转码cms系统
 
-## 2018年9月4日大更新
-这次完全更改了项目了定位，云转码不再是简单的云转码系统，而是CMS系统+云转码系统一体化，自带整个完备的并且对移动端友好的，而且非常利于SEO优化的自适应CMS系统，根据后台的分类系统和门户CMS管理系统，直接在首页达成完备的在线视频播放系统，适用于在线教育、企业内部培训视频、在线视频自媒体门户等多种运用方向。这次更新完善了视频的分类系统，完善了视频的搜索功能。
-
-一体化自动发布云转码系统截图：
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192811_2f198ea3_145248.jpeg "在这里输入图片标题")
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192833_58d6b693_145248.jpeg "FireShot Capture 3 - 在线教育，美丽人生 - http___localhost_3000_.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192842_6a95e52a_145248.jpeg "FireShot Capture 4 - 门户cms设置 - http___localhost_3000_admin_portal.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192851_cfc5123c_145248.jpeg "FireShot Capture 5 - 分类管理 - http___localhost_3000_admin_categories.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192907_42fa526f_145248.jpeg "FireShot Capture 6 - 全部电影库 - http___localhost_3000_admin_movies.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192931_5918d089_145248.jpeg "FireShot Capture 8 - [喵萌奶茶屋][繁体中文][与僧侣交合的色欲之_ - http___localhost_3000_movie_5b8e49643c3ee95a185469a7.jpg")
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/193021_c2a5a140_145248.jpeg "FireShot Capture 7 - [喵萌奶茶屋][繁体中文][与僧侣交合的色欲之_ - http___localhost_3000_movie_5b8e49643c3ee95a185469a7.jpg")
+### 2018年9月4日大更新
+这次完全更改了项目了定位，云转码不再是简单的云转码系统，而是CMS系统+云转码系统一体化，自带整个完备的并且对移动端友好的，而且非常利于SEO优化的自适应CMS系统，根据后台的分类系统和门户CMS管理系统，直接在首页达成完备的在线视频播放系统，适用于在线教育、企业内部培训视频、在线视频自媒体门户等多种运用方向。这次更新完善了视频的分类系统，完善了视频的搜索功能。CMS现在集成有视频发布，文章发布和图集发布三个功能。
 
 ### 增加会员系统
 增加会员系统，可以不开启CMS，独立开启会员系统，双向验证，安全可靠，后台可以配合卡劵生成，前台用户使用卡劵进行升级。
@@ -90,6 +81,15 @@ module.exports = {
 7. 秒切功能，开启之后，无需进行转码的视频会直接切片。（后台可设置）
 
 #### 版本
+##### V4版本
+* 大更新，CMS怎么能没有图集发布和文章发布，这次更新增加图集和文章发布的完整支持。
+* 图集发布，一键上传图片，一键完成封面截图，一键前端展示，点击翻页。
+* 文章发布，集成editor.md，markdown编辑器，极其完美的书写体验。
+* 增加分类编辑，编辑中可以针对分类添加防引用盗链，盗链功能颗粒化管理。
+* 电影管理页，增加一键修改所有电影分类的功能。
+* 增加播放器文字水印广告背景色和背景透明度设置。
+* 完全重写分享页面的代码，速度更快。
+
 ##### V3.2版本
 * 增加播放器进度条预览效果，鼠标移动到进度条会显示对应时间轴的预览图。
 * 增加后台设置TS加密，设置加密之后，切片文件TS会全部加密。
@@ -147,6 +147,14 @@ module.exports = {
 
 
 #### 截图
+![文章列表](https://images.gitee.com/uploads/images/2018/0925/232417_da13c156_145248.png "FireShot Capture 1 - 文章 - 新的在线教育 - http___localhost_3000_articles.png")
+![图集](https://images.gitee.com/uploads/images/2018/0925/233414_4ffade89_145248.jpeg "FireShot Capture 2 - 图集 - 新的在线教育 - http___localhost_3000_imageslist.jpg")
+![视频](https://images.gitee.com/uploads/images/2018/0925/233446_1f357ab5_145248.jpeg "FireShot Capture 3 - 新的在线教育 - http___localhost_3000_.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192833_58d6b693_145248.jpeg "FireShot Capture 3 - 在线教育，美丽人生 - http___localhost_3000_.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192842_6a95e52a_145248.jpeg "FireShot Capture 4 - 门户cms设置 - http___localhost_3000_admin_portal.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192851_cfc5123c_145248.jpeg "FireShot Capture 5 - 分类管理 - http___localhost_3000_admin_categories.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192907_42fa526f_145248.jpeg "FireShot Capture 6 - 全部电影库 - http___localhost_3000_admin_movies.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2018/0904/192931_5918d089_145248.jpeg "FireShot Capture 8 - [喵萌奶茶屋][繁体中文][与僧侣交合的色欲之_ - http___localhost_3000_movie_5b8e49643c3ee95a185469a7.jpg")
 ![输入图片说明](https://images.gitee.com/uploads/images/2018/0915/092922_4ab46535_145248.jpeg "屏幕快照 2018-09-15 上午9.26.56.jpg")
 ![输入图片说明](https://images.gitee.com/uploads/images/2018/0915/092907_0ce6f5d8_145248.jpeg "屏幕快照 2018-09-15 上午9.26.48.jpg")
 ![输入图片说明](https://images.gitee.com/uploads/images/2018/0915/092858_2ba6278d_145248.jpeg "屏幕快照 2018-09-15 上午9.26.38.jpg")
