@@ -23,3 +23,7 @@ package-lock.json
 public/videos/*
 
 !public/videos/index.html
+
+public/images/*
+
+!public/images/index.html
