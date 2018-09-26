@@ -289,6 +289,10 @@ exports.getmovie = function(req, res) {
                 if(err) {
                     console.log(err);
                 }
+                var categoryanti = "";
+                if(category) {
+                    categoryanti = category.antiurl?category.antiurl:"";
+                }
                 var rgba = colorRgba(results.player.wenzibackground,results.player.wenzibackgroundopacity);
                 var token = jwt.sign({access: "view"},results.setting.antikey,{expiresIn: '100s'});
                 res.render("movie",{
@@ -302,7 +306,7 @@ exports.getmovie = function(req, res) {
                     player: results.player,
                     rgba: rgba,
                     antiurl: results.setting.antiurl,
-                    categoryanti: category.antiurl?category.antiurl:""
+                    categoryanti: categoryanti
                 })
             })
     });
