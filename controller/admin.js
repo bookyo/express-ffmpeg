@@ -302,7 +302,7 @@ exports.getmovie = function(req, res) {
                     player: results.player,
                     rgba: rgba,
                     antiurl: results.setting.antiurl,
-                    categoryanti: category.antiurl
+                    categoryanti: category.antiurl?category.antiurl:""
                 })
             })
     });
