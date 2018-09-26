@@ -43,6 +43,10 @@ block content
                   .layui-input-block
                     input.layui-input(type="text",value="#{setting.antiurl.join('|')}",name="antiurl",placeholder="http://youurl,必须加http://前缀，多个域名由|分开，设置之后只能指定域名通过ifream调用")
                 .layui-form-item
+                  label.layui-form-label 盗链跳转域名
+                  .layui-input-block
+                    input.layui-input(type="text",value="#{setting.antiredirect}",name="antiredirect",placeholder="输入域名，带http://或者https://前缀")
+                .layui-form-item
                   label.layui-form-label 防盗链KEY
                   .layui-input-block
                     input.layui-input(type="text",value="#{setting.antikey}",name="key",placeholder="推荐八位英文数字组合")

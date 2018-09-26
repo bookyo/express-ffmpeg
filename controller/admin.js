@@ -97,7 +97,7 @@ exports.postupload = function(req, res) {
 
 exports.getmovies = function(req, res) {
     var page = req.query.page > 0 ? req.query.page : 1;
-    var perPage = 10;
+    var perPage = req.query.counts>0?req.query.counts*1:10;
     var keyword = req.query.keyword;
     if(keyword&&keyword!=""){
         var reg = /^[A-Za-z0-9]{24}$/;
@@ -290,8 +290,10 @@ exports.getmovie = function(req, res) {
                     console.log(err);
                 }
                 var categoryanti = "";
+                var open = "";
                 if(category) {
                     categoryanti = category.antiurl?category.antiurl:"";
+                    open = category.open?category.open:"";
                 }
                 var rgba = colorRgba(results.player.wenzibackground,results.player.wenzibackgroundopacity);
                 var token = jwt.sign({access: "view"},results.setting.antikey,{expiresIn: '100s'});
@@ -301,12 +303,13 @@ exports.getmovie = function(req, res) {
                     id:id,
                     token: token,
                     phoneviewer: phoneviewer,
-                    host: results.setting.host,
+                    antiredirect: results.setting.antiredirect,
                     waplock: waplock,
                     player: results.player,
                     rgba: rgba,
                     antiurl: results.setting.antiurl,
-                    categoryanti: categoryanti
+                    categoryanti: categoryanti,
+                    open: open
                 })
             })
     });
@@ -325,6 +328,7 @@ exports.setting = function(req, res) {
                     host:"",
                     hd: "",
                     antiurl: [""],
+                    antiredirect: "https://ffmpeg.moejj.com",
                     antikey: "",
                     wmpath: "./public/mark/mark.png",
                     miaoqie: "",
@@ -362,7 +366,6 @@ exports.postfenfa = function(req, res) {
     if(!kaiguan) {
         kaiguan = "";
     }
-    console.log(kaiguan);
     Fenfa.find()
         .exec(function(err, fenfa) {
             if(err) {
@@ -396,6 +399,7 @@ exports.postsetting = function(req, res) {
     var host = req.body.host;
     var hd = req.body.hd;
     var antiurl = req.body.antiurl;
+    var antiredirect = req.body.antiredirect;
     var antikey = req.body.key;
     var wmpath = req.body.watermark;
     var miaoqie = req.body.miaoqie;
@@ -416,6 +420,7 @@ exports.postsetting = function(req, res) {
                 setting[0].antikey = antikey;
                 setting[0].wmpath = wmpath;
                 setting[0].antiurl = antiurlarr;
+                setting[0].antiredirect = antiredirect;
                 setting[0].miaoqie = miaoqie;
                 setting[0].screenshots = screenshots;
                 setting[0].tsjiami = tsjiami;
@@ -429,6 +434,7 @@ exports.postsetting = function(req, res) {
                     host: host,
                     hd: hd,
                     antiurl: antiurlarr,
+                    antiredirect: antiredirect,
                     antikey: antikey,
                     miaoqie: miaoqie,
                     screenshots: screenshots,
@@ -1112,7 +1118,6 @@ exports.getcardtxt = function(req, res) {
 }
 exports.updatecategory = function(req, res) {
     var datas = req.body.datas;
-    console.log(JSON.parse(datas));
     var datasjson = JSON.parse(datas);
     for (let index = 0; index < datasjson.length; index++) {
         const element = datasjson[index];
@@ -1150,13 +1155,21 @@ exports.posteditcategory = function(req, res) {
     var id = req.params.id;
     var title = req.body.title;
     var antiurl = req.body.antiurl;
+    var open = req.body.open;
+    console.log(open);
     Category.findOne({_id:id})
         .exec(function(err, category) {
             if(err) {
                 console.log(err);
             }
+            Movie.updateMany({category:category.title},{ $set: { category: title }},function(err) {
+                if(err) {
+                    console.log(err);
+                }
+            });
             category.title = title;
             category.antiurl = antiurl;
+            category.open = open;
             category.save(function(err) {
                 if(err) {
                     console.log(err);
@@ -1164,6 +1177,29 @@ exports.posteditcategory = function(req, res) {
                 res.redirect("/admin/categories");
             })
         })
+}
+exports.selectedcategory = function(req, res) {
+    var ids = [];
+    var category = req.body.category;
+    ids = ids.concat(req.body.idarr);
+    for (let index = 0; index < ids.length; index++) {
+        const id = ids[index];
+        Movie.findOne({_id:id})
+            .exec(function(err, movie) {
+                if(err) {
+                    console.log(err);
+                }
+                movie.category = category;
+                movie.save(function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                })
+            })
+    }
+    res.json({
+        success: 1
+    });
 }
 function randomcard() {
     var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","A","B","C","D","E","F","G"];

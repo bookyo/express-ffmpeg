@@ -4,6 +4,7 @@ var SettingSchema = new Schema({
     host: String,
     hd: String,
     antiurl: [String],
+    antiredirect: String,
     antikey: String,
     wmpath: String,
     miaoqie: String,

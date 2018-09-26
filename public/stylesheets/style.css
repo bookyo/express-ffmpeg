@@ -351,6 +351,9 @@ img.images-poster{
 .p-20{
   padding:20px;
 }
+.selectedcategory{
+  display: none;
+}
 @media (min-width: 768px) {
   .col-md-4 {
   -ms-flex: 0 0 33.333333%;

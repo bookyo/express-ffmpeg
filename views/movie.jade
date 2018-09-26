@@ -77,33 +77,38 @@ html.playbody
         var antiurl = "#{antiurl}";
         var categoryantiurl = "#{categoryanti}";
         var antiarr = antiurl.split(",");
+        var open = "#{open}";
         var categoryantiarr = categoryantiurl.split("|");
         var anti= false;
         var level = $(".level").text();
-        if(categoryantiurl!="") {
-          if(parenturl== null) {
-            anti = true;
-          } else {
-            for(var i=0;i<categoryantiarr.length;i++) {
-              if(parenturl.indexOf(categoryantiarr[i])==0) {
-                anti = false;
-                break;
-              } else {
-                anti = true;
-              }
-            }
-          }
+        if(open=="on"){
+          anti = false;
         } else {
-          if(antiurl != ""){
-            if(parenturl == null) {
+          if(categoryantiurl!="") {
+            if(parenturl== null) {
               anti = true;
             } else {
-              for(var i=0;i<antiarr.length;i++) {
-                if(parenturl.indexOf(antiarr[i])==0) {
+              for(var i=0;i<categoryantiarr.length;i++) {
+                if(parenturl.indexOf(categoryantiarr[i])==0) {
                   anti = false;
                   break;
                 } else {
                   anti = true;
+                }
+              }
+            }
+          } else {
+            if(antiurl != ""){
+              if(parenturl == null) {
+                anti = true;
+              } else {
+                for(var i=0;i<antiarr.length;i++) {
+                  if(parenturl.indexOf(antiarr[i])==0) {
+                    anti = false;
+                    break;
+                  } else {
+                    anti = true;
+                  }
                 }
               }
             }
@@ -139,6 +144,7 @@ html.playbody
           });
           var ad = $(".adwrap").html();
           dp.on('canplay',function () {
+            $(".dplayer-video-wrap").find(".wenziad").remove();
             $(".dplayer-video-wrap").append(ad);
             $(".adwrap").remove();
             $(".dplayer-video").attr("x5-video-player-type","h5");
@@ -153,10 +159,10 @@ html.playbody
             }
           });
         } else {
-          layer.msg('无权播放此视频，将在2秒后跳转到首页。');
+          layer.msg('无权播放此视频，将在5秒后将进行跳转');
           setTimeout(function(){
-              window.location="#{host}";
-            },2000)
+              window.location="#{antiredirect}";
+            },5000)
         }
       if player.kaiguan
         - var markx = player.markx + "px";

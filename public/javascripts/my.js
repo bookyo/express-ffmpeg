@@ -41,6 +41,15 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
         content: $('.addcategory')
       })
     });
+    $(".selectedchangecategory").click(function(e) {
+      layer.open({
+        type:1,
+        title:"批量修改分类",
+        area:['auto','300px'],
+        shadeClose: true,
+        content: $('.selectedcategory')
+      })
+    });
     $(".doaddcategory").click(function(e) {
       var id = $(this).parent().data("id");
       var selectcategory = $('.selectcategory').val();
@@ -49,6 +58,25 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
         type: "post",
         url: "/addcategory",
         data: {selectcategory: selectcategory,inputcategory: inputcategory,id: id},
+        dataType: "JSON",
+        success: function (response) {
+          if(response.success==1) {
+            location.reload();
+          }
+        }
+      });
+    });
+    $(".doselectaddcategory").click(function(e) {
+      var ids = [];
+      $('.movieselected:checked').each(function(){  
+        ids.push($(this).val()); 
+      });
+      var category = $(".selectmoviecategory").val();
+      $.ajax({
+        type: "post",
+        url: "/selectedcategory",
+        data: {idarr: ids,category:category},
+        traditional: true,
         dataType: "JSON",
         success: function (response) {
           if(response.success==1) {
@@ -158,6 +186,9 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
     $("#submitsort").click(function(e) {
       tongjisortquery = "?sort="+sorttongji + "&counts="+tongjicounts;
       window.location = "/admin/tongji" + tongjisortquery;
+    });
+    form.on('select(counts)',function(data) {
+      window.location = "/admin/movies?counts=" + data.value;
     });
 });
 $(".zhuanma").click(function(e){
