@@ -1,0 +1,37 @@
+extends cmslayout
+block header
+  if currentcategory
+    title #{currentcategory} - #{portal.title}
+  else
+    title #{portal.moviestitle}
+    //- title #{portal.seotitle}
+    //- meta(name="keywords",content="#{portal.keywords}")
+    //- meta(name="description",content="#{portal.description}")
+block content
+  .layui-container.mt-20
+    .layui-row.layui-col-space20
+      .layui-col-md12
+        .card
+          if currentcategory
+            a.tag(href="/movies") 全部
+          else
+            a.tag.current(href="/movies") 全部
+          each category in categories
+            if currentcategory && currentcategory==category.title
+              a.tag.current(href="/category/#{category.title}") #{category.title}
+            else
+              a.tag(href="/category/#{category.title}") #{category.title}
+        .waterfall
+          each movie in movies
+            .col-md-4
+              each themovie in movie
+                .card.nopadding
+                  a(href="/movie/#{themovie._id}")
+                    img(src="/videos/#{themovie._id}/1.jpg")
+                  .card-body
+                    a(href="/movie/#{themovie._id}")
+                      h2 #{themovie.originalname}
+        nav.pages
+          if( pages> 1)
+            ul.pagination
+              != createPagination(pages, page)

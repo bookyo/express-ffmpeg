@@ -1,36 +1,59 @@
 extends cmslayout
 block header
-  if currentcategory
-    title #{currentcategory} - #{portal.title}
-  else
-    title #{portal.seotitle}
-    meta(name="keywords",content="#{portal.keywords}")
-    meta(name="description",content="#{portal.description}")
+  title #{portal.seotitle}
+  meta(name="keywords",content="#{portal.keywords}")
+  meta(name="description",content="#{portal.description}")
 block content
   .layui-container.mt-20
-    .layui-row.layui-col-space20
-      .layui-col-md12
-        .card
-          if currentcategory
-            a.tag(href="/") 全部
-          else
-            a.tag.current(href="/") 全部
-          each category in categories
-            if currentcategory && currentcategory==category.title
-              a.tag.current(href="/category/#{category.title}") #{category.title}
-            else
-              a.tag(href="/category/#{category.title}") #{category.title}
-        .waterfall
-          each movie in movies
-            .col-md-4
-              each themovie in movie
-                .card.nopadding
-                  a(href="/movie/#{themovie._id}")
-                    img(src="/videos/#{themovie._id}/1.jpg")
-                  .card-body
-                    a(href="/movie/#{themovie._id}")
-                      h2 #{themovie.originalname}
-        nav.pages
-          if( pages> 1)
-            ul.pagination
-              != createPagination(pages, page)
+    .layui-row.layui-col-space10.index-lists
+      each list in lists
+        if list.images
+          .item-width.list-item
+            .card.nopadding.md0
+              a(href="/image/#{list._id}")
+                img.images-poster(src="/images/#{list._id}/poster.jpg")
+              .card-body
+                a(href="/image/#{list._id}")
+                  h2 #{list.title}
+                a.mt-15.badge.badge-warning(href="/imageslist") #{portal.imagestitle}
+        if list.content
+          .item-width.list-item
+            .card.md0
+              .card-body
+                a(href="/article/#{list._id}") 
+                  h2 #{list.title}
+                - var content = list.content.replace(/<[^>]+>/g,"");
+                if content.length > 60
+                  - content = content.substr(0, 60) + "...";
+                p.article-description #{content}
+                a.mt-15.badge.badge-success(href="/articles") #{portal.articlestitle}
+        if list.status
+          .item-width.list-item
+            .card.nopadding.md0
+              a(href="/movie/#{list._id}")
+                img(src="/videos/#{list._id}/1.jpg")
+              .card-body
+                a(href="/movie/#{list._id}")
+                  h2 #{list.originalname}
+                a.mt-15.badge.badge-error(href="/movies") #{portal.moviestitle}
+    .text-center 浏览更多： 
+      .layui-btn-group
+        a.layui-btn.layui-btn-radius.layui-btn-danger(href="/movies") #{portal.moviestitle}
+        if portal.images == 'on'
+          a.layui-btn.layui-btn-radius.layui-btn-warning(href="/imageslist") #{portal.imagestitle}
+        if portal.articles == 'on'
+          a.layui-btn.layui-btn-radius.layui-btn-normal(href="/articles") #{portal.articlestitle}
+append script
+  script(src="https://cdn.bootcss.com/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js")
+  script(src="https://cdn.bootcss.com/masonry/4.2.1/masonry.pkgd.min.js")
+  script.
+    var $grid = $('.index-lists').masonry({
+      // set itemSelector so .grid-sizer is not used in layout
+      itemSelector: '.list-item',
+      // use element for option
+      columnWidth: '.item-width',
+      percentPosition: true
+    });
+    $grid.imagesLoaded().progress(function() {
+      $grid.masonry('layout');
+    });

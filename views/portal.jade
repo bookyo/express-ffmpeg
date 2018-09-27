@@ -45,6 +45,10 @@ block content
             .layui-input-block
               input.layui-input(type="text",value="#{portal.description}",name="description",placeholder="输入seo的描述")
           .layui-form-item
+            label.layui-form-label 视频导航标题
+            .layui-input-block
+              input.layui-input(type="text",value="#{portal.moviestitle}",name="moviestitle",placeholder="输入在导航和标题中显示的视频列表标题。")
+          .layui-form-item
             label.layui-form-label 开启图集系统
             .layui-input-block
               if portal.images == "on"

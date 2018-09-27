@@ -451,7 +451,36 @@ exports.postsetting = function(req, res) {
         });
     res.redirect("/admin/setting");
 }
-
+exports.editmovie = function(req, res) {
+    var id = req.params.id;
+    Movie.findOne({_id: id})
+        .exec(function(err, movie) {
+            if(err) {
+                console.log(err);
+            }
+            res.render("editmovie", {
+                title: "修改电影标题",
+                movie: movie
+            })
+        })
+}
+exports.postupdatemovie = function(req, res) {
+    var id = req.params.id;
+    var originalname = req.body.originalname;
+    Movie.findOne({_id: id})
+        .exec(function(err, movie) {
+            if(err) {
+                console.log(err);
+            }
+            movie.originalname = originalname;
+            movie.save(function(err) {
+                if(err) {
+                    console.log(err);
+                }
+                res.redirect("/admin/movies");
+            })
+        })
+}
 exports.uploadwatermark = function(req, res) {
     var file = req.file;
     var path = file.path;
@@ -466,6 +495,21 @@ exports.uploadvtt = function(req, res) {
     var exists = fs.existsSync(des);
     if(exists) {
         fs.rename(path,des+"/1.vtt",function(err) {
+            if(err) {
+                console.log(err);
+            }
+            res.json({
+                code:0
+            })
+        })
+    }
+}
+exports.uploadposter = function(req, res) {
+    var path = req.file.path;
+    var des = './public/videos/'+req.body.id;
+    var exists = fs.existsSync(des);
+    if(exists) {
+        fs.rename(path,des+"/1.jpg",function(err) {
             if(err) {
                 console.log(err);
             }
@@ -599,10 +643,11 @@ exports.portal = function(req, res) {
                     screenshots: 0,
                     keywords: '',
                     description: '',
+                    moviestitle: '视频',
                     images: '',
-                    imagesarticle: '',
+                    imagesarticle: '图集',
                     articles: '',
-                    articlestitle: '',
+                    articlestitle: '文章',
                     theme: 'default',
                     tongji: ''
                 }
@@ -620,6 +665,7 @@ exports.postportal = function(req, res) {
     var kaiguan = req.body.kaiguan;
     var host = req.body.host;
     var screenshots = req.body.screenshots;
+    var moviestitle = req.body.moviestitle;
     var description = req.body.description;
     var usersystem = req.body.usersystem;
     var images = req.body.images;
@@ -642,6 +688,7 @@ exports.postportal = function(req, res) {
                 portals[0].usersystem = usersystem;
                 portals[0].keywords = keywords;
                 portals[0].description = description;
+                portals[0].moviestitle = moviestitle;
                 portals[0].images = images;
                 portals[0].imagestitle = imagestitle;
                 portals[0].articles = articles;
@@ -663,6 +710,7 @@ exports.postportal = function(req, res) {
                     kaiguan: kaiguan,
                     usersystem: usersystem,
                     description: description,
+                    moviestitle: moviestitle,
                     articles: articles,
                     images: images,
                     imagestitle: imagestitle,

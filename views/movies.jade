@@ -51,7 +51,9 @@ block content
                 td
                   .layui-btn-group
                     button.layui-btn.layui-btn-sm.uploadvtt(lay-data="{data: {id: '#{movie._id}'}}") 上传vtt字幕
+                    button.layui-btn.layui-btn-sm.uploadposter(lay-data="{data: {id: '#{movie._id}'}}") 上传封面
                     button.layui-btn.layui-btn-sm.geturl(id="#{movie._id}") 分享链接
+                    button.layui-btn.layui-btn-sm.editmovietitle(data-id="#{movie._id}") 编辑
                     button.layui-btn.layui-btn-sm.category(data-id="#{movie._id}") 分类
                     button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-movie(data-id="#{movie._id}") 删除
         .layui-btn-group

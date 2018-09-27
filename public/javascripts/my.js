@@ -155,6 +155,17 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
         }
       }
     });
+    upload.render({
+      elem: ".uploadposter",
+      url: "/upposter",
+      field: "image",
+      method: 'POST',
+      done: function(res, index, upload) {
+        if(res.code==0) {
+          layer.msg("封面图上传成功");
+        }
+      }
+    });
     var color = $('.inputcolor').val();
     colorpicker.render({
       elem: '#selectcolor',
@@ -224,6 +235,10 @@ $(".listszhuanma").click(function(e) {
 $(".btn-edit-category").click(function(e) {
   var id = $(e.target).data('id');
   window.location = "/category/"+id+"/edit";
+});
+$(".editmovietitle").click(function(e) {
+  var id = $(e.target).data("id");
+  window.location = "/movie/" + id + "/edit";
 });
 $(".ruku").click(function(e) {
   $.ajax({

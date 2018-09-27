@@ -1,0 +1,15 @@
+extends layout
+block content
+  include navbar
+  .layui-container.main
+    .layui-row
+      .layui-col-md8.layui-col-md-offset2
+        h1.title #{title}
+        form.layui-form(method="post")
+          .layui-form-item
+            label.layui-form-label 视频名
+            .layui-input-block
+              input.layui-input(type="text",value="#{movie.originalname}",name="originalname",placeholder="输入新的视频名")
+          .layui-form-item
+            .layui-input-block
+              button.layui-btn(lay-submit,lay-filter="submiteditmovie") 提交

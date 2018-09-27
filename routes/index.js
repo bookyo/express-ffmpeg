@@ -62,6 +62,10 @@ module.exports = function(app) {
         res.redirect('https://baidu.com');
       }
     });
+    app.get("/hlslogout", checkLogin, function(req, res) {
+      req.session.user = null;
+      res.redirect("/hlsserver");
+    });
     function posttimeout (req, res, next) {
       req.setTimeout(10000, function() {
         res.statusCode = 500;
@@ -99,8 +103,11 @@ module.exports = function(app) {
     app.delete("/delete/image", checkLogin, Cmscontroller.deleteimage);
     app.delete("/delete/article", checkLogin, Cmscontroller.deletearticle);
     app.get("/share/:id", checkLevel, Admincontroller.getmovie);
-    app.get("/", Cmscontroller.index);
+    app.get("/", checkopen, Cmscontroller.index);
+    app.get("/movies", Cmscontroller.getmovies);
     app.get("/movie/:id", checkopen, Cmscontroller.getmovie);
+    app.get("/movie/:id/edit", checkLogin, Admincontroller.editmovie);
+    app.post("/movie/:id/edit", checkLogin, Admincontroller.postupdatemovie);
     app.post("/movies/updatecategory", checkLogin, Admincontroller.updatecategory);
     app.get("/category/:category", checkopen, Cmscontroller.getcategory);
     app.get("/admin/setting", checkLogin, Admincontroller.setting);
@@ -179,6 +186,9 @@ module.exports = function(app) {
       storage: storage2
     });
     app.post("/upvtt", checkLogin, upload2.single('vtt'), Admincontroller.uploadvtt);
+    app.post("/upposter", checkLogin, upload2.single('image'), Admincontroller.uploadposter);
+
+
     function checkLogin(req, res, next) {
       if( !req.session.user ) {
         return res.redirect('/hlsserver');

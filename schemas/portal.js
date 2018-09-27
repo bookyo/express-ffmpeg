@@ -9,6 +9,7 @@ var portalSchema = new Schema({
     kaiguan: String,
     usersystem: String,
     description: String,
+    moviestitle: String,
     images: String,
     imagestitle: String,
     articles: String,

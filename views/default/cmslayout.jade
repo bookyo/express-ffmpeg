@@ -14,7 +14,7 @@ html
         a(href="/").logo #{portal.title}
         ul.layui-nav(lay-filter="navbar")
           li.layui-nav-item
-            a(href="/") 首页
+            a(href="/movies") #{portal.moviestitle}
           if portal.images == 'on'
             li.layui-nav-item
               a(href="/imageslist") #{portal.imagestitle}
@@ -40,6 +40,7 @@ html
         | 倾情奉献 
         a(href="https://gitee.com/quazero") by屈阿零
         span.tongji!=portal.tongji
-    script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
-    script(src="/layui/layui.js")
-    script(src="/javascripts/cms.js")
+    block script
+      script(src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js")
+      script(src="/layui/layui.js")
+      script(src="/javascripts/cms.js")

@@ -6,7 +6,59 @@ var Article = require('../models/article');
 var moment = require('moment');
 var fs = require('fs');
 var sharp = require('sharp');
+var async = require('async');
+var _ = require('underscore');
 exports.index = function(req, res) {
+    var perPage = 9;
+    async.parallel({
+        movies: function(callback) {
+            Movie.find({status: 'finished'})
+                .sort('-createAt')
+                .limit(perPage)
+                .exec(function(err, movies) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    callback(null,movies);
+                })
+        },
+        images: function(callback) {
+            Image.find()
+                .sort('-createAt')
+                .limit(perPage)
+                .exec(function(err, images) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    callback(null, images);
+                })
+        },
+        articles: function(callback) {
+            Article.find()
+                .sort("-createAt")
+                .limit(perPage)
+                .exec(function(err, articles) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    callback(null, articles);
+                })
+        }
+    },function(err, results) {
+        if(err) {
+            console.log(err);
+        }
+        var lists = [];
+        lists = lists.concat(results.movies,results.images,results.articles);
+        lists = _.shuffle(lists);
+        res.render(req.portal.theme+'/index', {
+            portal: req.portal,
+            lists: lists,
+            user: req.session.leveluser
+        })
+    });
+}
+exports.getmovies = function(req, res) {
     var page = req.query.page > 0 ? req.query.page : 1;
     var perPage = 12;
     Portal.find()
@@ -35,7 +87,7 @@ exports.index = function(req, res) {
                                     for(var i=0;i<length;i=i+jiange) {
                                         results.push(movies.slice(i,i+jiange));
                                     }
-                                    res.render(portals[0].theme+'/index',{
+                                    res.render(portals[0].theme+'/movies',{
                                         categories: categories,
                                         movies: results,
                                         page: page,
@@ -106,7 +158,7 @@ exports.getcategory = function(req, res) {
                         for(var i=0;i<length;i=i+jiange) {
                             results.push(movies.slice(i,i+jiange));
                         }
-                        res.render(req.portal.theme+'/index',{
+                        res.render(req.portal.theme+'/movies',{
                             categories: categories,
                             movies: results,
                             page: page,
