@@ -81,6 +81,12 @@ module.exports = {
 7. 秒切功能，开启之后，无需进行转码的视频会直接切片。（后台可设置）
 
 #### 版本
+##### V4.1版本
+* 优化分类引用防盗链控制的逻辑，增加单分类开放浏览的选项。
+* 优化后台视频管理数量选择，和一键批量修改。
+* 后台增加设置选项，设置引用盗链跳转链接。
+* 图集页展示更加完美。
+
 ##### V4版本
 * 大更新，CMS怎么能没有图集发布和文章发布，这次更新增加图集和文章发布的完整支持。
 * 图集发布，一键上传图片，一键完成封面截图，一键前端展示，点击翻页。
@@ -147,6 +153,7 @@ module.exports = {
 
 
 #### 截图
+![图集展示](https://images.gitee.com/uploads/images/2018/0927/104338_617a2992_145248.jpeg "FireShot Capture 5 - 热血动漫角色大集合 I 新的在线教育 - http___localhost_3000_image_5baa513d0046647562fb1e0c_1.jpg")
 ![文章列表](https://images.gitee.com/uploads/images/2018/0925/232417_da13c156_145248.png "FireShot Capture 1 - 文章 - 新的在线教育 - http___localhost_3000_articles.png")
 ![图集](https://images.gitee.com/uploads/images/2018/0925/233414_4ffade89_145248.jpeg "FireShot Capture 2 - 图集 - 新的在线教育 - http___localhost_3000_imageslist.jpg")
 ![视频](https://images.gitee.com/uploads/images/2018/0925/233446_1f357ab5_145248.jpeg "FireShot Capture 3 - 新的在线教育 - http___localhost_3000_.jpg")
