@@ -92,7 +92,10 @@ module.exports = function(app) {
     app.post("/upload/image", checkLogin, articleupload.single('editormd-image-file'), Cmscontroller.uploadimage);
     app.get("/imageslist", checkopen, Cmscontroller.getimages);
     app.get("/articles", checkopen, Cmscontroller.getarticles);
-    // end
+    // cms end
+    // api
+    app.get("/api/m3u8/:id", Admincontroller.apim3u8);
+    // api end
     app.post("/upzimu", checkLogin, upload.single('zimu'), Admincontroller.postzimu);
     app.post("/upload", checkLogin, posttimeout, upload.single('file'), Admincontroller.postupload);
     app.post("/transcode", checkLogin, Admincontroller.transcode);

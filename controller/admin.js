@@ -168,7 +168,46 @@ exports.getmovies = function(req, res) {
     }
     
 }
-
+// apimanager
+exports.apim3u8 = function(req, res) {
+    var id = req.params.id;
+    var refer = req.headers.referer;
+    var agent = req.headers["user-agent"];
+    if(!refer || !agent) {
+        return res.status(404).send("错误页面");
+    }
+    Movie.findOne({_id: id})
+        .exec(function(err, movie){
+            if(err) {
+                console.log(err);
+            }
+            if(!movie) {
+                return res.status(404).send("页面已删除");
+            } else {
+                Setting.find()
+                    .exec(function(err, setting){
+                        if(err) {
+                            console.log(err);
+                        }
+                        var antiurl = setting[0].antiurl;
+                        for (let index = 0; index < antiurl.length; index++) {
+                            const element = antiurl[index];
+                            if(refer.indexOf(element)==0||refer.indexOf(setting[0].host)==0) {
+                                var path = "./public/videos/"+id+"/index.m3u8";
+                                var data = fs.readFileSync(path);
+                                var datastring = data.toString('utf-8');
+                                var m3u8arr = datastring.split("index");
+                                var m3u8strings = m3u8arr.join(setting[0].host+"/videos/"+id+"/index");
+                                res.status(200).send(m3u8strings);
+                            } else {
+                                res.status(404).send("无权访问");
+                            }
+                        }
+                    })
+            }
+        })
+}
+// end apimanager
 exports.transcode = function(req, res) {
     Movie
         .find({status:"waiting"})
