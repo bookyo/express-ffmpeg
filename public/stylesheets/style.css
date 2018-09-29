@@ -451,6 +451,11 @@ a.badge:hover{
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
+.article-title{
+  overflow: hidden;
+  height: 42px;
+  font-size: 16px;
+}
 @media (min-width: 768px) {
   .col-md-4 {
   -ms-flex: 0 0 33.333333%;

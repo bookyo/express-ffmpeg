@@ -4,17 +4,24 @@ block header
 block content
   .layui-container.mt-20
     .layui-row.layui-col-space20
-      .layui-col-md10.layui-col-md-offset1
+      .layui-col-md12
         .card.p-15
           span.layui-breadcrumb.p-20
             a(href="/") 首页
             a
              cite #{portal.articlestitle}
-        .waterfall.card
-          ul.articleul
-            each article in articles
-              li.articleli
-                a(href="/article/#{article._id}") #{article.title}     
+        .layui-row.layui-col-space15
+          each article in articles
+            .layui-col-md4
+              .card.md0
+                .card-body
+                  a(href="/article/#{article._id}") 
+                    h2.article-title(title="#{article.title}") #{article.title}
+                  - var content = article.content.replace(/<[^>]+>/g,"");
+                  if content.length > 60
+                    - content = content.substr(0, 60) + "...";
+                  p.article-description #{content}
+                  a.layui-btn.layui-btn-radius.layui-btn-normal.mt-15(href="/article/#{article._id}") 点击阅读    
         nav.pages
           if( pages> 1)
             ul.pagination
