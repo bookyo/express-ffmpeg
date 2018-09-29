@@ -21,7 +21,8 @@
 五、自带完备的CMS系统。
 
 文档更新地址：[https://moejj.com/yun-zhuan-ma-qie-pian/](https://moejj.com/yun-zhuan-ma-qie-pian/)   
-官网地址：[http://ffmpeg.moejj.com](http://ffmpeg.moejj.com)
+官网地址：[https://ffmpeg.moejj.com](https://ffmpeg.moejj.com)
+演示站：[https://www.moejj.com](https://www.moejj.com)
 这里不会再更新文档和版本内容
 
 本开源项目采用nodejs、expressjs、mongodb开发。
