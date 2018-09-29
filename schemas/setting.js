@@ -10,6 +10,7 @@ var SettingSchema = new Schema({
     miaoqie: String,
     screenshots: Number,
     tsjiami: String,
+    api: String,
     createAt: {
         type: Date,
         default: Date.now()

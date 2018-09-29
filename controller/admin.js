@@ -372,6 +372,7 @@ exports.setting = function(req, res) {
                     wmpath: "./public/mark/mark.png",
                     miaoqie: "",
                     tsjiami: "",
+                    api: "",
                     screenshots: 0
                 }
             }
@@ -444,6 +445,7 @@ exports.postsetting = function(req, res) {
     var miaoqie = req.body.miaoqie;
     var screenshots = req.body.screenshots;
     var tsjiami = req.body.tsjiami;
+    var api = req.body.api;
     antiurlarr = antiurl.split("|");
     if(!miaoqie) {
         miaoqie = "";
@@ -463,6 +465,7 @@ exports.postsetting = function(req, res) {
                 setting[0].miaoqie = miaoqie;
                 setting[0].screenshots = screenshots;
                 setting[0].tsjiami = tsjiami;
+                setting[0].api = api;
                 setting[0].save(function(err) {
                     if(err) {
                         console.log(err);
@@ -478,7 +481,8 @@ exports.postsetting = function(req, res) {
                     miaoqie: miaoqie,
                     screenshots: screenshots,
                     wmpath: wmpath,
-                    tsjiami: tsjiami
+                    tsjiami: tsjiami,
+                    api: api
                 }
                 var setting = new Setting(settingobj);
                 setting.save(function(err) {

@@ -2,6 +2,7 @@ var auth = require("../config/auth");
 var Admincontroller = require("../controller/admin");
 var Cmscontroller = require("../controller/cms");
 var Portal = require('../models/portal');
+var Setting = require('../models/setting');
 var User = require('../models/user');
 var multer = require('multer');
 const { body } = require('express-validator/check');
@@ -94,7 +95,7 @@ module.exports = function(app) {
     app.get("/articles", checkopen, Cmscontroller.getarticles);
     // cms end
     // api
-    app.get("/api/m3u8/:id", Admincontroller.apim3u8);
+    app.get("/api/m3u8/:id", checkApiOpen, Admincontroller.apim3u8);
     // api end
     app.post("/upzimu", checkLogin, upload.single('zimu'), Admincontroller.postzimu);
     app.post("/upload", checkLogin, posttimeout, upload.single('file'), Admincontroller.postupload);
@@ -281,5 +282,18 @@ module.exports = function(app) {
               }
             })
       }
+    }
+    function checkApiOpen(req, res, next) {
+      Setting.find()
+          .exec(function(err, setting) {
+            if(err) {
+              console.log(err);
+            }
+            var api = setting[0].api;
+            if(api!="on"){
+              return res.status(404).send("API未开启。");
+            }
+            next();
+          })
     }
 };
