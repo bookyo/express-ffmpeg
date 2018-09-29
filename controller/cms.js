@@ -455,6 +455,40 @@ exports.deletearticle = function(req, res) {
             })
          });
 }
+exports.editarticle = function(req, res) {
+    var id = req.params.id;
+    Article.findOne({_id:id})
+        .exec(function(err, article) {
+            if(err) {
+                console.log(err);
+            }
+            res.render('editarticle', {
+                title: '编辑文章',
+                article: article
+            })
+        })
+}
+exports.posteditarticle = function(req, res) {
+    var id = req.params.id;
+    var title = req.body.title;
+    var content = req.body['editormd-html-code'][1];
+    var contentmd = req.body['editormd-html-code'][0];
+    Article.findOne({_id: id})
+        .exec(function(err, article) {
+            if(err) {
+                console.log(err);
+            }
+            article.title = title;
+            article.content = content;
+            article.contentmd = contentmd;
+            article.save(function(err) {
+                if(err) {
+                    console.log(err);
+                }
+                res.redirect("/cms/articles");
+            })
+        })
+}
 function deleteall(path) {
     var files = [];
     if (fs.existsSync(path)) {

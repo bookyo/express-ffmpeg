@@ -22,6 +22,7 @@ block content
                         a(href="/article/"+article._id) 链接
                       td
                         .layui-btn-group
+                          a.layui-btn.layui-btn-sm(href="/article/#{article._id}/edit") 编辑
                           button.layui-btn.layui-btn-sm.layui-btn-danger.btn-delete-article(data-id="#{article._id}") 删除
             nav.pages
               if( pages> 1)

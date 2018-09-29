@@ -93,6 +93,8 @@ module.exports = function(app) {
     app.post("/upload/image", checkLogin, articleupload.single('editormd-image-file'), Cmscontroller.uploadimage);
     app.get("/imageslist", checkopen, Cmscontroller.getimages);
     app.get("/articles", checkopen, Cmscontroller.getarticles);
+    app.get("/article/:id/edit", checkLogin, Cmscontroller.editarticle);
+    app.post("/article/:id/edit", checkLogin, Cmscontroller.posteditarticle);
     // cms end
     // api
     app.get("/api/m3u8/:id", checkApiOpen, Admincontroller.apim3u8);

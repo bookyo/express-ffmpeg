@@ -1,0 +1,27 @@
+extends cmsmanagerlayout
+block append css
+  link(rel="stylesheet", href="/editor/css/editormd.min.css")
+block content
+  .layui-container
+    .layui-row
+      .layui-col-md12
+        form.layui-form#add-article(method="post")
+          input.layui-input(type="text",name="title",placeholder="输入标题",value="#{article.title}")
+          #editormd
+            textarea#content(name="editormd-markdown-doc",style="display:none") #{article.contentmd}
+            textarea#htmlcontent(name="editormd-html-code",style="display:none")
+          button.layui-btn.submitarticle(lay-submit,lay-filter="addarticle") 提交
+block append footer
+  script(src="/editor/editormd.min.js")
+  script.
+    $(function() {
+        var editor = editormd("editormd", {
+            path : "/editor/lib/",
+            height: 470,
+            syncScrolling: "single",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/upload/image",
+            saveHTMLToTextarea: true
+        });
+    });
