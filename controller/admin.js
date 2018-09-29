@@ -688,7 +688,7 @@ exports.portal = function(req, res) {
                     description: '',
                     moviestitle: '视频',
                     images: '',
-                    imagesarticle: '图集',
+                    imagestitle: '图集',
                     articles: '',
                     articlestitle: '文章',
                     theme: 'default',
