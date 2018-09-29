@@ -358,6 +358,9 @@ img.images-poster{
   padding-right: 1.5em;
   list-style: disc;
 }
+.article-player ol {
+  list-style: decimal;
+}
 .article-player li{
   margin: .5em 0;
   padding-left: .3em;
