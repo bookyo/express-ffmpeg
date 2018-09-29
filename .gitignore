@@ -27,3 +27,7 @@ public/videos/*
 public/images/*
 
 !public/images/index.html
+
+public/uploads/*
+
+!public/uploads/index.html
