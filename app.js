@@ -107,27 +107,28 @@ app.use("/videos/:id/index.m3u8", openUsersystem, function (req, res, next) {
               }
             } else {
               if (decoded.access == "view") {
-                var path = "./public/videos/" + id + "/index.m3u8";
-                var m3u8exists = fs.existsSync(path);
-                if (m3u8exists) {
-                  var data = fs.readFileSync(path);
-                  var datastring = data.toString('utf-8');
-                  var m3u8arr = datastring.split("index");
-                }
-                var newm3u8arr = [];
-                for (let index = 0; index < 18; index++) {
-                  if(index == 17) {
-                    var lastm3u8 = m3u8arr[17];
-                    var lastarr = lastm3u8.split("ts");
-                    lastarr.pop();
-                    lastarr.push("\n#EXT-X-ENDLIST\n");
-                    newm3u8arr.push(lastarr.join("ts"));
-                  } else {
-                    newm3u8arr.push(m3u8arr[index]);
-                  }
-                }
-                var newm3u8 = newm3u8arr.join("index");
                 if (req.usersystem) {
+                  var path = "./public/videos/" + id + "/index.m3u8";
+                  var m3u8exists = fs.existsSync(path);
+                  if (m3u8exists) {
+                    var data = fs.readFileSync(path);
+                    var datastring = data.toString('utf-8');
+                    var m3u8arr = datastring.split("index");
+                  }
+                  var newm3u8arr = [];
+                  var length = m3u8arr.length>=18?18:m3u8arr.length;
+                  for (let index = 0; index < length; index++) {
+                    if(index == length-1) {
+                      var lastm3u8 = m3u8arr[length-1];
+                      var lastarr = lastm3u8.split("ts");
+                      lastarr.pop();
+                      lastarr.push("\n#EXT-X-ENDLIST\n");
+                      newm3u8arr.push(lastarr.join("ts"));
+                    } else {
+                      newm3u8arr.push(m3u8arr[index]);
+                    }
+                  }
+                  var newm3u8 = newm3u8arr.join("index");
                   if (req.session.leveluser) {
                     User.findOne({username: req.session.leveluser})
                         .exec(function(err, user) {
