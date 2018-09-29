@@ -365,6 +365,7 @@ img.images-poster{
   list-style: inherit;
 }
 .article-player pre {
+  white-space: pre;
   overflow-x: auto;
   margin: 1em 0 2em;
   padding: 20px;
@@ -455,6 +456,9 @@ a.badge:hover{
   overflow: hidden;
   height: 42px;
   font-size: 16px;
+}
+.article-container{
+  width:100%;
 }
 @media (min-width: 768px) {
   .col-md-4 {
