@@ -39,7 +39,7 @@ block content
           if( pages> 1)
             ul.pagination
               != createPagination(pages, page)
-  script(src="https://cdn.bootcss.com/Chart.js/2.7.2/Chart.min.js")
+  script(src="/javascripts/Chart.min.js")
   p(style="display:none")#data #{data}
   script.
     var data = document.getElementById("data").innerText;

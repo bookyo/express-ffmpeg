@@ -44,8 +44,8 @@ block content
         if portal.articles == 'on'
           a.layui-btn.layui-btn-radius.layui-btn-normal(href="/articles") #{portal.articlestitle}
 append script
-  script(src="https://cdn.bootcss.com/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js")
-  script(src="https://cdn.bootcss.com/masonry/4.2.1/masonry.pkgd.min.js")
+  script(src="/javascripts/imagesloaded.pkgd.min.js")
+  script(src="/javascripts/masonry.pkgd.min.js")
   script.
     var $grid = $('.index-lists').masonry({
       // set itemSelector so .grid-sizer is not used in layout

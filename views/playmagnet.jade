@@ -47,7 +47,7 @@ html.playbody
       #player
     script(src="https://cdn.jsdelivr.net/webtorrent/latest/webtorrent.min.js")
     script(src="/javascripts/DPlayer.min.js")
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
     script.
       function getParentUrl() {   
          var url = null;  
@@ -63,7 +63,8 @@ html.playbody
       var parenturl = getParentUrl();
       var antiurl = "#{antiurl}";
       $("#submagnet").click(function(e) {
-        var magnet = $(".inputline input").val();
+        var magnet = $(".inputline input").val()+"&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com
+";
         if(antiurl != ""){
           if(parenturl != null && parenturl.indexOf("#{antiurl}")==0){
             var dp = new DPlayer({
