@@ -12,14 +12,14 @@ block content
             .card.nopadding.md0
               a(href="/image/#{list._id}")
                 img.images-poster(src="/images/#{list._id}/poster.jpg")
-              .card-body
+              .card-body.index-card-body
                 a(href="/image/#{list._id}")
                   h2 #{list.title}
                 a.mt-15.badge.badge-warning(href="/imageslist") #{portal.imagestitle}
         if list.content
           .item-width.list-item
             .card.md0
-              .card-body
+              .card-body.index-card-body
                 a(href="/article/#{list._id}") 
                   h2 #{list.title}
                 - var content = list.content.replace(/<[^>]+>/g,"");
@@ -35,7 +35,7 @@ block content
                   img(src="#{list.poster}")
                 else
                   img(src="/videos/#{list._id}/1.jpg")
-              .card-body
+              .card-body.index-card-body
                 a(href="/movie/#{list._id}")
                   h2 #{list.originalname}
                 a.mt-15.badge.badge-error(href="/movies") #{portal.moviestitle}

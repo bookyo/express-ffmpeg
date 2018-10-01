@@ -463,6 +463,9 @@ a.badge:hover{
 .article-container{
   width:100%;
 }
+.card .index-card-body{
+  padding:20px;
+}
 @media (min-width: 768px) {
   .col-md-4 {
   -ms-flex: 0 0 33.333333%;
@@ -491,6 +494,18 @@ a.badge:hover{
     padding:0 10px;
   }
   .logo{
+    font-size:12px;
+  }
+  .card .index-card-body{
+    padding:10px;
+  }
+  .card .card-body h2 {
+    font-size: 14px;
+    word-break: break-all;
+  }
+  .article-description {
+    color: #9a9a9a;
+    margin-top: 15px;
     font-size:12px;
   }
 }
