@@ -47,7 +47,7 @@ sudo apt-get install ffmpeg
 ```
 然后输入ffmpeg和ffprobe查看是否安装成功。
 
-2. 安装nodejs、expessjs、mongodb环境。
+2. 安装nodejs、expessjs、mongodb、redis环境。
 详情见：[express+nodejs+redis+mongodb+pm2+nginx环境部署安装，生产环境及开发环境部署](http://blog.sina.com.cn/s/blog_13e807ed00102wlxo.html)
 
 3. node ./bin/www
