@@ -14,6 +14,9 @@ var _ = require('underscore');
 var moment = require('moment');
 var crypto = require('crypto');
 var async = require('async');
+var redis = require('redis')
+redis.createClient();
+var cache = require('../helper/rediscache');
 var path = require('path');
 const { validationResult } = require('express-validator/check');
 exports.getadmin = function(req,res){
@@ -335,20 +338,25 @@ exports.getmovie = function(req, res) {
                     open = category.open?category.open:"";
                 }
                 var rgba = colorRgba(results.player.wenzibackground,results.player.wenzibackgroundopacity);
-                var token = jwt.sign({access: "view"},results.setting.antikey,{expiresIn: '100s'});
-                res.render("movie",{
-                    level:req.level,
-                    title: results.movie.originalname+"在线播放",
-                    id:id,
-                    token: token,
-                    phoneviewer: phoneviewer,
-                    antiredirect: results.setting.antiredirect,
-                    waplock: waplock,
-                    player: results.player,
-                    rgba: rgba,
-                    antiurl: results.setting.antiurl,
-                    categoryanti: categoryanti,
-                    open: open
+                cache.getTokenByRedis(function(err, token){
+                    if(err) {
+                        console.log(err);
+                    }
+                    res.render("movie",{
+                        level:req.level,
+                        title: results.movie.originalname+"在线播放",
+                        id:id,
+                        token: token,
+                        poster: results.movie.poster,
+                        phoneviewer: phoneviewer,
+                        antiredirect: results.setting.antiredirect,
+                        waplock: waplock,
+                        player: results.player,
+                        rgba: rgba,
+                        antiurl: results.setting.antiurl,
+                        categoryanti: categoryanti,
+                        open: open
+                    })
                 })
             })
     });
@@ -549,16 +557,29 @@ exports.uploadvtt = function(req, res) {
 }
 exports.uploadposter = function(req, res) {
     var path = req.file.path;
-    var des = './public/videos/'+req.body.id;
+    var id = req.body.id;
+    var des = './public/videos/'+id;
     var exists = fs.existsSync(des);
     if(exists) {
-        fs.rename(path,des+"/1.jpg",function(err) {
+        fs.rename(path,des+"/poster.jpg",function(err) {
             if(err) {
                 console.log(err);
             }
-            res.json({
-                code:0
-            })
+            Movie.findOne({_id: id})
+                .exec(function(err, movie) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    movie.poster = '/videos/'+id+'/poster.jpg';
+                    movie.save(function(err) {
+                        if(err) {
+                            console.log(err);
+                        }
+                        res.json({
+                            code:0
+                        });
+                    })
+                })
         })
     }
 }

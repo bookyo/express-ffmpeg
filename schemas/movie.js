@@ -5,6 +5,7 @@ var MovieSchema = new Schema({
     size: String,
     category: String,
     originalname: String,
+    poster: String,
     count: {type:Number, default: 0},
     path:String,
     createAt: {

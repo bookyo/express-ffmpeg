@@ -28,7 +28,9 @@ block content
               input.layui-input(type="text",disabled,value="无论手机还是电脑，本站都推荐使用火狐浏览器观看")
               h2.title 视频截图
               - var n = 0
+              if movie.poster
+                img(src="#{movie.poster}")
               while n < portal.screenshots
-                  img(src="/videos/#{movie._id}/#{++n}.jpg")
+                img(src="/videos/#{movie._id}/#{++n}.jpg")
               
           

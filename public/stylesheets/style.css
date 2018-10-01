@@ -477,7 +477,7 @@ a.badge:hover{
 }
 @media screen and (max-width: 750px) {
   .item-width {
-    width:100%;
+    width:50%;
   }
   .layui-main {
   width: auto;

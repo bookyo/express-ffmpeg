@@ -31,7 +31,10 @@ block content
           .item-width.list-item
             .card.nopadding.md0
               a(href="/movie/#{list._id}")
-                img(src="/videos/#{list._id}/1.jpg")
+                if list.poster
+                  img(src="#{list.poster}")
+                else
+                  img(src="/videos/#{list._id}/1.jpg")
               .card-body
                 a(href="/movie/#{list._id}")
                   h2 #{list.originalname}

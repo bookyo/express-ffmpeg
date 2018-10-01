@@ -9,7 +9,7 @@ var sharp = require('sharp');
 var async = require('async');
 var _ = require('underscore');
 exports.index = function(req, res) {
-    var perPage = 9;
+    var perPage = 12;
     async.parallel({
         movies: function(callback) {
             Movie.find({status: 'finished'})

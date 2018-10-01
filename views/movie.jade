@@ -61,6 +61,11 @@ html.playbody
       script(src="/javascripts/jquery.min.js")
       script(src="/layer/layer.js")
       .hidden!=player.tongji
+      - var theposter;
+      if poster
+        - theposter = poster;
+      else
+        - theposter = "/videos/"+id+"/1.jpg";
       script.
         function getParentUrl() {   
           var url = null;  
@@ -124,7 +129,7 @@ html.playbody
               mutex: true,
               video: {
                   url: '/videos/#{id}/index.m3u8?token=#{token}',
-                  pic: '/videos/#{id}/1.jpg',
+                  pic: '#{theposter}',
                   thumbnails: '/videos/#{id}/thumbnails.jpg',
                   type: 'hls'
               },
