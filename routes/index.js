@@ -131,6 +131,7 @@ module.exports = function(app) {
     app.post("/admin/bofangqi", checkLogin, Admincontroller.postbofangqi);
     app.get("/admin/tongji", checkLogin, Admincontroller.tongji);
     app.post("/selectedcategory", checkLogin, Admincontroller.selectedcategory);
+    app.post("/selectedcuthead", checkLogin, Admincontroller.cuthead);
     app.get("/login", checkUsersystemOpen, checkLevelNotLogin, Admincontroller.login);
     app.post("/login", checkUsersystemOpen, checkLevelNotLogin, [
       body('email')

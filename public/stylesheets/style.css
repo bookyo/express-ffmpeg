@@ -466,6 +466,9 @@ a.badge:hover{
 .card .index-card-body{
   padding:20px;
 }
+.selectedhead{
+  display:none;
+}
 @media (min-width: 768px) {
   .col-md-4 {
   -ms-flex: 0 0 33.333333%;

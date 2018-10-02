@@ -50,6 +50,36 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
         content: $('.selectedcategory')
       })
     });
+    $(".selectedcuthead").click(function(e) {
+      layer.open({
+        type:1,
+        title: "批量剪切片头",
+        area:['500px','auto'],
+        shadeClose: true,
+        content: $('.selectedhead')
+      })
+    });
+    $(".docuthead").click(function(e) {
+      var ids = [];
+      $('.movieselected:checked').each(function(){  
+        ids.push($(this).val()); 
+      });
+      var duration = $(".duration").val();
+      if(ids.length>0){
+        $.ajax({
+          type: "post",
+          url: "/selectedcuthead",
+          data: {idarr: ids,duration:duration},
+          traditional: true,
+          dataType: "JSON",
+          success: function (response) {
+            if(response.success==1) {
+              location.reload();
+            }
+          }
+        });
+      }
+    });
     $(".doaddcategory").click(function(e) {
       var id = $(this).parent().data("id");
       var selectcategory = $('.selectcategory').val();

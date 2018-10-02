@@ -59,6 +59,7 @@ block content
         .layui-btn-group
           button.layui-btn.savecategory 保存本页分类
           button.layui-btn.selectedchangecategory 批量修改分类
+          button.layui-btn.selectedcuthead.hidden 批量剪切片头
         nav.pages
           if( pages> 1)
             ul.pagination
@@ -76,5 +77,9 @@ block content
             each category in categories
               option(value="#{category.title}") #{category.title}
           button.layui-btn.layui-btn-sm.doselectaddcategory(style="margin-top:15px;") 修改
-        
-          
+        .selectedhead.layui-form(style="padding:30px;text-align:center;")
+          .layui-form-item
+            label.layui-form-label 剪切时长
+            .layui-input-block
+              input.layui-input.duration(type="text",name="duration",placeholder="输入时间轴，格式00:00:10")
+          button.layui-btn.layui-btn-sm.docuthead 确定

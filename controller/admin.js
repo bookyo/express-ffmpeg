@@ -3,13 +3,13 @@ var Setting = require("../models/setting");
 var Fenfa = require("../models/fenfa");
 var FFmpeghelper = require('../helper/newffmpeg');
 var ListsFFmpegHelper = require("../helper/listsffmpeg");
+var ffmpegcut = require('../helper/ffmpegcut');
 var Category = require("../models/category");
 var Portal = require("../models/portal");
 var Player = require("../models/player");
 var User = require("../models/user");
 var Card = require("../models/card");
 var fs = require('fs');
-var jwt = require('jsonwebtoken');
 var _ = require('underscore');
 var moment = require('moment');
 var crypto = require('crypto');
@@ -560,28 +560,29 @@ exports.uploadposter = function(req, res) {
     var id = req.body.id;
     var des = './public/videos/'+id;
     var exists = fs.existsSync(des);
-    if(exists) {
-        fs.rename(path,des+"/poster.jpg",function(err) {
-            if(err) {
-                console.log(err);
-            }
-            Movie.findOne({_id: id})
-                .exec(function(err, movie) {
+    if (!exists) {
+        fs.mkdirSync(des);
+    }
+    fs.rename(path,des+"/poster.jpg",function(err) {
+        if(err) {
+            console.log(err);
+        }
+        Movie.findOne({_id: id})
+            .exec(function(err, movie) {
+                if(err) {
+                    console.log(err);
+                }
+                movie.poster = '/videos/'+id+'/poster.jpg';
+                movie.save(function(err) {
                     if(err) {
                         console.log(err);
                     }
-                    movie.poster = '/videos/'+id+'/poster.jpg';
-                    movie.save(function(err) {
-                        if(err) {
-                            console.log(err);
-                        }
-                        res.json({
-                            code:0
-                        });
-                    })
+                    res.json({
+                        code:0
+                    });
                 })
-        })
-    }
+            })
+    })
 }
 exports.postzimu = function(req, res) {
     res.json({
@@ -1307,6 +1308,26 @@ exports.selectedcategory = function(req, res) {
                         console.log(err);
                     }
                 })
+            })
+    }
+    res.json({
+        success: 1
+    });
+}
+exports.cuthead = function(req, res) {
+    var ids = [];
+    var duration = req.body.duration;
+    ids = ids.concat(req.body.idarr);
+    for (let index = 0; index < ids.length; index++) {
+        const id = ids[index];
+        Movie.findOne({_id:id})
+            .exec(function(err, movie){
+                if(err) {
+                    console.log(err);
+                }
+                if(movie.status=="waiting"){
+                    ffmpegcut.cuthead(movie,duration);
+                }
             })
     }
     res.json({
