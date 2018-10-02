@@ -365,7 +365,7 @@ var myDropzone = new Dropzone(document.body, {
   uploadMultiple:false,
   chunking:true,
   timeout:30000,
-  chunkSize: 1000000,
+  chunkSize: 2000000,
   parallelChunkUploads:false,
   retryChunks:true,
   chunksUploaded: function(file, done) {

@@ -237,8 +237,9 @@ function chunk(path, des, id, config, vf, tsjiami) {
                 })
         })
         .on('error', function (err, stdout, stderr) {
-            console.log('Cannot chunk video: ' + err.message);
+            console.log('Cannot chunk video: ' + path + err.message);
             deleteall(des);
+            fs.mkdirSync(des);
             ffmpegtransandchunk(des, path, config, vf, id);
         })
         .on("start", function () {
