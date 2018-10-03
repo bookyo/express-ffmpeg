@@ -14,7 +14,11 @@ html.playbody
         margin-top:-42px;
       }
       .inputline{
-        text-align:center;
+        top: 0;
+        position: fixed;
+        z-index: 1000;
+        text-align: center;
+        width: 100%;
       }
       .inputline .input{
       width:80%;  
@@ -63,8 +67,7 @@ html.playbody
       var parenturl = getParentUrl();
       var antiurl = "#{antiurl}";
       $("#submagnet").click(function(e) {
-        var magnet = $(".inputline input").val()+"&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com
-";
+        var magnet = $(".inputline input").val()+"&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com";
         if(antiurl != ""){
           if(parenturl != null && parenturl.indexOf("#{antiurl}")==0){
             var dp = new DPlayer({
