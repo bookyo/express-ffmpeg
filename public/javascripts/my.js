@@ -80,6 +80,26 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
         });
       }
     });
+    $(".btn-deleteall").click(function(e) {
+      layer.confirm('是否确定删除所选视频？',{
+        btn: ['确定']
+      }, function() {
+        var ids = [];
+        $('.movieselected:checked').each(function(){  
+          ids.push($(this).val()); 
+        });
+        $.ajax({
+          type: "DELETE",
+          url: "/deleteselected?ids="+ids,
+          dataType: "JSON",
+          success: function (response) {
+            if(response.success==1) {
+              location.reload();
+            }
+          }
+        });
+      })
+    });
     $(".doaddcategory").click(function(e) {
       var id = $(this).parent().data("id");
       var selectcategory = $('.selectcategory').val();

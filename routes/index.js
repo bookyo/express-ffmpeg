@@ -108,6 +108,7 @@ module.exports = function(app) {
     app.delete("/delete/user", checkLogin, Admincontroller.deluser);
     app.delete("/delete/image", checkLogin, Cmscontroller.deleteimage);
     app.delete("/delete/article", checkLogin, Cmscontroller.deletearticle);
+    app.delete("/deleteselected", checkLogin, Admincontroller.deleteselected);
     app.get("/share/:id", checkLevel, Admincontroller.getmovie);
     app.get("/", checkopen, Cmscontroller.index);
     app.get("/movies", Cmscontroller.getmovies);
