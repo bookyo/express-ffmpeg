@@ -298,12 +298,12 @@ module.exports = function(app) {
               return res.status(404).send("API未开启。");
             }
             var antiurlarr = setting[0].antiurl;
-            if(antiurlarr.indexOf(req.headers.origin)!=-1){ 
-              res.header("Access-Control-Allow-Origin", req.headers.origin); 
-              res.header("Access-Control-Allow-Methods", "POST, GET"); 
-              res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
-              res.header("Access-Control-Allow-Headers", "Content-Type"); 
-            }
+            // if(antiurlarr.indexOf(req.headers.origin)!=-1){ 
+            res.header("Access-Control-Allow-Origin", '*'); 
+            res.header("Access-Control-Allow-Methods", "POST, GET"); 
+            res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
+            res.header("Access-Control-Allow-Headers", "Content-Type"); 
+            // }
             next();
           })
     }
