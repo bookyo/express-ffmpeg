@@ -297,10 +297,6 @@ module.exports = function(app) {
             if(api!="on"){
               return res.status(404).send("API未开启。");
             }
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Methods", "POST, GET");
-            res.header("Access-Control-Allow-Headers", "X-Requested-With");
-            res.header("Access-Control-Allow-Headers", "Content-Type");
             next();
           })
     }
