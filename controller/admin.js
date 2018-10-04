@@ -179,6 +179,10 @@ exports.apim3u8 = function(req, res) {
     if(!refer || !agent) {
         return res.status(404).send("错误页面");
     }
+    var referarr = refer.split("/");
+    var urlarr = [];
+    urlarr.push(referarr[0],referarr[1],referarr[2]);
+    var url = urlarr.join('/');
     Movie.findOne({_id: id})
         .exec(function(err, movie){
             if(err) {
@@ -193,19 +197,16 @@ exports.apim3u8 = function(req, res) {
                             console.log(err);
                         }
                         var antiurl = setting[0].antiurl;
-                        for (let index = 0; index < antiurl.length; index++) {
-                            const element = antiurl[index];
-                            if(refer.indexOf(element)==0||refer.indexOf(setting[0].host)==0) {
-                                var path = "./public/videos/"+id+"/index.m3u8";
-                                var data = fs.readFileSync(path);
-                                var datastring = data.toString('utf-8');
-                                var m3u8arr = datastring.split("index");
-                                var m3u8strings = m3u8arr.join(setting[0].host+"/videos/"+id+"/index");
-                                res.status(200).send(m3u8strings);
-                            } else {
-                                res.status(404).send("无权访问");
-                            }
-                        }
+                        if(antiurl.indexOf(url)!=-1||refer.indexOf(setting[0].host)==0){ 
+                            var path = "./public/videos/"+id+"/index.m3u8";
+                            var data = fs.readFileSync(path);
+                            var datastring = data.toString('utf-8');
+                            var m3u8arr = datastring.split("index");
+                            var m3u8strings = m3u8arr.join(setting[0].host+"/videos/"+id+"/index");
+                            return res.status(200).send(m3u8strings);
+                          } else {
+                            res.status(404).send("无权访问");
+                          }
                     })
             }
         })
