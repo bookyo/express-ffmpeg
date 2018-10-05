@@ -162,8 +162,8 @@ module.exports = function(app) {
     app.get("/admin/users", checkLogin, Admincontroller.adminusers);
     app.post("/admin/gencard", checkLogin, Admincontroller.gencard);
     app.get("/admin/cards", checkLogin, Admincontroller.cards);
-    app.get("/addcard", checkLevelLogin, Admincontroller.addcard);
-    app.post("/addcard",checkLevelLogin, [
+    app.get("/addcard", checkUsersystemOpen, checkLevelLogin, Admincontroller.addcard);
+    app.post("/addcard",checkUsersystemOpen, checkLevelLogin, [
       body('card')
         .trim()
         .matches(/^[\S]{20}$/).withMessage('必须20个非空字符')
