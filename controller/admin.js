@@ -212,7 +212,7 @@ exports.apim3u8 = function(req, res) {
                             var m3u8strings = m3u8arr.join(setting[0].host+"/videos/"+id+"/index");
                             res.header('Content-Type','application/octet-stream');
                             res.header('Content-Disposition', 'attachment; filename=index.m3u8');
-                            return res.status(200).redirect(m3u8strings);
+                            return res.status(200).send(m3u8strings);
                           } else {
                             res.status(404).send("无权访问");
                           }
