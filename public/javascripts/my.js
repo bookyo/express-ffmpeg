@@ -30,6 +30,19 @@ layui.use(['jquery','form','colorpicker','element','layer','upload'], function()
         }
       });
     });
+    $(".getm3u8").click(function(e) {
+      var id = $(this).attr("id");
+      var host = window.location.host;
+      var schma = window.location.protocol;
+      var url = schma +'//'+ host+'/videos/'+id+'/index.m3u8';
+      layer.open({
+        type:1,
+        title: "m3u8链接",
+        area:['400px','200px'],
+        shadeClose: true,
+        content: '<div style="padding:20px"><p>m3u8链接(双击选择复制):</p><input class="layui-input" value="'+url+'" disabled/></div>'
+      })
+    });
     $(".category").click(function(e) {
       var id = $(e.target).data("id");
       $('.addcategory').attr('data-id',id);

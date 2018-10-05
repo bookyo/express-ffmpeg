@@ -86,6 +86,11 @@ html.playbody
         var categoryantiarr = categoryantiurl.split("|");
         var anti= false;
         var level = $(".level").text();
+        var token = "#{token}";
+        var m3u8 = '/videos/#{id}/index.m3u8';
+        if(token!=''){
+          m3u8 = m3u8+'?token='+token;
+        } 
         if(open=="on"){
           anti = false;
         } else {
@@ -128,7 +133,7 @@ html.playbody
               logo: '#{logo}',
               mutex: true,
               video: {
-                  url: '/videos/#{id}/index.m3u8?token=#{token}',
+                  url: m3u8,
                   pic: '#{theposter}',
                   thumbnails: '/videos/#{id}/thumbnails.jpg',
                   type: 'hls'

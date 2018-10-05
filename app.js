@@ -63,94 +63,98 @@ app.use("/videos/*/ts.key", function(req,res,next) {
       }) 
 });
 app.use("/videos/:id/index.m3u8", openUsersystem, function (req, res, next) {
-  var token = req.query.token;
   var id = req.params.id;
   Setting.find()
     .exec(function (err, setting) {
       if (err) {
         console.log(err);
       }
-      jwt.verify(token, setting[0].antikey, function (err, decoded) {
-        if (err) {
-          console.log(err);
-          res.statusCode = 404;
-          return res.send("对不起，您没有权限");
-        }
-        Fenfa.find()
-          .exec(function (err, fenfa) {
-            if (err) {
-              console.log(err);
-            }
-            if (fenfa[0].kaiguan == "on") {
-              var path = "./public/videos/" + id + "/index.m3u8";
-              var m3u8exists = fs.existsSync(path);
-              if (m3u8exists) {
-                var data = fs.readFileSync(path);
-                var datastring = data.toString('utf-8');
-                var m3u8arr = datastring.split("index");
-                var domains = fenfa[0].domains;
-                var domainslength = fenfa[0].domains.length;
-                var index = 0;
-                for (let i = 0; i < m3u8arr.length; i++) {
-                  if (i > 0) {
-                    if (index < domainslength) {
-                      m3u8arr[i] = domains[index] + "/videos/" + id + "/index" + m3u8arr[i];
-                      index++;
-                    } else {
-                      index = 1;
-                      m3u8arr[i] = domains[0] + "/videos/" + id + "/index" + m3u8arr[i];
-                    }
-                  }
-                }
-                var newm3u8 = m3u8arr.join("");
-                res.send(newm3u8);
+      if(setting[0].antikey!=""){
+        var token = req.query.token;
+        jwt.verify(token, setting[0].antikey, function (err, decoded) {
+          if (err) {
+            console.log(err);
+            res.statusCode = 404;
+            return res.send("对不起，您没有权限");
+          }
+          Fenfa.find()
+            .exec(function (err, fenfa) {
+              if (err) {
+                console.log(err);
               }
-            } else {
-              if (decoded.access == "view") {
-                if (req.usersystem) {
-                  var path = "./public/videos/" + id + "/index.m3u8";
-                  var m3u8exists = fs.existsSync(path);
-                  if (m3u8exists) {
-                    var data = fs.readFileSync(path);
-                    var datastring = data.toString('utf-8');
-                    var m3u8arr = datastring.split("index");
-                  }
-                  var newm3u8arr = [];
-                  var length = m3u8arr.length>=18?18:m3u8arr.length;
-                  for (let index = 0; index < length; index++) {
-                    if(index == length-1) {
-                      var lastm3u8 = m3u8arr[length-1];
-                      var lastarr = lastm3u8.split("ts");
-                      lastarr.pop();
-                      lastarr.push("\n#EXT-X-ENDLIST\n");
-                      newm3u8arr.push(lastarr.join("ts"));
-                    } else {
-                      newm3u8arr.push(m3u8arr[index]);
+              if (fenfa[0].kaiguan == "on") {
+                var path = "./public/videos/" + id + "/index.m3u8";
+                var m3u8exists = fs.existsSync(path);
+                if (m3u8exists) {
+                  var data = fs.readFileSync(path);
+                  var datastring = data.toString('utf-8');
+                  var m3u8arr = datastring.split("index");
+                  var domains = fenfa[0].domains;
+                  var domainslength = fenfa[0].domains.length;
+                  var index = 0;
+                  for (let i = 0; i < m3u8arr.length; i++) {
+                    if (i > 0) {
+                      if (index < domainslength) {
+                        m3u8arr[i] = domains[index] + "/videos/" + id + "/index" + m3u8arr[i];
+                        index++;
+                      } else {
+                        index = 1;
+                        m3u8arr[i] = domains[0] + "/videos/" + id + "/index" + m3u8arr[i];
+                      }
                     }
                   }
-                  var newm3u8 = newm3u8arr.join("index");
-                  if (req.session.leveluser) {
-                    User.findOne({username: req.session.leveluser})
-                        .exec(function(err, user) {
-                          if(err) {
-                            console.log(err);
-                          }
-                          if (user.level == 2 && moment(user.duedate).isAfter(Date.now())) {
-                            next();
-                          } else {
-                            res.send(newm3u8);
-                          }
-                        })
+                  var newm3u8 = m3u8arr.join("");
+                  res.send(newm3u8);
+                }
+              } else {
+                if (decoded.access == "view") {
+                  if (req.usersystem) {
+                    var path = "./public/videos/" + id + "/index.m3u8";
+                    var m3u8exists = fs.existsSync(path);
+                    if (m3u8exists) {
+                      var data = fs.readFileSync(path);
+                      var datastring = data.toString('utf-8');
+                      var m3u8arr = datastring.split("index");
+                    }
+                    var newm3u8arr = [];
+                    var length = m3u8arr.length>=18?18:m3u8arr.length;
+                    for (let index = 0; index < length; index++) {
+                      if(index == length-1) {
+                        var lastm3u8 = m3u8arr[length-1];
+                        var lastarr = lastm3u8.split("ts");
+                        lastarr.pop();
+                        lastarr.push("\n#EXT-X-ENDLIST\n");
+                        newm3u8arr.push(lastarr.join("ts"));
+                      } else {
+                        newm3u8arr.push(m3u8arr[index]);
+                      }
+                    }
+                    var newm3u8 = newm3u8arr.join("index");
+                    if (req.session.leveluser) {
+                      User.findOne({username: req.session.leveluser})
+                          .exec(function(err, user) {
+                            if(err) {
+                              console.log(err);
+                            }
+                            if (user.level == 2 && moment(user.duedate).isAfter(Date.now())) {
+                              next();
+                            } else {
+                              res.send(newm3u8);
+                            }
+                          })
+                    } else {
+                      res.send(newm3u8);
+                    }
                   } else {
-                    res.send(newm3u8);
+                    next();
                   }
-                } else {
-                  next();
                 }
               }
-            }
-          })
-      })
+            })
+        })
+      } else {
+        next();
+      }
     });
 });
 app.use(express.static(path.join(__dirname, 'public')));

@@ -348,15 +348,33 @@ exports.getmovie = function(req, res) {
                     open = category.open?category.open:"";
                 }
                 var rgba = colorRgba(results.player.wenzibackground,results.player.wenzibackgroundopacity);
-                cache.getTokenByRedis(function(err, token){
-                    if(err) {
-                        console.log(err);
-                    }
+                if (results.setting.antikey!=""){
+                    cache.getTokenByRedis(function(err, token){
+                        if(err) {
+                            console.log(err);
+                        }
+                        res.render("movie",{
+                            level:req.level,
+                            title: results.movie.originalname+"在线播放",
+                            id:id,
+                            token: token,
+                            poster: results.movie.poster,
+                            phoneviewer: phoneviewer,
+                            antiredirect: results.setting.antiredirect,
+                            waplock: waplock,
+                            player: results.player,
+                            rgba: rgba,
+                            antiurl: results.setting.antiurl,
+                            categoryanti: categoryanti,
+                            open: open
+                        })
+                    })
+                } else {
                     res.render("movie",{
                         level:req.level,
                         title: results.movie.originalname+"在线播放",
                         id:id,
-                        token: token,
+                        token: '',
                         poster: results.movie.poster,
                         phoneviewer: phoneviewer,
                         antiredirect: results.setting.antiredirect,
@@ -367,7 +385,7 @@ exports.getmovie = function(req, res) {
                         categoryanti: categoryanti,
                         open: open
                     })
-                })
+                }
             })
     });
 }
