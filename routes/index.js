@@ -297,7 +297,7 @@ module.exports = function(app) {
             if(api!="on"){
               return res.status(404).send("API未开启。");
             }
-            var antiurlarr = setting[0].antiurl;
+            // var antiurlarr = setting[0].antiurl;
             // if(antiurlarr.indexOf(req.headers.origin)!=-1){ 
             res.header("Access-Control-Allow-Origin", '*'); 
             res.header("Access-Control-Allow-Methods", "POST, GET"); 
