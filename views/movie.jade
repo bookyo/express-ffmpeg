@@ -79,6 +79,9 @@ html.playbody
             return url;  
         }
         var parenturl = getParentUrl();
+        if(!parenturl) {
+          parenturl = (window.location != window.parent.location)?document.referrer:document.location;
+        }
         var antiurl = "#{antiurl}";
         var categoryantiurl = "#{categoryanti}";
         var antiarr = antiurl.split(",");
