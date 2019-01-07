@@ -1,4 +1,5 @@
 # 自带CMS系统的云转码系统，一体化自动发布云转码cms系统
+github为镜像，最新源码https://gitee.com/quazero/express-ffmpeg
 
 ### 开发计划
 利用react native开发的跨平台原生APP代码正在紧锣密鼓的准备中，大概15天会第一个基础版本。大家敬请期待。
